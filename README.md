@@ -1,6 +1,6 @@
 # Nodeset Validator Tracker Dashboard
 
-A web dashboard for monitoring nodeset validator performance and metrics.
+A web dashboard for monitoring nodeset validator metrics.
 
 
 ## Contributing
