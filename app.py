@@ -50,11 +50,11 @@ st.markdown("""
     .css-1d391kg {
         display: none;
     }
-    
+
     section[data-testid="stSidebar"] {
         display: none;
     }
-    
+
     /* Adjust main content area */
     .main .block-container {
         padding-left: 1rem;
@@ -91,20 +91,29 @@ def calculate_concentration_metrics(operator_validators):
 
     total_validators = sum(operator_validators.values())
     operator_counts = list(operator_validators.values())
-    operator_counts.sort(reverse=True)
+    
+    # Sort in ascending order for proper Gini calculation
+    operator_counts.sort()
 
-    # Gini coefficient calculation
+    # Gini coefficient calculation - CORRECTED VERSION
     n = len(operator_counts)
-    if n == 0:
+    if n == 0 or total_validators == 0:
         return {}
 
-    index = np.arange(1, n + 1)
-    gini = (2 * np.sum(index * operator_counts)) / (n * np.sum(operator_counts)) - (n + 1) / n
+    # Standard Gini formula
+    index = np.arange(1, n + 1)  # 1, 2, 3, ..., n
+    gini = (2 * np.sum(index * operator_counts)) / (n * total_validators) - (n + 1) / n
+    
+    # Ensure Gini is between 0 and 1
+    gini = max(0, min(1, gini))
 
+    # Sort in descending order for concentration ratios
+    operator_counts_desc = sorted(operator_counts, reverse=True)
+    
     # Concentration ratios
-    top_1_pct = (operator_counts[0] / total_validators) * 100 if operator_counts else 0
-    top_5_pct = (sum(operator_counts[:min(5, len(operator_counts))]) / total_validators) * 100
-    top_10_pct = (sum(operator_counts[:min(10, len(operator_counts))]) / total_validators) * 100
+    top_1_pct = (operator_counts_desc[0] / total_validators) * 100 if operator_counts_desc else 0
+    top_5_pct = (sum(operator_counts_desc[:min(5, len(operator_counts_desc))]) / total_validators) * 100
+    top_10_pct = (sum(operator_counts_desc[:min(10, len(operator_counts_desc))]) / total_validators) * 100
 
     return {
         'gini_coefficient': gini,
@@ -359,7 +368,7 @@ def main():
     # Data info and refresh button in header
     with col2:
         st.metric("Last Block", f"{last_block:,}")
-        
+
     with col3:
         if st.button("🔄 Refresh Data", help="Reload validator data"):
             st.cache_data.clear()
@@ -391,7 +400,7 @@ def main():
         st.metric(
             "Exited Validators",
             f"{total_exited:,}",
-            delta_color="inverse",
+            delta=None,
             help="Validators that have exited the network"
         )
 
