@@ -319,7 +319,7 @@ def main():
     col1, col2, col3 = st.columns([3, 1, 1])
     with col1:
         st.title("🔗 NodeSet Validator Monitor")
-        st.markdown("*Real-time monitoring and analysis of NodeSet protocol validators*")
+        st.markdown("*Monitoring and analysis of NodeSet protocol validators*")
 
     # Load data
     cache_data = load_validator_data()
