@@ -157,6 +157,11 @@ def create_performance_analysis(operator_performance, operator_validators):
         return None, None, None
 
     df = pd.DataFrame(perf_data)
+    
+    # FIXED: Force categorical order for legend
+    df['performance_category'] = pd.Categorical(df['performance_category'], 
+                                              categories=['Excellent', 'Good', 'Average', 'Poor'], 
+                                              ordered=True)
 
     # Performance vs Validator Count scatter plot
     fig_scatter = px.scatter(
