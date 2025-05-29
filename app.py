@@ -15,7 +15,7 @@ st.set_page_config(
     page_title="NodeSet Validator Monitor",
     page_icon="🔗",
     layout="wide",
-    initial_sidebar_state="expanded"
+    initial_sidebar_state="collapsed"  # Collapse sidebar by default
 )
 
 # Custom CSS for better styling
@@ -45,6 +45,22 @@ st.markdown("""
         border-radius: 0.5rem;
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     }
+
+    /* Hide sidebar completely */
+    .css-1d391kg {
+        display: none;
+    }
+    
+    section[data-testid="stSidebar"] {
+        display: none;
+    }
+    
+    /* Adjust main content area */
+    .main .block-container {
+        padding-left: 1rem;
+        padding-right: 1rem;
+        max-width: none;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -62,10 +78,9 @@ def load_validator_data():
             try:
                 with open(cache_file, 'r') as f:
                     cache = json.load(f)
-                st.sidebar.success(f"✅ Data loaded from: {cache_file}")
                 return cache, cache_file
             except Exception as e:
-                st.sidebar.error(f"❌ Error loading {cache_file}: {str(e)}")
+                st.error(f"❌ Error loading {cache_file}: {str(e)}")
 
     return None, None
 
@@ -300,16 +315,11 @@ def display_health_status(concentration_metrics, total_active, total_exited):
         st.caption(f"{avg_validators:.1f} avg validators/operator")
 
 def main():
-    # Header
-    col1, col2 = st.columns([3, 1])
+    # Header with refresh button and data info
+    col1, col2, col3 = st.columns([3, 1, 1])
     with col1:
         st.title("🔗 NodeSet Validator Monitor")
         st.markdown("*Real-time monitoring and analysis of NodeSet protocol validators*")
-
-    with col2:
-        if st.button("🔄 Refresh Data", help="Reload validator data"):
-            st.cache_data.clear()
-            st.rerun()
 
     # Load data
     cache_data = load_validator_data()
@@ -346,13 +356,18 @@ def main():
 
     total_active = sum(active_validators.values())
 
-    # Sidebar info
-    st.sidebar.header("📊 Data Overview")
-    st.sidebar.metric("Last Updated Block", f"{last_block:,}")
-    st.sidebar.metric("Cache File", cache_file.split('/')[-1])
+    # Data info and refresh button in header
+    with col2:
+        st.metric("Last Block", f"{last_block:,}")
+        
+    with col3:
+        if st.button("🔄 Refresh Data", help="Reload validator data"):
+            st.cache_data.clear()
+            st.rerun()
 
+    # Show data source info
     last_update = datetime.fromtimestamp(os.path.getmtime(cache_file))
-    st.sidebar.caption(f"File modified: {last_update.strftime('%Y-%m-%d %H:%M:%S')}")
+    st.caption(f"📁 Data from: {cache_file.split('/')[-1]} | 🕒 Updated: {last_update.strftime('%Y-%m-%d %H:%M:%S')}")
 
     # Main metrics
     col1, col2, col3, col4 = st.columns(4)
@@ -393,6 +408,12 @@ def main():
     concentration_metrics = calculate_concentration_metrics(active_validators)
     if concentration_metrics:
         display_health_status(concentration_metrics, total_active, total_exited)
+
+    # Settings row
+    st.markdown("---")
+    col1, col2 = st.columns([3, 1])
+    with col2:
+        auto_refresh = st.checkbox("🔄 Auto-refresh (60 seconds)")
 
     # Detailed analysis tabs
     tab1, tab2, tab3, tab4, tab5 = st.tabs([
@@ -581,10 +602,7 @@ def main():
             if st.button("📄 Show Full Cache"):
                 st.json(cache)
 
-    # Auto-refresh option
-    st.sidebar.header("⚙️ Settings")
-    auto_refresh = st.sidebar.checkbox("🔄 Auto-refresh (60 seconds)")
-
+    # Auto-refresh handling
     if auto_refresh:
         import time
         time.sleep(60)
