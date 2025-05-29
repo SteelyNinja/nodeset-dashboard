@@ -91,7 +91,7 @@ def calculate_concentration_metrics(operator_validators):
 
     total_validators = sum(operator_validators.values())
     operator_counts = list(operator_validators.values())
-    
+
     # Sort in ascending order for proper Gini calculation
     operator_counts.sort()
 
@@ -103,13 +103,13 @@ def calculate_concentration_metrics(operator_validators):
     # Standard Gini formula
     index = np.arange(1, n + 1)  # 1, 2, 3, ..., n
     gini = (2 * np.sum(index * operator_counts)) / (n * total_validators) - (n + 1) / n
-    
+
     # Ensure Gini is between 0 and 1
     gini = max(0, min(1, gini))
 
     # Sort in descending order for concentration ratios
     operator_counts_desc = sorted(operator_counts, reverse=True)
-    
+
     # Concentration ratios
     top_1_pct = (operator_counts_desc[0] / total_validators) * 100 if operator_counts_desc else 0
     top_5_pct = (sum(operator_counts_desc[:min(5, len(operator_counts_desc))]) / total_validators) * 100
@@ -123,6 +123,76 @@ def calculate_concentration_metrics(operator_validators):
         'total_operators': len(operator_validators),
         'total_validators': total_validators
     }
+
+def get_performance_category(performance):
+    """Categorize performance levels"""
+    if performance >= 99.5:
+        return 'Excellent'
+    elif performance >= 98.5:
+        return 'Good'
+    elif performance >= 95.0:
+        return 'Average'
+    else:
+        return 'Poor'
+
+def create_performance_analysis(operator_performance, operator_validators):
+    """Create performance analysis visualizations"""
+    if not operator_performance:
+        return None, None, None
+    
+    # Combine performance with validator counts
+    perf_data = []
+    for addr, performance in operator_performance.items():
+        validator_count = operator_validators.get(addr, 0)
+        if validator_count > 0:  # Only include operators with validators
+            perf_data.append({
+                'operator': f"{addr[:8]}...{addr[-6:]}",
+                'full_address': addr,
+                'performance': performance,
+                'validator_count': validator_count,
+                'performance_category': get_performance_category(performance)
+            })
+    
+    if not perf_data:
+        return None, None, None
+    
+    df = pd.DataFrame(perf_data)
+    
+    # Performance vs Validator Count scatter plot
+    fig_scatter = px.scatter(
+        df, 
+        x='validator_count', 
+        y='performance',
+        size='validator_count',
+        color='performance_category',
+        hover_data=['operator'],
+        title="Operator Performance vs Validator Count",
+        labels={
+            'validator_count': 'Number of Validators',
+            'performance': 'Performance (%)',
+            'performance_category': 'Performance Level'
+        },
+        color_discrete_map={
+            'Excellent': '#28a745',
+            'Good': '#17a2b8', 
+            'Average': '#ffc107',
+            'Poor': '#dc3545'
+        }
+    )
+    fig_scatter.update_layout(height=500)
+    
+    # Performance distribution histogram
+    fig_hist = px.histogram(
+        df,
+        x='performance',
+        nbins=20,
+        title="Distribution of Operator Performance",
+        labels={'x': 'Performance (%)', 'y': 'Number of Operators'},
+        color_discrete_sequence=['#667eea']
+    )
+    fig_hist.update_layout(height=400)
+    
+    return fig_scatter, fig_hist, df
 
 def create_concentration_pie(operator_validators, title="Validator Distribution"):
     """Create pie chart showing operator concentration"""
@@ -265,6 +335,40 @@ def create_top_operators_table(operator_validators, operator_exited):
 
     return df
 
+def create_performance_table(operator_performance, operator_validators, operator_exited):
+    """Create enhanced operator table with performance data"""
+    if not operator_performance:
+        return pd.DataFrame()
+    
+    data = []
+    for addr, performance in operator_performance.items():
+        total_count = operator_validators.get(addr, 0)
+        exited_count = operator_exited.get(addr, 0)
+        active_count = total_count - exited_count
+        
+        if total_count > 0:  # Only include operators with validators
+            data.append({
+                'Rank': 0,  # Will be set after sorting
+                'Operator': f"{addr[:8]}...{addr[-6:]}",
+                'Full Address': addr,
+                'Performance': f"{performance:.2f}%",
+                'Performance_Raw': performance,
+                'Category': get_performance_category(performance),
+                'Active': active_count,
+                'Total': total_count,
+                'Exited': exited_count,
+            })
+    
+    if not data:
+        return pd.DataFrame()
+    
+    df = pd.DataFrame(data)
+    # Sort by performance first, then by active validators
+    df = df.sort_values(['Performance_Raw', 'Active'], ascending=[False, False]).reset_index(drop=True)
+    df['Rank'] = range(1, len(df) + 1)
+    
+    return df
+
 def display_health_status(concentration_metrics, total_active, total_exited):
     """Display network health indicators"""
     st.subheader("🏥 Network Health Status")
@@ -323,6 +427,79 @@ def display_health_status(concentration_metrics, total_active, total_exited):
         st.markdown(f"**Operator Size:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
         st.caption(f"{avg_validators:.1f} avg validators/operator")
 
+def display_performance_health(operator_performance, operator_validators):
+    """Display performance-based health indicators"""
+    if not operator_performance:
+        return
+    
+    st.subheader("🎯 Performance Health Status")
+    
+    # Calculate weighted average performance
+    total_weighted_performance = 0
+    total_validators = 0
+    
+    perf_categories = {'Excellent': 0, 'Good': 0, 'Average': 0, 'Poor': 0}
+    
+    for addr, performance in operator_performance.items():
+        validator_count = operator_validators.get(addr, 0)
+        if validator_count > 0:
+            total_weighted_performance += performance * validator_count
+            total_validators += validator_count
+            perf_categories[get_performance_category(performance)] += validator_count
+    
+    avg_performance = total_weighted_performance / total_validators if total_validators > 0 else 0
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        if avg_performance >= 99:
+            status = "🟢 Excellent"
+            color = "status-good"
+        elif avg_performance >= 98:
+            status = "🟡 Good"
+            color = "status-warning"
+        else:
+            status = "🔴 Needs Attention"
+            color = "status-danger"
+        
+        st.markdown(f"**Network Performance:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
+        st.caption(f"Weighted avg: {avg_performance:.2f}%")
+    
+    with col2:
+        excellent_pct = (perf_categories['Excellent'] / total_validators * 100) if total_validators > 0 else 0
+        st.metric("Excellent Performers", f"{excellent_pct:.1f}%")
+        st.caption(f"{perf_categories['Excellent']} validators")
+    
+    with col3:
+        poor_pct = (perf_categories['Poor'] / total_validators * 100) if total_validators > 0 else 0
+        if poor_pct < 5:
+            color = "status-good"
+        elif poor_pct < 15:
+            color = "status-warning"
+        else:
+            color = "status-danger"
+        
+        st.markdown(f"**Poor Performers:** <span class='{color}'>{poor_pct:.1f}%</span>", unsafe_allow_html=True)
+        st.caption(f"{perf_categories['Poor']} validators")
+    
+    with col4:
+        # Performance consistency (std deviation)
+        performances = list(operator_performance.values())
+        perf_std = np.std(performances) if performances else 0
+        
+        if perf_std < 1.0:
+            status = "🟢 Consistent"
+            color = "status-good"
+        elif perf_std < 2.5:
+            status = "🟡 Variable" 
+            color = "status-warning"
+        else:
+            status = "🔴 Inconsistent"
+            color = "status-danger"
+            
+        st.markdown(f"**Consistency:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
+        st.caption(f"Std dev: {perf_std:.2f}%")
+
 def main():
     # Header with refresh button and data info
     col1, col2, col3 = st.columns([3, 1, 1])
@@ -351,6 +528,7 @@ def main():
     # Extract data
     operator_validators = cache.get('operator_validators', {})
     operator_exited = cache.get('exited_validators', {})
+    operator_performance = cache.get('operator_performance', {})
     total_validators = cache.get('total_validators', 0)
     total_exited = cache.get('total_exited', 0)
     last_block = cache.get('last_block', 0)
@@ -417,6 +595,10 @@ def main():
     if concentration_metrics:
         display_health_status(concentration_metrics, total_active, total_exited)
 
+    # Performance health status
+    if operator_performance:
+        display_performance_health(operator_performance, operator_validators)
+
     # Settings row
     st.markdown("---")
     col1, col2 = st.columns([3, 1])
@@ -424,10 +606,11 @@ def main():
         auto_refresh = st.checkbox("🔄 Auto-refresh (60 seconds)")
 
     # Detailed analysis tabs
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "📈 Distribution",
         "🎯 Concentration",
         "🏆 Top Operators",
+        "⚡ Performance",
         "🚪 Exit Analysis",
         "📋 Raw Data"
     ])
@@ -523,6 +706,63 @@ def main():
             st.info("No operator data available.")
 
     with tab4:
+        st.subheader("⚡ Operator Performance Analysis")
+        
+        if operator_performance:
+            fig_scatter, fig_hist, perf_df = create_performance_analysis(
+                operator_performance, operator_validators
+            )
+            
+            if fig_scatter and fig_hist:
+                # Performance scatter plot
+                st.plotly_chart(fig_scatter, use_container_width=True)
+                
+                col1, col2 = st.columns(2)
+                
+                with col1:
+                    # Performance distribution
+                    st.plotly_chart(fig_hist, use_container_width=True)
+                
+                with col2:
+                    # Performance summary stats
+                    st.subheader("📊 Performance Summary")
+                    performances = list(operator_performance.values())
+                    
+                    summary_stats = pd.DataFrame([
+                        {"Metric": "Average", "Value": f"{np.mean(performances):.2f}%"},
+                        {"Metric": "Median", "Value": f"{np.median(performances):.2f}%"},
+                        {"Metric": "Best", "Value": f"{np.max(performances):.2f}%"},
+                        {"Metric": "Worst", "Value": f"{np.min(performances):.2f}%"},
+                        {"Metric": "Std Dev", "Value": f"{np.std(performances):.2f}%"},
+                    ])
+                    
+                    st.dataframe(summary_stats, use_container_width=True, hide_index=True)
+                
+                # Enhanced performance table
+                st.subheader("🏆 Operators by Performance")
+                perf_table_df = create_performance_table(
+                    operator_performance, operator_validators, operator_exited
+                )
+                
+                if not perf_table_df.empty:
+                    display_perf_df = perf_table_df.drop(['Full Address', 'Performance_Raw'], axis=1)
+                    st.dataframe(
+                        display_perf_df,
+                        use_container_width=True,
+                        hide_index=True,
+                        column_config={
+                            "Category": st.column_config.TextColumn(
+                                "Category",
+                                help="Performance category based on percentage"
+                            )
+                        }
+                    )
+            else:
+                st.info("Insufficient performance data for analysis.")
+        else:
+            st.info("No performance data available in cache file.")
+
+    with tab5:
         if total_exited > 0:
             st.subheader("🚪 Exit Analysis")
 
@@ -590,7 +830,7 @@ def main():
         else:
             st.info("😊 Great news! No validator exits detected yet.")
 
-    with tab5:
+    with tab6:
         st.subheader("📋 Raw Cache Data")
 
         col1, col2 = st.columns(2)
@@ -603,7 +843,8 @@ def main():
                 "last_epoch_checked": cache.get('last_epoch_checked', 0),
                 "total_operators": len(cache.get('operator_validators', {})),
                 "pending_pubkeys": len(cache.get('pending_pubkeys', [])),
-                "processed_transactions": len(cache.get('processed_transactions', []))
+                "processed_transactions": len(cache.get('processed_transactions', [])),
+                "performance_metrics": len(cache.get('operator_performance', {}))
             })
 
         with col2:
