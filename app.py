@@ -391,7 +391,6 @@ def main():
         st.metric(
             "Exited Validators",
             f"{total_exited:,}",
-            delta=f"-{total_exited}" if total_exited > 0 else None,
             delta_color="inverse",
             help="Validators that have exited the network"
         )
