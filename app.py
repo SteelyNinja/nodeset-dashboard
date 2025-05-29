@@ -349,7 +349,7 @@ def create_performance_table(operator_performance, operator_validators, operator
         if total_count > 0:  # Only include operators with validators
             data.append({
                 'Rank': 0,  # Will be set after sorting
-                'Operator': f"{addr[:8]}...{addr[-6:]}",
+                'Operator': addr,
                 'Full Address': addr,
                 'Performance': f"{performance:.2f}%",
                 'Performance_Raw': performance,
