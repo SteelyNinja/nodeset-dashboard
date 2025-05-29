@@ -320,7 +320,7 @@ def create_top_operators_table(operator_validators, operator_exited):
 
         data.append({
             'Rank': 0,  # Will be set after sorting
-            'Operator': f"{addr[:8]}...{addr[-6:]}",
+            'Operator': addr,
             'Full Address': addr,
             'Active': active_count,
             'Total': total_count,
