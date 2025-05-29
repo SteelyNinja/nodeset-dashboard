@@ -139,7 +139,7 @@ def create_performance_analysis(operator_performance, operator_validators):
     """Create performance analysis visualizations"""
     if not operator_performance:
         return None, None, None
-    
+
     # Combine performance with validator counts
     perf_data = []
     for addr, performance in operator_performance.items():
@@ -152,16 +152,16 @@ def create_performance_analysis(operator_performance, operator_validators):
                 'validator_count': validator_count,
                 'performance_category': get_performance_category(performance)
             })
-    
+
     if not perf_data:
         return None, None, None
-    
+
     df = pd.DataFrame(perf_data)
-    
+
     # Performance vs Validator Count scatter plot
     fig_scatter = px.scatter(
-        df, 
-        x='validator_count', 
+        df,
+        x='validator_count',
         y='performance',
         size='validator_count',
         color='performance_category',
@@ -173,14 +173,15 @@ def create_performance_analysis(operator_performance, operator_validators):
             'performance_category': 'Performance Level'
         },
         color_discrete_map={
-            'Excellent': '#28a745',
-            'Good': '#17a2b8', 
+            'Excellent': '#17a2b8',
+            'Good': '#28a745',
             'Average': '#ffc107',
             'Poor': '#dc3545'
-        }
+        },
+        category_orders={'performance_category': ['Excellent', 'Good', 'Average', 'Poor']}
     )
     fig_scatter.update_layout(height=500)
-    
+
     # Performance distribution histogram
     fig_hist = px.histogram(
         df,
@@ -191,7 +192,7 @@ def create_performance_analysis(operator_performance, operator_validators):
         color_discrete_sequence=['#667eea']
     )
     fig_hist.update_layout(height=400)
-    
+
     return fig_scatter, fig_hist, df
 
 def create_concentration_pie(operator_validators, title="Validator Distribution"):
@@ -339,13 +340,13 @@ def create_performance_table(operator_performance, operator_validators, operator
     """Create enhanced operator table with performance data"""
     if not operator_performance:
         return pd.DataFrame()
-    
+
     data = []
     for addr, performance in operator_performance.items():
         total_count = operator_validators.get(addr, 0)
         exited_count = operator_exited.get(addr, 0)
         active_count = total_count - exited_count
-        
+
         if total_count > 0:  # Only include operators with validators
             data.append({
                 'Rank': 0,  # Will be set after sorting
@@ -358,15 +359,15 @@ def create_performance_table(operator_performance, operator_validators, operator
                 'Total': total_count,
                 'Exited': exited_count,
             })
-    
+
     if not data:
         return pd.DataFrame()
-    
+
     df = pd.DataFrame(data)
     # Sort by performance first, then by active validators
     df = df.sort_values(['Performance_Raw', 'Active'], ascending=[False, False]).reset_index(drop=True)
     df['Rank'] = range(1, len(df) + 1)
-    
+
     return df
 
 def display_health_status(concentration_metrics, total_active, total_exited):
@@ -431,26 +432,26 @@ def display_performance_health(operator_performance, operator_validators):
     """Display performance-based health indicators"""
     if not operator_performance:
         return
-    
+
     st.subheader("🎯 Performance Health Status")
-    
+
     # Calculate weighted average performance
     total_weighted_performance = 0
     total_validators = 0
-    
+
     perf_categories = {'Excellent': 0, 'Good': 0, 'Average': 0, 'Poor': 0}
-    
+
     for addr, performance in operator_performance.items():
         validator_count = operator_validators.get(addr, 0)
         if validator_count > 0:
             total_weighted_performance += performance * validator_count
             total_validators += validator_count
             perf_categories[get_performance_category(performance)] += validator_count
-    
+
     avg_performance = total_weighted_performance / total_validators if total_validators > 0 else 0
-    
+
     col1, col2, col3, col4 = st.columns(4)
-    
+
     with col1:
         if avg_performance >= 99:
             status = "🟢 Excellent"
@@ -461,15 +462,15 @@ def display_performance_health(operator_performance, operator_validators):
         else:
             status = "🔴 Needs Attention"
             color = "status-danger"
-        
+
         st.markdown(f"**Network Performance:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
         st.caption(f"Weighted avg: {avg_performance:.2f}%")
-    
+
     with col2:
         excellent_pct = (perf_categories['Excellent'] / total_validators * 100) if total_validators > 0 else 0
         st.metric("Excellent Performers", f"{excellent_pct:.1f}%")
         st.caption(f"{perf_categories['Excellent']} validators")
-    
+
     with col3:
         poor_pct = (perf_categories['Poor'] / total_validators * 100) if total_validators > 0 else 0
         if poor_pct < 5:
@@ -478,25 +479,25 @@ def display_performance_health(operator_performance, operator_validators):
             color = "status-warning"
         else:
             color = "status-danger"
-        
+
         st.markdown(f"**Poor Performers:** <span class='{color}'>{poor_pct:.1f}%</span>", unsafe_allow_html=True)
         st.caption(f"{perf_categories['Poor']} validators")
-    
+
     with col4:
         # Performance consistency (std deviation)
         performances = list(operator_performance.values())
         perf_std = np.std(performances) if performances else 0
-        
+
         if perf_std < 1.0:
             status = "🟢 Consistent"
             color = "status-good"
         elif perf_std < 2.5:
-            status = "🟡 Variable" 
+            status = "🟡 Variable"
             color = "status-warning"
         else:
             status = "🔴 Inconsistent"
             color = "status-danger"
-            
+
         st.markdown(f"**Consistency:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
         st.caption(f"Std dev: {perf_std:.2f}%")
 
@@ -707,27 +708,27 @@ def main():
 
     with tab4:
         st.subheader("⚡ Operator Performance Analysis")
-        
+
         if operator_performance:
             fig_scatter, fig_hist, perf_df = create_performance_analysis(
                 operator_performance, operator_validators
             )
-            
+
             if fig_scatter and fig_hist:
                 # Performance scatter plot
                 st.plotly_chart(fig_scatter, use_container_width=True)
-                
+
                 col1, col2 = st.columns(2)
-                
+
                 with col1:
                     # Performance distribution
                     st.plotly_chart(fig_hist, use_container_width=True)
-                
+
                 with col2:
                     # Performance summary stats
                     st.subheader("📊 Performance Summary")
                     performances = list(operator_performance.values())
-                    
+
                     summary_stats = pd.DataFrame([
                         {"Metric": "Average", "Value": f"{np.mean(performances):.2f}%"},
                         {"Metric": "Median", "Value": f"{np.median(performances):.2f}%"},
@@ -735,15 +736,15 @@ def main():
                         {"Metric": "Worst", "Value": f"{np.min(performances):.2f}%"},
                         {"Metric": "Std Dev", "Value": f"{np.std(performances):.2f}%"},
                     ])
-                    
+
                     st.dataframe(summary_stats, use_container_width=True, hide_index=True)
-                
+
                 # Enhanced performance table
                 st.subheader("🏆 Operators by Performance")
                 perf_table_df = create_performance_table(
                     operator_performance, operator_validators, operator_exited
                 )
-                
+
                 if not perf_table_df.empty:
                     display_perf_df = perf_table_df.drop(['Full Address', 'Performance_Raw'], axis=1)
                     st.dataframe(
