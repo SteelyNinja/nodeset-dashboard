@@ -713,8 +713,7 @@ def main():
         if poor_pct > 0:
             perf_status.append(f"{poor_pct:.1f}% Poor")
         
-        st.markdown(f"<div class='health-summary'><strong>Performance Health:</strong> {' • '.join(perf_status)}</div>", unsafe_allow_html=True)
-
+        st.markdown(f"<div class='health-summary'><strong>Performance Health (24 hours):</strong> {' • '.join(perf_status)}</div>", unsafe_allow_html=True)
     # Expandable detailed health metrics - responsive columns
     with st.expander("🔍 Detailed Health Metrics"):
         if concentration_metrics:
@@ -834,6 +833,7 @@ def main():
 
     with tab4:
         st.subheader("⚡ Operator Performance Analysis")
+        st.info("ℹ️ This is last 24 hour data only")
 
         if operator_performance:
             fig_scatter, fig_hist, perf_df = create_performance_analysis(
