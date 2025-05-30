@@ -695,13 +695,13 @@ def main():
             st.info("No concentration data available.")
 
     with tab3:
-        # UPDATED: Show all operators instead of top 20
+        # Show all operators
         st.subheader("🏆 Top Operators by Active Validators")
 
         df_operators = create_top_operators_table(operator_validators, operator_exited)
 
         if not df_operators.empty:
-            # Display table - REMOVED .head(20) to show all
+            # Display table - show all operators
             display_df = df_operators.drop(['Full Address'], axis=1)
             st.dataframe(
                 display_df,
