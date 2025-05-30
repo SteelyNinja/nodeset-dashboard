@@ -18,7 +18,7 @@ st.set_page_config(
     initial_sidebar_state="collapsed"  # Collapse sidebar by default
 )
 
-# Custom CSS for better styling
+# Custom CSS for better styling and responsive design
 st.markdown("""
 <style>
     .metric-container {
@@ -55,11 +55,57 @@ st.markdown("""
         display: none;
     }
 
-    /* Adjust main content area */
+    /* Responsive design adjustments */
     .main .block-container {
         padding-left: 1rem;
         padding-right: 1rem;
         max-width: none;
+    }
+
+    /* Mobile-friendly adjustments */
+    @media (max-width: 768px) {
+        .main .block-container {
+            padding-left: 0.5rem;
+            padding-right: 0.5rem;
+        }
+        
+        div[data-testid="metric-container"] {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+        }
+        
+        h1 {
+            font-size: 1.5rem !important;
+        }
+        
+        .metric-container {
+            padding: 0.5rem;
+            margin: 0.25rem 0;
+        }
+    }
+
+    /* Tablet adjustments */
+    @media (min-width: 769px) and (max-width: 1024px) {
+        .main .block-container {
+            padding-left: 0.75rem;
+            padding-right: 0.75rem;
+        }
+    }
+
+    /* Wide screen adjustments */
+    @media (min-width: 1400px) {
+        .main .block-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+    }
+
+    /* Health status responsive text */
+    @media (max-width: 768px) {
+        .health-summary {
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
     }
 </style>
 """, unsafe_allow_html=True)
@@ -527,11 +573,16 @@ def display_performance_health(operator_performance, operator_validators):
         st.caption(f"Std dev: {perf_std:.2f}%")
 
 def main():
-    # Header with refresh button and data info
-    col1, col2, col3 = st.columns([3, 1, 1])
-    with col1:
-        st.title("🔗 NodeSet Validator Monitor")
-        st.markdown("*Monitoring and analysis of NodeSet protocol validators*")
+    # Responsive header design
+    st.title("🔗 NodeSet Validator Monitor")
+    st.markdown("*Real-time monitoring and analysis of NodeSet protocol validators*")
+    
+    # Refresh button (full width on mobile, right-aligned on desktop)
+    refresh_col1, refresh_col2 = st.columns([3, 1])
+    with refresh_col2:
+        if st.button("🔄 Refresh Data", help="Reload validator data", use_container_width=True):
+            st.cache_data.clear()
+            st.rerun()
 
     # Load data
     cache_data = load_validator_data()
@@ -569,67 +620,122 @@ def main():
 
     total_active = sum(active_validators.values())
 
-    # Data info and refresh button in header
-    with col2:
-        st.metric("Last Block", f"{last_block:,}")
-
-    with col3:
-        if st.button("🔄 Refresh Data", help="Reload validator data"):
-            st.cache_data.clear()
-            st.rerun()
-
-    # Show data source info
+    # Data source info (responsive)
     last_update = datetime.fromtimestamp(os.path.getmtime(cache_file))
-    st.caption(f"📁 Data from: {cache_file.split('/')[-1]} | 🕒 Updated: {last_update.strftime('%Y-%m-%d %H:%M:%S')}")
+    st.caption(f"📊 Block: {last_block:,} • 🕒 {last_update.strftime('%H:%M:%S')} • 📁 {cache_file.split('/')[-1]}")
 
-    # Main metrics
+    # Responsive metrics layout
+    st.markdown("### 📈 Network Overview")
+    
+    # Use responsive columns - fewer on mobile
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        st.metric(
-            "Active Validators",
-            f"{total_active:,}",
-            delta=None,
-            help="Currently active validators in the network"
-        )
+        st.metric("Active Validators", f"{total_active:,}")
 
     with col2:
-        st.metric(
-            "Active Operators",
-            len(active_validators),
-            help="Operators with at least one active validator"
-        )
+        st.metric("Active Operators", len(active_validators))
 
     with col3:
-        st.metric(
-            "Exited Validators",
-            f"{total_exited:,}",
-            delta=None,
-            help="Validators that have exited the network"
-        )
+        st.metric("Exited Validators", f"{total_exited:,}")
 
     with col4:
         exit_rate = (total_exited / total_validators * 100) if total_validators > 0 else 0
-        st.metric(
-            "Exit Rate",
-            f"{exit_rate:.1f}%",
-            help="Percentage of validators that have exited"
-        )
+        st.metric("Exit Rate", f"{exit_rate:.1f}%")
 
-    # Health status
-    concentration_metrics = calculate_concentration_metrics(active_validators)
-    if concentration_metrics:
-        display_health_status(concentration_metrics, total_active, total_exited)
-
-    # Performance health status
-    if operator_performance:
-        display_performance_health(operator_performance, operator_validators)
-
-    # Settings row
+    # Auto-refresh in separate row for better mobile layout
     st.markdown("---")
-    col1, col2 = st.columns([3, 1])
-    with col2:
-        auto_refresh = st.checkbox("🔄 Auto-refresh (60 seconds)")
+    auto_refresh_col1, auto_refresh_col2 = st.columns([3, 1])
+    with auto_refresh_col2:
+        auto_refresh = st.checkbox("🔄 Auto-refresh (60s)")
+
+    # Combined health status with responsive design
+    concentration_metrics = calculate_concentration_metrics(active_validators)
+    
+    # Network Health Summary (responsive text)
+    if concentration_metrics:
+        gini = concentration_metrics.get('gini_coefficient', 0)
+        total_ops = concentration_metrics.get('total_operators', 0)
+        avg_validators = (total_active / total_ops) if total_ops > 0 else 0
+        
+        # Determine overall health status
+        health_indicators = []
+        if gini < 0.5:
+            health_indicators.append("🟢 Well Decentralized")
+        elif gini < 0.7:
+            health_indicators.append("🟡 Moderately Decentralized")
+        else:
+            health_indicators.append("🔴 Concentrated")
+            
+        if exit_rate < 5:
+            health_indicators.append("🟢 Low Exit Rate")
+        elif exit_rate < 15:
+            health_indicators.append("🟡 Moderate Exits")
+        else:
+            health_indicators.append("🔴 High Exits")
+            
+        if avg_validators < 10:
+            health_indicators.append("🟢 Small Operators")
+        elif avg_validators <= 50:
+            health_indicators.append("🟡 Medium Operators")
+        else:
+            health_indicators.append("🔴 Large Operators")
+        
+        # Responsive health display
+        st.markdown(f"<div class='health-summary'><strong>Network Health:</strong> {' • '.join(health_indicators)}</div>", unsafe_allow_html=True)
+
+    # Performance summary (if available) - responsive
+    if operator_performance:
+        total_weighted_performance = 0
+        total_validators_perf = 0
+        perf_categories = {'Excellent': 0, 'Good': 0, 'Average': 0, 'Poor': 0}
+
+        for addr, performance in operator_performance.items():
+            validator_count = operator_validators.get(addr, 0)
+            if validator_count > 0:
+                total_weighted_performance += performance * validator_count
+                total_validators_perf += validator_count
+                perf_categories[get_performance_category(performance)] += validator_count
+
+        avg_performance = total_weighted_performance / total_validators_perf if total_validators_perf > 0 else 0
+        excellent_pct = (perf_categories['Excellent'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
+        poor_pct = (perf_categories['Poor'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
+        
+        perf_status = []
+        if avg_performance >= 99:
+            perf_status.append("🟢 Excellent Performance")
+        elif avg_performance >= 98:
+            perf_status.append("🟡 Good Performance")
+        else:
+            perf_status.append("🔴 Performance Issues")
+            
+        perf_status.append(f"{excellent_pct:.1f}% Excellent")
+        if poor_pct > 0:
+            perf_status.append(f"{poor_pct:.1f}% Poor")
+        
+        st.markdown(f"<div class='health-summary'><strong>Performance Health:</strong> {' • '.join(perf_status)}</div>", unsafe_allow_html=True)
+
+    # Expandable detailed health metrics - responsive columns
+    with st.expander("🔍 Detailed Health Metrics"):
+        if concentration_metrics:
+            detail_col1, detail_col2 = st.columns([1, 1])
+            with detail_col1:
+                st.markdown("**Decentralization Metrics**")
+                st.write(f"• Gini Coefficient: {gini:.3f}")
+                st.write(f"• Top 1 Operator: {concentration_metrics['top_1_concentration']:.1f}%")
+                st.write(f"• Top 5 Operators: {concentration_metrics['top_5_concentration']:.1f}%")
+                st.write(f"• Average Validators/Operator: {avg_validators:.1f}")
+                
+            with detail_col2:
+                if operator_performance:
+                    st.markdown("**Performance Metrics**")
+                    st.write(f"• Network Average: {avg_performance:.2f}%")
+                    st.write(f"• Excellent Performers: {excellent_pct:.1f}%")
+                    st.write(f"• Poor Performers: {poor_pct:.1f}%")
+                    performances = list(operator_performance.values())
+                    st.write(f"• Performance Std Dev: {np.std(performances):.2f}%")
+
+    st.markdown("---")
 
     # Detailed analysis tabs
     tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
