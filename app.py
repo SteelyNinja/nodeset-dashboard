@@ -248,18 +248,18 @@ def create_distribution_histogram(operator_validators):
         return go.Figure()
 
     validator_counts = list(operator_validators.values())
-    
+
     # Get the range of validator counts
     min_validators = min(validator_counts)
     max_validators = max(validator_counts)
-    
+
     fig = px.histogram(
         x=validator_counts,
         title="Distribution of Validators per Operator",
         labels={'x': 'Validators per Operator', 'y': 'Number of Operators'},
         color_discrete_sequence=['#667eea']
     )
-    
+
     # Override with custom bins to ensure whole number alignment
     fig.update_traces(
         xbins=dict(
@@ -268,7 +268,7 @@ def create_distribution_histogram(operator_validators):
             size=1  # Each bin represents exactly 1 validator
         )
     )
-    
+
     # Set x-axis to show only whole numbers
     fig.update_layout(
         height=400,
@@ -280,7 +280,7 @@ def create_distribution_histogram(operator_validators):
         ),
         bargap=0.1  # Small gap between bars for clarity
     )
-    
+
     return fig
 
 def create_concentration_curve(operator_validators):
@@ -723,11 +723,6 @@ def main():
                 file_name=f"nodeset_operators_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                 mime="text/csv"
             )
-
-            # Full addresses expandable section - REMOVED .head(10) to show all
-            with st.expander("🔍 Show Full Addresses"):
-                for _, row in df_operators.iterrows():
-                    st.code(f"#{row['Rank']:2d} | {row['Active']:3d} validators | {row['Full Address']}")
         else:
             st.info("No operator data available.")
 
