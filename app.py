@@ -68,16 +68,16 @@ st.markdown("""
             padding-left: 0.5rem;
             padding-right: 0.5rem;
         }
-
+        
         div[data-testid="metric-container"] {
             padding: 0.5rem;
             margin: 0.25rem 0;
         }
-
+        
         h1 {
             font-size: 1.5rem !important;
         }
-
+        
         .metric-container {
             padding: 0.5rem;
             margin: 0.25rem 0;
@@ -524,20 +524,17 @@ def display_performance_health(operator_performance, operator_validators):
     col1, col2, col3, col4 = st.columns(4)
 
     with col1:
-        if avg_performance >= 99.5:
-            status = "🔵 Excellent"
-            color = "#17a2b8"
-        elif avg_performance >= 98.5:
-            status = "🟢 Good"
-            color = "#28a745"
-        elif avg_performance >= 95.0:
-            status = "🟡 Average"
-            color = "#ffc107"
+        if avg_performance >= 99:
+            status = "🟢 Excellent"
+            color = "status-good"
+        elif avg_performance >= 98:
+            status = "🟡 Good"
+            color = "status-warning"
         else:
-            status = "🔴 Poor"
-            color = "#dc3545"
+            status = "🔴 Needs Attention"
+            color = "status-danger"
 
-        st.markdown(f"**Network Performance:** <span style='color: {color}'>{status}</span>", unsafe_allow_html=True)
+        st.markdown(f"**Network Performance:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
         st.caption(f"Weighted avg: {avg_performance:.2f}%")
 
     with col2:
@@ -548,13 +545,13 @@ def display_performance_health(operator_performance, operator_validators):
     with col3:
         poor_pct = (perf_categories['Poor'] / total_validators * 100) if total_validators > 0 else 0
         if poor_pct < 5:
-            color = "#28a745"
+            color = "status-good"
         elif poor_pct < 15:
-            color = "#ffc107"
+            color = "status-warning"
         else:
-            color = "#dc3545"
+            color = "status-danger"
 
-        st.markdown(f"**Poor Performers:** <span style='color: {color}'>{poor_pct:.1f}%</span>", unsafe_allow_html=True)
+        st.markdown(f"**Poor Performers:** <span class='{color}'>{poor_pct:.1f}%</span>", unsafe_allow_html=True)
         st.caption(f"{perf_categories['Poor']} validators")
 
     with col4:
@@ -563,23 +560,23 @@ def display_performance_health(operator_performance, operator_validators):
         perf_std = np.std(performances) if performances else 0
 
         if perf_std < 1.0:
-            status = "🔵 Consistent"
-            color = "#17a2b8"
+            status = "🟢 Consistent"
+            color = "status-good"
         elif perf_std < 2.5:
             status = "🟡 Variable"
-            color = "#ffc107"
+            color = "status-warning"
         else:
             status = "🔴 Inconsistent"
-            color = "#dc3545"
+            color = "status-danger"
 
-        st.markdown(f"**Consistency:** <span style='color: {color}'>{status}</span>", unsafe_allow_html=True)
+        st.markdown(f"**Consistency:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
         st.caption(f"Std dev: {perf_std:.2f}%")
 
 def main():
     # Responsive header design
     st.title("🔗 NodeSet Validator Monitor")
     st.markdown("*Real-time monitoring and analysis of NodeSet protocol validators*")
-
+    
     # Refresh button (full width on mobile, right-aligned on desktop)
     refresh_col1, refresh_col2 = st.columns([3, 1])
     with refresh_col2:
@@ -629,7 +626,7 @@ def main():
 
     # Responsive metrics layout
     st.markdown("### 📈 Network Overview")
-
+    
     # Use responsive columns - fewer on mobile
     col1, col2, col3, col4 = st.columns(4)
 
@@ -654,13 +651,13 @@ def main():
 
     # Combined health status with responsive design
     concentration_metrics = calculate_concentration_metrics(active_validators)
-
+    
     # Network Health Summary (responsive text)
     if concentration_metrics:
         gini = concentration_metrics.get('gini_coefficient', 0)
         total_ops = concentration_metrics.get('total_operators', 0)
         avg_validators = (total_active / total_ops) if total_ops > 0 else 0
-
+        
         # Determine overall health status
         health_indicators = []
         if gini < 0.5:
@@ -669,21 +666,21 @@ def main():
             health_indicators.append("🟡 Moderately Decentralized")
         else:
             health_indicators.append("🔴 Concentrated")
-
+            
         if exit_rate < 5:
             health_indicators.append("🟢 Low Exit Rate")
         elif exit_rate < 15:
             health_indicators.append("🟡 Moderate Exits")
         else:
             health_indicators.append("🔴 High Exits")
-
+            
         if avg_validators < 10:
             health_indicators.append("🟢 Small Operators")
         elif avg_validators <= 50:
             health_indicators.append("🟡 Medium Operators")
         else:
             health_indicators.append("🔴 Large Operators")
-
+        
         # Responsive health display
         st.markdown(f"<div class='health-summary'><strong>Network Health:</strong> {' • '.join(health_indicators)}</div>", unsafe_allow_html=True)
 
@@ -703,7 +700,7 @@ def main():
         avg_performance = total_weighted_performance / total_validators_perf if total_validators_perf > 0 else 0
         excellent_pct = (perf_categories['Excellent'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
         poor_pct = (perf_categories['Poor'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
-
+        
         perf_status = []
         if avg_performance >= 99:
             perf_status.append("🟢 Excellent Performance")
@@ -711,11 +708,11 @@ def main():
             perf_status.append("🟡 Good Performance")
         else:
             perf_status.append("🔴 Performance Issues")
-
+            
         perf_status.append(f"{excellent_pct:.1f}% Excellent")
         if poor_pct > 0:
             perf_status.append(f"{poor_pct:.1f}% Poor")
-
+        
         st.markdown(f"<div class='health-summary'><strong>Performance Health:</strong> {' • '.join(perf_status)}</div>", unsafe_allow_html=True)
 
     # Expandable detailed health metrics - responsive columns
@@ -728,7 +725,7 @@ def main():
                 st.write(f"• Top 1 Operator: {concentration_metrics['top_1_concentration']:.1f}%")
                 st.write(f"• Top 5 Operators: {concentration_metrics['top_5_concentration']:.1f}%")
                 st.write(f"• Average Validators/Operator: {avg_validators:.1f}")
-
+                
             with detail_col2:
                 if operator_performance:
                     st.markdown("**Performance Metrics**")
