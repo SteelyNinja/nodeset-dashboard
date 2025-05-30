@@ -157,10 +157,10 @@ def create_performance_analysis(operator_performance, operator_validators):
         return None, None, None
 
     df = pd.DataFrame(perf_data)
-    
+
     # FIXED: Force categorical order for legend
-    df['performance_category'] = pd.Categorical(df['performance_category'], 
-                                              categories=['Excellent', 'Good', 'Average', 'Poor'], 
+    df['performance_category'] = pd.Categorical(df['performance_category'],
+                                              categories=['Excellent', 'Good', 'Average', 'Poor'],
                                               ordered=True)
 
     # Performance vs Validator Count scatter plot
@@ -243,24 +243,44 @@ def create_concentration_pie(operator_validators, title="Validator Distribution"
     return fig
 
 def create_distribution_histogram(operator_validators):
-    """Create histogram of validator counts per operator"""
+    """Create histogram of validator counts per operator with discrete bins"""
     if not operator_validators:
         return go.Figure()
 
     validator_counts = list(operator_validators.values())
-
+    
+    # Get the range of validator counts
+    min_validators = min(validator_counts)
+    max_validators = max(validator_counts)
+    
     fig = px.histogram(
         x=validator_counts,
-        nbins=max(10, min(50, len(set(validator_counts)))),
         title="Distribution of Validators per Operator",
         labels={'x': 'Validators per Operator', 'y': 'Number of Operators'},
         color_discrete_sequence=['#667eea']
     )
-
+    
+    # Override with custom bins to ensure whole number alignment
+    fig.update_traces(
+        xbins=dict(
+            start=min_validators - 0.5,
+            end=max_validators + 0.5,
+            size=1  # Each bin represents exactly 1 validator
+        )
+    )
+    
+    # Set x-axis to show only whole numbers
     fig.update_layout(
         height=400,
-        showlegend=False
+        showlegend=False,
+        xaxis=dict(
+            tick0=min_validators,
+            dtick=1,  # Show tick marks at every whole number
+            tickmode='linear'
+        ),
+        bargap=0.1  # Small gap between bars for clarity
     )
+    
     return fig
 
 def create_concentration_curve(operator_validators):
