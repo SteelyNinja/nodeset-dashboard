@@ -766,9 +766,6 @@ def main():
             median_validators = np.median(validator_counts) if validator_counts else 0
             min_validators = min(validator_counts) if validator_counts else 0
             
-            # Standard deviation
-            std_validators = np.std(validator_counts) if validator_counts else 0
-            
             # Concentration metrics
             sorted_validators = sorted(validator_counts, reverse=True)
             top_3_validators = sum(sorted_validators[:3]) if len(sorted_validators) >= 3 else sum(sorted_validators)
@@ -782,15 +779,11 @@ def main():
             below_avg_count = sum(1 for count in validator_counts if count < avg_validators_dist)
             below_avg_percentage = (below_avg_count / total_operators * 100) if total_operators > 0 else 0
             
-            # Single validator operators
-            single_validator_count = sum(1 for count in validator_counts if count == 1)
-            single_validator_percentage = (single_validator_count / total_operators * 100) if total_operators > 0 else 0
-            
             # Large operators (above median)
             large_operators_count = sum(1 for count in validator_counts if count > median_validators)
             large_operators_percentage = (large_operators_count / total_operators * 100) if total_operators > 0 else 0
             
-            # NEW METRICS: Cap-based calculations
+            # Cap-based calculations
             cap_level = max_validators  # Current maximum becomes the cap
             
             # Calculate validators needed to reach cap for each operator
@@ -803,14 +796,14 @@ def main():
             operators_at_cap = sum(1 for count in validator_counts if count == cap_level)
             operators_at_cap_percentage = (operators_at_cap / total_operators * 100) if total_operators > 0 else 0
             
-            # Operators within 50% of cap
-            operators_near_cap = sum(1 for count in validator_counts if count >= cap_level * 0.5)
+            # Operators at 75% or higher of cap
+            operators_near_cap = sum(1 for count in validator_counts if count >= cap_level * 0.75)
             operators_near_cap_percentage = (operators_near_cap / total_operators * 100) if total_operators > 0 else 0
             
-            # Display metrics in a responsive grid
-            col1, col2, col3, col4, col5 = st.columns(5)
+            # Display metrics in a responsive grid - now 4 columns per row
+            col1, col2, col3, col4 = st.columns(4)
             
-            # Row 1: Basic Distribution Metrics
+            # Row 1: Basic Distribution Metrics (4 metrics)
             with col1:
                 st.metric("Largest Operator", f"{max_validators} validators")
             with col2:
@@ -819,44 +812,36 @@ def main():
                 st.metric("Median per Operator", f"{median_validators:.1f} validators")
             with col4:
                 st.metric("Smallest Operator", f"{min_validators} validators")
-            with col5:
-                st.metric("Standard Deviation", f"{std_validators:.1f}")
             
-            # Row 2: Concentration Metrics
-            col6, col7, col8, col9, col10 = st.columns(5)
-            with col6:
+            # Row 2: Concentration Metrics (4 metrics)
+            col5, col6, col7, col8 = st.columns(4)
+            with col5:
                 st.metric("Top 3 Operators Control", f"{top_3_percentage:.1f}%")
                 st.caption(f"{top_3_validators} of {total_validators_dist} validators")
-            with col7:
+            with col6:
                 st.metric("Top 5 Operators Control", f"{top_5_percentage:.1f}%")
                 st.caption(f"{top_5_validators} of {total_validators_dist} validators")
-            with col8:
+            with col7:
                 st.metric("Top 10 Operators Control", f"{top_10_percentage:.1f}%")
                 st.caption(f"{top_10_validators} of {total_validators_dist} validators")
-            with col9:
+            with col8:
                 st.metric("Below Average Operators", f"{below_avg_percentage:.1f}%")
                 st.caption(f"{below_avg_count} operators")
-            with col10:
-                st.metric("Single Validator Operators", f"{single_validator_percentage:.1f}%")
-                st.caption(f"{single_validator_count} operators")
             
-            # Row 3: Cap-Based Metrics (NEW)
-            col11, col12, col13, col14, col15 = st.columns(5)
-            with col11:
-                st.metric("Current Cap Level", f"{cap_level} validators")
-                st.caption("Highest operator count")
-            with col12:
+            # Row 3: Cap-Based Metrics (4 metrics)
+            col9, col10, col11, col12 = st.columns(4)
+            with col9:
                 st.metric("Validators to Cap", f"{validators_to_cap:,}")
                 st.caption("Total needed to reach cap")
-            with col13:
+            with col10:
                 st.metric("ETH to Cap", f"{eth_to_cap:,} ETH")
                 st.caption(f"@ 32 ETH per validator")
-            with col14:
+            with col11:
                 st.metric("Operators at Cap", f"{operators_at_cap_percentage:.1f}%")
                 st.caption(f"{operators_at_cap} operators")
-            with col15:
-                st.metric("Operators Near Cap", f"{operators_near_cap_percentage:.1f}%")
-                st.caption(f"{operators_near_cap} ops (≥50% of cap)")
+            with col12:
+                st.metric("Operators at 75%+ of Cap", f"{operators_near_cap_percentage:.1f}%")
+                st.caption(f"{operators_near_cap} ops (≥75% of cap)")
         else:
             st.info("No active validator data available for insights.")
 
