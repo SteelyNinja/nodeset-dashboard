@@ -754,31 +754,111 @@ def main():
             fig_hist = create_distribution_histogram(active_validators)
             st.plotly_chart(fig_hist, use_container_width=True)
 
-            # Key insights
+            # Enhanced Key insights with 15 total metrics
             st.subheader("📊 Key Insights")
-            col1, col2, col3 = st.columns(3)
-
-    with col1:
-        max_validators = max(active_validators.values()) if active_validators else 0
-        st.metric("Largest Operator", f"{max_validators} validators")
-
-    with col2:
-        # Average validators per operator
-        avg_validators = np.mean(list(active_validators.values())) if active_validators else 0
-        st.metric("Average per Operator", f"{avg_validators:.1f} validators")
-
-    with col3:
-        # Concentration metric - what % of validators are controlled by largest operators
-        if active_validators:
-            sorted_validators = sorted(active_validators.values(), reverse=True)
-            total_validators = sum(sorted_validators)
-            # Top 3 operators' share
+            
+            # Calculate all metrics
+            validator_counts = list(active_validators.values())
+            max_validators = max(validator_counts) if validator_counts else 0
+            total_validators_dist = sum(validator_counts)
+            total_operators = len(validator_counts)
+            avg_validators_dist = np.mean(validator_counts) if validator_counts else 0
+            median_validators = np.median(validator_counts) if validator_counts else 0
+            min_validators = min(validator_counts) if validator_counts else 0
+            
+            # Standard deviation
+            std_validators = np.std(validator_counts) if validator_counts else 0
+            
+            # Concentration metrics
+            sorted_validators = sorted(validator_counts, reverse=True)
             top_3_validators = sum(sorted_validators[:3]) if len(sorted_validators) >= 3 else sum(sorted_validators)
-            top_3_percentage = (top_3_validators / total_validators * 100) if total_validators > 0 else 0
-            st.metric("Top 3 Operators Control", f"{top_3_percentage:.1f}%")
-            st.caption(f"{top_3_validators} of {total_validators} validators")
+            top_3_percentage = (top_3_validators / total_validators_dist * 100) if total_validators_dist > 0 else 0
+            top_5_validators = sum(sorted_validators[:5]) if len(sorted_validators) >= 5 else sum(sorted_validators)
+            top_5_percentage = (top_5_validators / total_validators_dist * 100) if total_validators_dist > 0 else 0
+            top_10_validators = sum(sorted_validators[:10]) if len(sorted_validators) >= 10 else sum(sorted_validators)
+            top_10_percentage = (top_10_validators / total_validators_dist * 100) if total_validators_dist > 0 else 0
+            
+            # Distribution analysis
+            below_avg_count = sum(1 for count in validator_counts if count < avg_validators_dist)
+            below_avg_percentage = (below_avg_count / total_operators * 100) if total_operators > 0 else 0
+            
+            # Single validator operators
+            single_validator_count = sum(1 for count in validator_counts if count == 1)
+            single_validator_percentage = (single_validator_count / total_operators * 100) if total_operators > 0 else 0
+            
+            # Large operators (above median)
+            large_operators_count = sum(1 for count in validator_counts if count > median_validators)
+            large_operators_percentage = (large_operators_count / total_operators * 100) if total_operators > 0 else 0
+            
+            # NEW METRICS: Cap-based calculations
+            cap_level = max_validators  # Current maximum becomes the cap
+            
+            # Calculate validators needed to reach cap for each operator
+            validators_to_cap = sum(max(0, cap_level - count) for count in validator_counts)
+            
+            # ETH needed (32 ETH per validator)
+            eth_to_cap = validators_to_cap * 32
+            
+            # Operators already at cap
+            operators_at_cap = sum(1 for count in validator_counts if count == cap_level)
+            operators_at_cap_percentage = (operators_at_cap / total_operators * 100) if total_operators > 0 else 0
+            
+            # Operators within 50% of cap
+            operators_near_cap = sum(1 for count in validator_counts if count >= cap_level * 0.5)
+            operators_near_cap_percentage = (operators_near_cap / total_operators * 100) if total_operators > 0 else 0
+            
+            # Display metrics in a responsive grid
+            col1, col2, col3, col4, col5 = st.columns(5)
+            
+            # Row 1: Basic Distribution Metrics
+            with col1:
+                st.metric("Largest Operator", f"{max_validators} validators")
+            with col2:
+                st.metric("Average per Operator", f"{avg_validators_dist:.1f} validators")
+            with col3:
+                st.metric("Median per Operator", f"{median_validators:.1f} validators")
+            with col4:
+                st.metric("Smallest Operator", f"{min_validators} validators")
+            with col5:
+                st.metric("Standard Deviation", f"{std_validators:.1f}")
+            
+            # Row 2: Concentration Metrics
+            col6, col7, col8, col9, col10 = st.columns(5)
+            with col6:
+                st.metric("Top 3 Operators Control", f"{top_3_percentage:.1f}%")
+                st.caption(f"{top_3_validators} of {total_validators_dist} validators")
+            with col7:
+                st.metric("Top 5 Operators Control", f"{top_5_percentage:.1f}%")
+                st.caption(f"{top_5_validators} of {total_validators_dist} validators")
+            with col8:
+                st.metric("Top 10 Operators Control", f"{top_10_percentage:.1f}%")
+                st.caption(f"{top_10_validators} of {total_validators_dist} validators")
+            with col9:
+                st.metric("Below Average Operators", f"{below_avg_percentage:.1f}%")
+                st.caption(f"{below_avg_count} operators")
+            with col10:
+                st.metric("Single Validator Operators", f"{single_validator_percentage:.1f}%")
+                st.caption(f"{single_validator_count} operators")
+            
+            # Row 3: Cap-Based Metrics (NEW)
+            col11, col12, col13, col14, col15 = st.columns(5)
+            with col11:
+                st.metric("Current Cap Level", f"{cap_level} validators")
+                st.caption("Highest operator count")
+            with col12:
+                st.metric("Validators to Cap", f"{validators_to_cap:,}")
+                st.caption("Total needed to reach cap")
+            with col13:
+                st.metric("ETH to Cap", f"{eth_to_cap:,} ETH")
+                st.caption(f"@ 32 ETH per validator")
+            with col14:
+                st.metric("Operators at Cap", f"{operators_at_cap_percentage:.1f}%")
+                st.caption(f"{operators_at_cap} operators")
+            with col15:
+                st.metric("Operators Near Cap", f"{operators_near_cap_percentage:.1f}%")
+                st.caption(f"{operators_near_cap} ops (≥50% of cap)")
         else:
-            st.metric("Top 3 Operators Control", "0%")
+            st.info("No active validator data available for insights.")
 
     with tab2:
         if concentration_metrics:
@@ -969,11 +1049,11 @@ def main():
 
     with tab6:
         st.subheader("💰 Transaction Cost Analysis")
-        
+
         operator_costs = cache.get('operator_costs', {})
         operator_transactions = cache.get('operator_transactions', {})
         cost_last_updated = cache.get('cost_last_updated', 0)
-        
+
         if not operator_costs:
             st.info("💡 No cost data available. Ensure ETHERSCAN_API_KEY is set and run the tracker script to collect transaction cost data.")
             st.markdown("""
@@ -989,39 +1069,39 @@ def main():
             total_successful = sum(cost['successful_txs'] for cost in operator_costs.values())
             total_failed = sum(cost['failed_txs'] for cost in operator_costs.values())
             operators_with_costs = len([c for c in operator_costs.values() if c['total_txs'] > 0])
-            
+
             # Cost summary cards
             col1, col2, col3, col4 = st.columns(4)
-            
+
             with col1:
                 st.metric("Total Gas Spent", f"{total_gas_spent:.6f} ETH")
-                
+
             with col2:
                 st.metric("Total Transactions", f"{total_transactions:,}")
-                
+
             with col3:
                 success_rate = (total_successful / total_transactions * 100) if total_transactions > 0 else 0
                 st.metric("Success Rate", f"{success_rate:.1f}%")
-                
+
             with col4:
                 avg_cost = total_gas_spent / total_transactions if total_transactions > 0 else 0
                 st.metric("Avg Cost/TX", f"{avg_cost:.6f} ETH")
 
             # Additional summary row
             col5, col6, col7, col8 = st.columns(4)
-            
+
             with col5:
                 st.metric("Operators Tracked", f"{operators_with_costs}")
-                
+
             with col6:
                 st.metric("Failed Transactions", f"{total_failed:,}")
-                    
+
             with col7:
                 # Cost per validator
                 total_active_validators = sum(v - operator_exited.get(k, 0) for k, v in operator_validators.items())
                 cost_per_validator = total_gas_spent / total_active_validators if total_active_validators > 0 else 0
                 st.metric("Cost per Validator", f"{cost_per_validator:.6f} ETH")
-                
+
             with col8:
                 if cost_last_updated > 0:
                     last_update_dt = datetime.fromtimestamp(cost_last_updated)
@@ -1031,14 +1111,14 @@ def main():
                     st.metric("Data Age", "Unknown")
 
             st.markdown("---")
-            
+
             # Create operator cost table
             cost_data = []
             for operator, cost_info in operator_costs.items():
                 if cost_info['total_txs'] > 0:
                     validator_count = operator_validators.get(operator, 0)
                     active_validators = validator_count - operator_exited.get(operator, 0)
-                    
+
                     cost_data.append({
                         'operator': operator,
                         'operator_short': f"{operator[:8]}...{operator[-6:]}",
@@ -1051,21 +1131,21 @@ def main():
                         'validators': active_validators,
                         'cost_per_validator': cost_info['total_cost_eth'] / active_validators if active_validators > 0 else 0
                     })
-            
+
             if cost_data:
                 # Sort by total cost descending
                 cost_data.sort(key=lambda x: x['total_cost_eth'], reverse=True)
-                
+
                 st.subheader("📊 Operator Cost Rankings")
                 st.caption(f"Showing {len(cost_data)} operators with transaction data, sorted by total gas spent")
-                
+
                 # Add search functionality
                 search_term = st.text_input(
                     "🔍 Search operators by address",
                     placeholder="Enter full or partial address (e.g., 0x1878f36 or f36F8442)",
                     help="Search is case-insensitive and matches any part of the address"
                 )
-                
+
                 # Filter data based on search
                 if search_term:
                     filtered_data = [row for row in cost_data if search_term.lower() in row['operator'].lower()]
@@ -1077,28 +1157,28 @@ def main():
                         display_data = []
                 else:
                     display_data = cost_data
-                
+
                 # Create expandable table
                 for i, row in enumerate(display_data):
                     with st.expander(
-                        f"#{i+1} {row['operator']} - {row['total_cost_eth']:.6f} ETH ({row['total_txs']} txs)", 
+                        f"#{i+1} {row['operator']} - {row['total_cost_eth']:.6f} ETH ({row['total_txs']} txs)",
                         expanded=False
                     ):
                         # Operator summary in columns
                         detail_col1, detail_col2, detail_col3 = st.columns(3)
-                        
+
                         with detail_col1:
                             st.markdown("**📊 Transaction Summary**")
                             st.write(f"• Total Cost: **{row['total_cost_eth']:.6f} ETH**")
                             st.write(f"• Total Transactions: **{row['total_txs']:,}**")
                             st.write(f"• Average per TX: **{row['avg_cost_per_tx']:.6f} ETH**")
-                            
+
                         with detail_col2:
                             st.markdown("**✅ Success Metrics**")
                             st.write(f"• Successful: **{row['successful_txs']:,}**")
                             st.write(f"• Failed: **{row['failed_txs']:,}**")
                             st.write(f"• Success Rate: **{row['success_rate']:.1f}%**")
-                            
+
                         with detail_col3:
                             st.markdown("**🔗 Validator Metrics**")
                             st.write(f"• Active Validators: **{row['validators']:,}**")
@@ -1107,44 +1187,44 @@ def main():
                             else:
                                 st.write(f"• Cost per Validator: **N/A**")
                             st.write(f"• Full Address: `{row['operator']}`")
-                        
+
                         # Transaction details table
                         operator_txs = operator_transactions.get(row['operator'], [])
                         if operator_txs:
                             st.markdown("**📋 Transaction History**")
-                            
+
                             # Convert to DataFrame and sort by date/time
                             tx_df = pd.DataFrame(operator_txs)
                             tx_df['datetime'] = pd.to_datetime(tx_df['date'] + ' ' + tx_df['time'])
                             tx_df = tx_df.sort_values('datetime', ascending=False)
-                            
+
                             # Add validator count column for successful transactions
                             tx_df['validator_count'] = tx_df.apply(
-                                lambda row_data: row_data.get('validator_count', 0) if row_data['status'] == 'Successful' else 0, 
+                                lambda row_data: row_data.get('validator_count', 0) if row_data['status'] == 'Successful' else 0,
                                 axis=1
                             )
-                            
+
                             # Ensure validator_count is numeric
                             tx_df['validator_count'] = pd.to_numeric(tx_df['validator_count'], errors='coerce').fillna(0).astype(int)
-                            
+
                             # Format for display - show empty string for failed transactions
                             display_tx_df = tx_df[['date', 'time', 'total_cost_eth', 'status', 'validator_count', 'gas_used', 'gas_price']].copy()
                             display_tx_df['validator_count_display'] = display_tx_df.apply(
-                                lambda row: str(row['validator_count']) if row['status'] == 'Successful' and row['validator_count'] > 0 else '', 
+                                lambda row: str(row['validator_count']) if row['status'] == 'Successful' and row['validator_count'] > 0 else '',
                                 axis=1
                             )
-                            
+
                             # Create final display dataframe
                             final_display_df = display_tx_df[['date', 'time', 'total_cost_eth', 'status', 'validator_count_display', 'gas_used', 'gas_price']].copy()
                             final_display_df.columns = ['Date', 'Time', 'Cost (ETH)', 'Status', 'Validators', 'Gas Used', 'Gas Price']
-                            
+
                             # Style the status column
                             def style_status(val):
                                 if val == 'Successful':
                                     return 'color: green'
                                 else:
                                     return 'color: red'
-                            
+
                             st.dataframe(
                                 final_display_df.style.map(style_status, subset=['Status']),
                                 use_container_width=True,
@@ -1168,7 +1248,7 @@ def main():
                                     )
                                 }
                             )
-                            
+
                             # Download individual operator data
                             csv_data = tx_df.to_csv(index=False)
                             st.download_button(
@@ -1180,7 +1260,7 @@ def main():
                             )
                         else:
                             st.info("No detailed transaction data available for this operator.")
-                
+
                 # Download all cost data
                 st.markdown("---")
                 col1, col2 = st.columns([3, 1])
@@ -1188,10 +1268,10 @@ def main():
                     # Create summary CSV
                     summary_df = pd.DataFrame(cost_data)
                     summary_csv = summary_df[[
-                        'operator', 'total_cost_eth', 'total_txs', 'successful_txs', 
+                        'operator', 'total_cost_eth', 'total_txs', 'successful_txs',
                         'failed_txs', 'success_rate', 'validators', 'cost_per_validator'
                     ]].to_csv(index=False)
-                    
+
                     st.download_button(
                         label="📥 Download All Cost Data",
                         data=summary_csv,
