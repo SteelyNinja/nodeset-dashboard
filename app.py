@@ -486,14 +486,14 @@ def display_health_status(concentration_metrics, total_active, total_exited):
         total_ops = concentration_metrics.get('total_operators', 0)
         avg_validators = (total_active / total_ops) if total_ops > 0 else 0
 
-        if avg_validators < 10:  # Changed from 5 to 10
-            status = "🟢 Low"  # Changed from "Diverse" to "Low"
+        if avg_validators < 50:
+            status = "🟢 Low"
             color = "status-good"
-        elif avg_validators <= 50:  # Changed from 20 to 50
+        elif avg_validators <= 100:
             status = "🟡 Moderate"
             color = "status-warning"
         else:
-            status = "🔴 High"  # Changed from "Concentrated" to "High"
+            status = "🔴 High"
             color = "status-danger"
 
         st.markdown(f"**Operator Size:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
@@ -674,9 +674,9 @@ def main():
         else:
             health_indicators.append("🔴 High Exits")
 
-        if avg_validators < 10:
+        if avg_validators < 50:
             health_indicators.append("🟢 Small Operators")
-        elif avg_validators <= 50:
+        elif avg_validators <= 100:
             health_indicators.append("🟡 Medium Operators")
         else:
             health_indicators.append("🔴 Large Operators")
