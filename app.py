@@ -777,8 +777,8 @@ def main():
             top_3_percentage = (top_3_validators / total_validators * 100) if total_validators > 0 else 0
             st.metric("Top 3 Operators Control", f"{top_3_percentage:.1f}%")
             st.caption(f"{top_3_validators} of {total_validators} validators")
-    else:
-        st.metric("Top 3 Operators Control", "0%")
+        else:
+            st.metric("Top 3 Operators Control", "0%")
 
     with tab2:
         if concentration_metrics:
