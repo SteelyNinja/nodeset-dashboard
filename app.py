@@ -738,12 +738,13 @@ def main():
     st.markdown("---")
 
     # Detailed analysis tabs
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         "📈 Distribution",
         "🎯 Concentration",
         "🏆 Top Operators",
         "⚡ Performance",
         "🚪 Exit Analysis",
+        "💰 Costs",
         "📋 Raw Data"
     ])
 
@@ -959,6 +960,241 @@ def main():
             st.info("😊 Great news! No validator exits detected yet.")
 
     with tab6:
+        st.subheader("💰 Transaction Cost Analysis")
+        
+        operator_costs = cache.get('operator_costs', {})
+        operator_transactions = cache.get('operator_transactions', {})
+        cost_last_updated = cache.get('cost_last_updated', 0)
+        
+        if not operator_costs:
+            st.info("💡 No cost data available. Ensure ETHERSCAN_API_KEY is set and run the tracker script to collect transaction cost data.")
+            st.markdown("""
+            **To enable cost tracking:**
+            1. Set `ETHERSCAN_API_KEY` environment variable
+            2. Run the NodeSet validator tracker script
+            3. Cost data will be collected for all operators
+            """)
+        else:
+            # Summary metrics at the top
+            total_gas_spent = sum(cost['total_cost_eth'] for cost in operator_costs.values())
+            total_transactions = sum(cost['total_txs'] for cost in operator_costs.values())
+            total_successful = sum(cost['successful_txs'] for cost in operator_costs.values())
+            total_failed = sum(cost['failed_txs'] for cost in operator_costs.values())
+            operators_with_costs = len([c for c in operator_costs.values() if c['total_txs'] > 0])
+            
+            # Cost summary cards
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                st.metric("Total Gas Spent", f"{total_gas_spent:.6f} ETH")
+                
+            with col2:
+                st.metric("Total Transactions", f"{total_transactions:,}")
+                
+            with col3:
+                success_rate = (total_successful / total_transactions * 100) if total_transactions > 0 else 0
+                st.metric("Success Rate", f"{success_rate:.1f}%")
+                
+            with col4:
+                avg_cost = total_gas_spent / total_transactions if total_transactions > 0 else 0
+                st.metric("Avg Cost/TX", f"{avg_cost:.6f} ETH")
+
+            # Additional summary row
+            col5, col6, col7, col8 = st.columns(4)
+            
+            with col5:
+                st.metric("Operators Tracked", f"{operators_with_costs}")
+                
+            with col6:
+                st.metric("Failed Transactions", f"{total_failed:,}")
+                    
+            with col7:
+                # Cost per validator
+                total_active_validators = sum(v - operator_exited.get(k, 0) for k, v in operator_validators.items())
+                cost_per_validator = total_gas_spent / total_active_validators if total_active_validators > 0 else 0
+                st.metric("Cost per Validator", f"{cost_per_validator:.6f} ETH")
+                
+            with col8:
+                if cost_last_updated > 0:
+                    last_update_dt = datetime.fromtimestamp(cost_last_updated)
+                    hours_ago = (datetime.now() - last_update_dt).total_seconds() / 3600
+                    st.metric("Data Age", f"{hours_ago:.1f}h ago")
+                else:
+                    st.metric("Data Age", "Unknown")
+
+            st.markdown("---")
+            
+            # Create operator cost table
+            cost_data = []
+            for operator, cost_info in operator_costs.items():
+                if cost_info['total_txs'] > 0:
+                    validator_count = operator_validators.get(operator, 0)
+                    active_validators = validator_count - operator_exited.get(operator, 0)
+                    
+                    cost_data.append({
+                        'operator': operator,
+                        'operator_short': f"{operator[:8]}...{operator[-6:]}",
+                        'total_cost_eth': cost_info['total_cost_eth'],
+                        'total_txs': cost_info['total_txs'],
+                        'successful_txs': cost_info['successful_txs'],
+                        'failed_txs': cost_info['failed_txs'],
+                        'avg_cost_per_tx': cost_info['avg_cost_per_tx'],
+                        'success_rate': (cost_info['successful_txs'] / cost_info['total_txs'] * 100) if cost_info['total_txs'] > 0 else 0,
+                        'validators': active_validators,
+                        'cost_per_validator': cost_info['total_cost_eth'] / active_validators if active_validators > 0 else 0
+                    })
+            
+            if cost_data:
+                # Sort by total cost descending
+                cost_data.sort(key=lambda x: x['total_cost_eth'], reverse=True)
+                
+                st.subheader("📊 Operator Cost Rankings")
+                st.caption(f"Showing {len(cost_data)} operators with transaction data, sorted by total gas spent")
+                
+                # Add search functionality
+                search_term = st.text_input(
+                    "🔍 Search operators by address",
+                    placeholder="Enter full or partial address (e.g., 0x1878f36 or f36F8442)",
+                    help="Search is case-insensitive and matches any part of the address"
+                )
+                
+                # Filter data based on search
+                if search_term:
+                    filtered_data = [row for row in cost_data if search_term.lower() in row['operator'].lower()]
+                    if filtered_data:
+                        st.info(f"Found {len(filtered_data)} operators matching '{search_term}'")
+                        display_data = filtered_data
+                    else:
+                        st.warning(f"No operators found matching '{search_term}'")
+                        display_data = []
+                else:
+                    display_data = cost_data
+                
+                # Create expandable table
+                for i, row in enumerate(display_data):
+                    with st.expander(
+                        f"#{i+1} {row['operator']} - {row['total_cost_eth']:.6f} ETH ({row['total_txs']} txs)", 
+                        expanded=False
+                    ):
+                        # Operator summary in columns
+                        detail_col1, detail_col2, detail_col3 = st.columns(3)
+                        
+                        with detail_col1:
+                            st.markdown("**📊 Transaction Summary**")
+                            st.write(f"• Total Cost: **{row['total_cost_eth']:.6f} ETH**")
+                            st.write(f"• Total Transactions: **{row['total_txs']:,}**")
+                            st.write(f"• Average per TX: **{row['avg_cost_per_tx']:.6f} ETH**")
+                            
+                        with detail_col2:
+                            st.markdown("**✅ Success Metrics**")
+                            st.write(f"• Successful: **{row['successful_txs']:,}**")
+                            st.write(f"• Failed: **{row['failed_txs']:,}**")
+                            st.write(f"• Success Rate: **{row['success_rate']:.1f}%**")
+                            
+                        with detail_col3:
+                            st.markdown("**🔗 Validator Metrics**")
+                            st.write(f"• Active Validators: **{row['validators']:,}**")
+                            if row['validators'] > 0:
+                                st.write(f"• Cost per Validator: **{row['cost_per_validator']:.6f} ETH**")
+                            else:
+                                st.write(f"• Cost per Validator: **N/A**")
+                            st.write(f"• Full Address: `{row['operator']}`")
+                        
+                        # Transaction details table
+                        operator_txs = operator_transactions.get(row['operator'], [])
+                        if operator_txs:
+                            st.markdown("**📋 Transaction History**")
+                            
+                            # Convert to DataFrame and sort by date/time
+                            tx_df = pd.DataFrame(operator_txs)
+                            tx_df['datetime'] = pd.to_datetime(tx_df['date'] + ' ' + tx_df['time'])
+                            tx_df = tx_df.sort_values('datetime', ascending=False)
+                            
+                            # Add validator count column for successful transactions
+                            tx_df['validator_count'] = tx_df.apply(
+                                lambda row_data: row_data.get('validator_count', 0) if row_data['status'] == 'Successful' else 0, 
+                                axis=1
+                            )
+                            
+                            # Ensure validator_count is numeric
+                            tx_df['validator_count'] = pd.to_numeric(tx_df['validator_count'], errors='coerce').fillna(0).astype(int)
+                            
+                            # Format for display - show empty string for failed transactions
+                            display_tx_df = tx_df[['date', 'time', 'total_cost_eth', 'status', 'validator_count', 'gas_used', 'gas_price']].copy()
+                            display_tx_df['validator_count_display'] = display_tx_df.apply(
+                                lambda row: str(row['validator_count']) if row['status'] == 'Successful' and row['validator_count'] > 0 else '', 
+                                axis=1
+                            )
+                            
+                            # Create final display dataframe
+                            final_display_df = display_tx_df[['date', 'time', 'total_cost_eth', 'status', 'validator_count_display', 'gas_used', 'gas_price']].copy()
+                            final_display_df.columns = ['Date', 'Time', 'Cost (ETH)', 'Status', 'Validators', 'Gas Used', 'Gas Price']
+                            
+                            # Style the status column
+                            def style_status(val):
+                                if val == 'Successful':
+                                    return 'color: green'
+                                else:
+                                    return 'color: red'
+                            
+                            st.dataframe(
+                                final_display_df.style.map(style_status, subset=['Status']),
+                                use_container_width=True,
+                                hide_index=True,
+                                column_config={
+                                    "Cost (ETH)": st.column_config.NumberColumn(
+                                        "Cost (ETH)",
+                                        format="%.6f"
+                                    ),
+                                    "Validators": st.column_config.TextColumn(
+                                        "Validators",
+                                        help="Number of validator deposits in successful transactions"
+                                    ),
+                                    "Gas Used": st.column_config.NumberColumn(
+                                        "Gas Used",
+                                        format="%d"
+                                    ),
+                                    "Gas Price": st.column_config.NumberColumn(
+                                        "Gas Price",
+                                        format="%d"
+                                    )
+                                }
+                            )
+                            
+                            # Download individual operator data
+                            csv_data = tx_df.to_csv(index=False)
+                            st.download_button(
+                                label=f"📥 Download {row['operator_short']} transactions",
+                                data=csv_data,
+                                file_name=f"nodeset_costs_{row['operator_short']}_{datetime.now().strftime('%Y%m%d')}.csv",
+                                mime="text/csv",
+                                key=f"download_{i}"
+                            )
+                        else:
+                            st.info("No detailed transaction data available for this operator.")
+                
+                # Download all cost data
+                st.markdown("---")
+                col1, col2 = st.columns([3, 1])
+                with col2:
+                    # Create summary CSV
+                    summary_df = pd.DataFrame(cost_data)
+                    summary_csv = summary_df[[
+                        'operator', 'total_cost_eth', 'total_txs', 'successful_txs', 
+                        'failed_txs', 'success_rate', 'validators', 'cost_per_validator'
+                    ]].to_csv(index=False)
+                    
+                    st.download_button(
+                        label="📥 Download All Cost Data",
+                        data=summary_csv,
+                        file_name=f"nodeset_all_costs_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                        mime="text/csv",
+                        use_container_width=True
+                    )
+            else:
+                st.info("No operators found with transaction cost data.")
+
+    with tab7:
         st.subheader("📋 Raw Cache Data")
 
         col1, col2 = st.columns(2)
@@ -972,7 +1208,9 @@ def main():
                 "total_operators": len(cache.get('operator_validators', {})),
                 "pending_pubkeys": len(cache.get('pending_pubkeys', [])),
                 "processed_transactions": len(cache.get('processed_transactions', [])),
-                "performance_metrics": len(cache.get('operator_performance', {}))
+                "performance_metrics": len(cache.get('operator_performance', {})),
+                "cost_metrics": len(cache.get('operator_costs', {})),
+                "transaction_records": len(cache.get('operator_transactions', {}))
             })
 
         with col2:
