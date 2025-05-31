@@ -575,7 +575,7 @@ def display_performance_health(operator_performance, operator_validators):
 def main():
     # Responsive header design
     st.title("🔗 NodeSet Validator Monitor")
-    st.markdown("*Real-time monitoring and analysis of NodeSet protocol validators*")
+    st.markdown("*Monitoring and analysis of NodeSet protocol validators - data cache updated every 15 minutes hit \"Refresh Data\" button to reload. Latest cache time is reported in UTC time.*")
 
     # Refresh button (full width on mobile, right-aligned on desktop)
     refresh_col1, refresh_col2 = st.columns([3, 1])
