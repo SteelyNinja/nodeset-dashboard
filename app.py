@@ -756,7 +756,7 @@ def main():
 
             # Enhanced Key insights with 15 total metrics
             st.subheader("📊 Key Insights")
-            
+
             # Calculate all metrics
             validator_counts = list(active_validators.values())
             max_validators = max(validator_counts) if validator_counts else 0
@@ -765,7 +765,7 @@ def main():
             avg_validators_dist = np.mean(validator_counts) if validator_counts else 0
             median_validators = np.median(validator_counts) if validator_counts else 0
             min_validators = min(validator_counts) if validator_counts else 0
-            
+
             # Concentration metrics
             sorted_validators = sorted(validator_counts, reverse=True)
             top_3_validators = sum(sorted_validators[:3]) if len(sorted_validators) >= 3 else sum(sorted_validators)
@@ -774,35 +774,35 @@ def main():
             top_5_percentage = (top_5_validators / total_validators_dist * 100) if total_validators_dist > 0 else 0
             top_10_validators = sum(sorted_validators[:10]) if len(sorted_validators) >= 10 else sum(sorted_validators)
             top_10_percentage = (top_10_validators / total_validators_dist * 100) if total_validators_dist > 0 else 0
-            
+
             # Distribution analysis
             below_avg_count = sum(1 for count in validator_counts if count < avg_validators_dist)
             below_avg_percentage = (below_avg_count / total_operators * 100) if total_operators > 0 else 0
-            
+
             # Large operators (above median)
             large_operators_count = sum(1 for count in validator_counts if count > median_validators)
             large_operators_percentage = (large_operators_count / total_operators * 100) if total_operators > 0 else 0
-            
+
             # Cap-based calculations
             cap_level = max_validators  # Current maximum becomes the cap
-            
+
             # Calculate validators needed to reach cap for each operator
             validators_to_cap = sum(max(0, cap_level - count) for count in validator_counts)
-            
+
             # ETH needed (32 ETH per validator)
             eth_to_cap = validators_to_cap * 32
-            
+
             # Operators already at cap
             operators_at_cap = sum(1 for count in validator_counts if count == cap_level)
             operators_at_cap_percentage = (operators_at_cap / total_operators * 100) if total_operators > 0 else 0
-            
+
             # Operators at 75% or higher of cap
             operators_near_cap = sum(1 for count in validator_counts if count >= cap_level * 0.75)
             operators_near_cap_percentage = (operators_near_cap / total_operators * 100) if total_operators > 0 else 0
-            
+
             # Display metrics in a responsive grid - now 4 columns per row
             col1, col2, col3, col4 = st.columns(4)
-            
+
             # Row 1: Basic Distribution Metrics (4 metrics)
             with col1:
                 st.metric("Largest Operator", f"{max_validators} validators")
@@ -812,7 +812,7 @@ def main():
                 st.metric("Median per Operator", f"{median_validators:.1f} validators")
             with col4:
                 st.metric("Smallest Operator", f"{min_validators} validators")
-            
+
             # Row 2: Concentration Metrics (4 metrics)
             col5, col6, col7, col8 = st.columns(4)
             with col5:
@@ -827,7 +827,7 @@ def main():
             with col8:
                 st.metric("Below Average Operators", f"{below_avg_percentage:.1f}%")
                 st.caption(f"{below_avg_count} operators")
-            
+
             # Row 3: Cap-Based Metrics (4 metrics)
             col9, col10, col11, col12 = st.columns(4)
             with col9:
@@ -881,21 +881,28 @@ def main():
         df_operators = create_top_operators_table(operator_validators, operator_exited)
 
         if not df_operators.empty:
-            # Display table - show all operators
+            # Display table - show all operators with left-aligned numeric columns
             display_df = df_operators.drop(['Full Address'], axis=1)
+            
+            # Convert numeric columns to strings to force left alignment
+            display_df_styled = display_df.copy()
+            display_df_styled['Active'] = display_df_styled['Active'].astype(str)
+            display_df_styled['Total'] = display_df_styled['Total'].astype(str)
+            display_df_styled['Exited'] = display_df_styled['Exited'].astype(str)
+            
             st.dataframe(
-                display_df,
+                display_df_styled,
                 use_container_width=True,
                 hide_index=True,
                 column_config={
                     "Rank": st.column_config.NumberColumn("Rank", width="small"),
-                    "Active": st.column_config.NumberColumn("Active", format="%d"),
-                    "Total": st.column_config.NumberColumn("Total", format="%d"),
-                    "Exited": st.column_config.NumberColumn("Exited", format="%d"),
+                    "Active": st.column_config.TextColumn("Active", width="medium"),
+                    "Total": st.column_config.TextColumn("Total", width="medium"),
+                    "Exited": st.column_config.TextColumn("Exited", width="medium"),
                 }
             )
 
-            # Download CSV
+            # Download CSV (use original numeric data)
             csv = display_df.to_csv(index=False)
             st.download_button(
                 label="📥 Download CSV",
