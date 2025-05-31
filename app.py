@@ -1016,7 +1016,7 @@ def main():
                     exit_rate = (exit_count / total_count * 100) if total_count > 0 else 0
 
                     exited_operators_data.append({
-                        'Operator': f"{addr[:8]}...{addr[-6:]}",
+                        'Operator': addr,
                         'Exits': exit_count,
                         'Still Active': active_count,
                         'Total Ever': total_count,
