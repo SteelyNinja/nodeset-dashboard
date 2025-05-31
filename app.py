@@ -758,19 +758,27 @@ def main():
             st.subheader("📊 Key Insights")
             col1, col2, col3 = st.columns(3)
 
-            with col1:
-                max_validators = max(active_validators.values()) if active_validators else 0
-                st.metric("Largest Operator", f"{max_validators} validators")
+with col1:
+    max_validators = max(active_validators.values()) if active_validators else 0
+    st.metric("Largest Operator", f"{max_validators} validators")
 
-            with col2:
-                median_validators = np.median(list(active_validators.values())) if active_validators else 0
-                st.metric("Median per Operator", f"{median_validators:.1f}")
+with col2:
+    # Average validators per operator
+    avg_validators = np.mean(list(active_validators.values())) if active_validators else 0
+    st.metric("Average per Operator", f"{avg_validators:.1f} validators")
 
-            with col3:
-                single_validator_ops = sum(1 for v in active_validators.values() if v == 1)
-                st.metric("Single-Validator Operators", single_validator_ops)
-        else:
-            st.info("No active validators found.")
+with col3:
+    # Concentration metric - what % of validators are controlled by largest operators
+    if active_validators:
+        sorted_validators = sorted(active_validators.values(), reverse=True)
+        total_validators = sum(sorted_validators)
+        # Top 3 operators' share
+        top_3_validators = sum(sorted_validators[:3]) if len(sorted_validators) >= 3 else sum(sorted_validators)
+        top_3_percentage = (top_3_validators / total_validators * 100) if total_validators > 0 else 0
+        st.metric("Top 3 Operators Control", f"{top_3_percentage:.1f}%")
+        st.caption(f"{top_3_validators} of {total_validators} validators")
+    else:
+        st.metric("Top 3 Operators Control", "0%")
 
     with tab2:
         if concentration_metrics:
