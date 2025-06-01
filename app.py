@@ -145,7 +145,7 @@ def load_validator_data():
 def format_operator_display(address: str, ens_names: dict, short: bool = False) -> str:
     """Format operator address with ENS name if available for display."""
     ens_name = ens_names.get(address)
-    
+
     if ens_name:
         if short:
             return f"{ens_name}"
@@ -157,7 +157,7 @@ def format_operator_display(address: str, ens_names: dict, short: bool = False) 
 def format_operator_display_plain(address: str, ens_names: dict, show_full_address: bool = False) -> str:
     """Format operator address with ENS name for plain text (CSV exports)."""
     ens_name = ens_names.get(address)
-    
+
     if ens_name:
         if show_full_address:
             return f"{ens_name} ({address})"
@@ -465,7 +465,7 @@ def create_performance_table(operator_performance, operator_validators, operator
         if total_count > 0:  # Only include operators with validators
             # Get ENS name separately
             ens_name = ens_names.get(addr, "")
-            
+
             data.append({
                 'Rank': 0,  # Will be set after sorting
                 'Address': addr,
@@ -623,21 +623,21 @@ def display_ens_status(ens_names, operator_validators):
     """Display ENS resolution status"""
     if not ens_names:
         return
-        
+
     st.subheader("🏷️ ENS Name Resolution Status")
-    
+
     total_operators = len(operator_validators)
     ens_resolved = len(ens_names)
     coverage_pct = (ens_resolved / total_operators * 100) if total_operators > 0 else 0
-    
+
     col1, col2, col3, col4 = st.columns(4)
-    
+
     with col1:
         st.metric("ENS Names Found", f"{ens_resolved}")
-        
+
     with col2:
         st.metric("Total Operators", f"{total_operators}")
-        
+
     with col3:
         if coverage_pct >= 50:
             color = "status-good"
@@ -646,7 +646,7 @@ def display_ens_status(ens_names, operator_validators):
         else:
             color = "status-danger"
         st.markdown(f"**Coverage:** <span class='{color}'>{coverage_pct:.1f}%</span>", unsafe_allow_html=True)
-        
+
     with col4:
         # Calculate validators covered by ENS
         validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
@@ -707,13 +707,13 @@ def main():
 
     # Data source info (responsive)
     last_update = datetime.fromtimestamp(os.path.getmtime(cache_file))
-    
+
     # ENS update info
     ens_update_str = ""
     if ens_last_updated > 0:
         ens_update_time = datetime.fromtimestamp(ens_last_updated)
         ens_update_str = f" • 🏷️ ENS: {ens_update_time.strftime('%H:%M:%S')}"
-    
+
     st.caption(f"📊 Block: {last_block:,} • 🕒 {last_update.strftime('%H:%M:%S')}{ens_update_str} • 📁 {cache_file.split('/')[-1]}")
 
     # Responsive metrics layout
@@ -812,7 +812,7 @@ def main():
         ens_coverage = len(ens_names) / len(operator_validators) * 100 if operator_validators else 0
         validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
         validator_coverage = validators_with_ens / total_active * 100 if total_active > 0 else 0
-        
+
         st.markdown(f"<div class='health-summary'><strong>ENS Resolution:</strong> {len(ens_names)} names found • {ens_coverage:.1f}% operator coverage • {validator_coverage:.1f}% validator coverage</div>", unsafe_allow_html=True)
 
     # Expandable detailed health metrics - responsive columns
@@ -834,7 +834,7 @@ def main():
                     st.write(f"• Poor Performers: {poor_pct:.1f}%")
                     performances = list(operator_performance.values())
                     st.write(f"• Performance Std Dev: {np.std(performances):.2f}%")
-                    
+
             with detail_col3:
                 if ens_names:
                     st.markdown("**ENS Resolution Metrics**")
@@ -991,10 +991,10 @@ def main():
         df_operators = create_top_operators_table(operator_validators, operator_exited, ens_names)
 
         if not df_operators.empty:
-            # Display table with separate ENS and Address columns
+            # Display table with separate ENS and Address columns - USING EXACT WORKING PATTERN
             display_df = df_operators.copy()
 
-            # Convert numeric columns to strings to force left alignment
+            # EXACT SAME METHOD as working table - convert numeric columns to strings
             display_df['Active'] = display_df['Active'].astype(str)
             display_df['Total'] = display_df['Total'].astype(str)
             display_df['Exited'] = display_df['Exited'].astype(str)
@@ -1010,6 +1010,8 @@ def main():
                     "Active": st.column_config.TextColumn("Active", width="small"),
                     "Total": st.column_config.TextColumn("Total", width="small"),
                     "Exited": st.column_config.TextColumn("Exited", width="small"),
+                    "Exit Rate": st.column_config.TextColumn("Exit Rate", width="small"),
+                    "Market Share": st.column_config.TextColumn("Market Share", width="small")
                 }
             )
 
@@ -1058,31 +1060,39 @@ def main():
 
                     st.dataframe(summary_stats, use_container_width=True, hide_index=True)
 
-                # Enhanced performance table with ENS names
+                # Enhanced performance table with ENS names - USING EXACT WORKING PATTERN
                 st.subheader("🏆 Operators by Performance")
                 perf_table_df = create_performance_table(
                     operator_performance, operator_validators, operator_exited, ens_names
                 )
 
                 if not perf_table_df.empty:
-                    display_perf_df = perf_table_df.drop(['Performance_Raw'], axis=1)
+                    display_perf_df = perf_table_df.drop(['Performance_Raw'], axis=1).copy()
+                    
+                    # EXACT SAME METHOD as working table - convert numeric columns to strings
+                    display_perf_df['Active'] = display_perf_df['Active'].astype(str)
+                    display_perf_df['Total'] = display_perf_df['Total'].astype(str)
+                    display_perf_df['Exited'] = display_perf_df['Exited'].astype(str)
+                    
                     st.dataframe(
                         display_perf_df,
                         use_container_width=True,
                         hide_index=True,
                         column_config={
+                            "Rank": st.column_config.NumberColumn("Rank", width="small"),
                             "Address": st.column_config.TextColumn("Address", width="large"),
                             "ENS Name": st.column_config.TextColumn("ENS Name", width="small"),
-                            "Category": st.column_config.TextColumn(
-                                "Category",
-                                help="Performance category based on percentage"
-                            )
+                            "Performance": st.column_config.TextColumn("Performance", width="small"),
+                            "Category": st.column_config.TextColumn("Category", width="small"),
+                            "Active": st.column_config.TextColumn("Active", width="small"),
+                            "Total": st.column_config.TextColumn("Total", width="small"),
+                            "Exited": st.column_config.TextColumn("Exited", width="small")
                         }
                     )
-                    
+
                     # Download performance data with separate columns
                     export_perf_df = perf_table_df.drop(['Performance_Raw'], axis=1)
-                    
+
                     perf_csv = export_perf_df.to_csv(index=False)
                     st.download_button(
                         label="📥 Download Performance Data",
@@ -1137,7 +1147,7 @@ def main():
                         )
                         st.plotly_chart(fig_scatter, use_container_width=True)
 
-            # Operators with highest exit rates (with ENS names)
+            # Operators with highest exit rates (with ENS names) - USING EXACT WORKING PATTERN
             st.subheader("Operators with Exits")
             exited_operators_data = []
             for addr, exit_count in operator_exited.items():
@@ -1159,11 +1169,27 @@ def main():
             if exited_operators_data:
                 df_exited = pd.DataFrame(exited_operators_data)
                 df_exited = df_exited.sort_values('Exit Rate', key=lambda x: x.str.rstrip('%').astype(float), ascending=False)
-                
+
+                # EXACT SAME METHOD as working table - convert numeric columns to strings
+                df_exited['Exits'] = df_exited['Exits'].astype(str)
+                df_exited['Still Active'] = df_exited['Still Active'].astype(str)
+                df_exited['Total Ever'] = df_exited['Total Ever'].astype(str)
+
                 # Display table
                 display_exited_df = df_exited.drop(['Full Address'], axis=1)
-                st.dataframe(display_exited_df, use_container_width=True, hide_index=True)
-                
+                st.dataframe(
+                    display_exited_df, 
+                    use_container_width=True, 
+                    hide_index=True,
+                    column_config={
+                        "Operator": st.column_config.TextColumn("Operator", width="large"),
+                        "Exits": st.column_config.TextColumn("Exits", width="small"),
+                        "Still Active": st.column_config.TextColumn("Still Active", width="small"),
+                        "Total Ever": st.column_config.TextColumn("Total Ever", width="small"),
+                        "Exit Rate": st.column_config.TextColumn("Exit Rate", width="small")
+                    }
+                )
+
                 # Download exits data
                 exits_csv = display_exited_df.to_csv(index=False)
                 st.download_button(
@@ -1283,10 +1309,10 @@ def main():
                     for row in cost_data:
                         ens_name = ens_names.get(row['operator'], "")
                         # Search in address or ENS name
-                        if (search_term.lower() in row['operator'].lower() or 
+                        if (search_term.lower() in row['operator'].lower() or
                             (ens_name and search_term.lower() in ens_name.lower())):
                             filtered_data.append(row)
-                    
+
                     if filtered_data:
                         st.info(f"Found {len(filtered_data)} operators matching '{search_term}'")
                         display_data = filtered_data
@@ -1306,14 +1332,14 @@ def main():
                     else:
                         header_display = f"#{i+1} {row['operator']} - {row['total_cost_eth']:.6f} ETH ({row['total_txs']} txs)"
                         operator_info = f"**Address:** `{row['operator']}`"
-                    
+
                     with st.expander(header_display, expanded=False):
                         # Operator info section with prominent ENS display
                         st.markdown("**🔗 Operator Information**")
                         st.markdown(operator_info)
-                        
+
                         st.markdown("---")
-                        
+
                         # Operator summary in columns
                         detail_col1, detail_col2, detail_col3 = st.columns(3)
 
@@ -1337,7 +1363,7 @@ def main():
                             else:
                                 st.write(f"• Cost per Validator: **N/A**")
 
-                        # Transaction details table
+                        # Transaction details table - USING EXACT WORKING PATTERN
                         operator_txs = operator_transactions.get(row['operator'], [])
                         if operator_txs:
                             st.markdown("**📋 Transaction History**")
@@ -1363,38 +1389,26 @@ def main():
                                 axis=1
                             )
 
-                            # Create final display dataframe
+                            # Create final display dataframe - USING EXACT WORKING PATTERN
                             final_display_df = display_tx_df[['date', 'time', 'total_cost_eth', 'status', 'validator_count_display', 'gas_used', 'gas_price']].copy()
                             final_display_df.columns = ['Date', 'Time', 'Cost (ETH)', 'Status', 'Validators', 'Gas Used', 'Gas Price']
 
-                            # Style the status column
-                            def style_status(val):
-                                if val == 'Successful':
-                                    return 'color: green'
-                                else:
-                                    return 'color: red'
+                            # EXACT SAME METHOD as working table - convert numeric columns to strings
+                            final_display_df['Gas Used'] = final_display_df['Gas Used'].astype(str)
+                            final_display_df['Gas Price'] = final_display_df['Gas Price'].astype(str)
 
                             st.dataframe(
-                                final_display_df.style.map(style_status, subset=['Status']),
+                                final_display_df,
                                 use_container_width=True,
                                 hide_index=True,
                                 column_config={
-                                    "Cost (ETH)": st.column_config.NumberColumn(
-                                        "Cost (ETH)",
-                                        format="%.6f"
-                                    ),
-                                    "Validators": st.column_config.TextColumn(
-                                        "Validators",
-                                        help="Number of validator deposits in successful transactions"
-                                    ),
-                                    "Gas Used": st.column_config.NumberColumn(
-                                        "Gas Used",
-                                        format="%d"
-                                    ),
-                                    "Gas Price": st.column_config.NumberColumn(
-                                        "Gas Price",
-                                        format="%d"
-                                    )
+                                    "Date": st.column_config.TextColumn("Date", width="small"),
+                                    "Time": st.column_config.TextColumn("Time", width="small"),
+                                    "Cost (ETH)": st.column_config.TextColumn("Cost (ETH)", width="small"),
+                                    "Status": st.column_config.TextColumn("Status", width="small"),
+                                    "Validators": st.column_config.TextColumn("Validators", width="small"),
+                                    "Gas Used": st.column_config.TextColumn("Gas Used", width="small"),
+                                    "Gas Price": st.column_config.TextColumn("Gas Price", width="small")
                                 }
                             )
 
@@ -1405,7 +1419,7 @@ def main():
                                 filename_part = ens_name.replace('.', '_')
                             else:
                                 filename_part = f"{row['operator'][:8]}_{row['operator'][-6:]}"
-                            
+
                             csv_data = tx_df.to_csv(index=False)
                             st.download_button(
                                 label=f"📥 Download {ens_name if ens_name else row['operator'][:10]+'...'} transactions",
@@ -1423,7 +1437,7 @@ def main():
                 with col2:
                     # Create summary CSV with full addresses and ENS names
                     summary_df = pd.DataFrame(cost_data)
-                    
+
                     # Add ENS names to the export
                     export_cost_data = []
                     for row in cost_data:
@@ -1439,7 +1453,7 @@ def main():
                             'validators': row['validators'],
                             'cost_per_validator': row['cost_per_validator']
                         })
-                    
+
                     export_df = pd.DataFrame(export_cost_data)
                     summary_csv = export_df.to_csv(index=False)
 
@@ -1475,43 +1489,50 @@ def main():
                 "ens_last_updated": cache.get('ens_last_updated', 0),
                 "ens_update_failures": len(cache.get('ens_update_failures', {}))
             }
-            
+
             st.json(cache_summary)
 
         with col2:
             if st.button("📄 Show Full Cache"):
                 st.json(cache)
 
-        # ENS Names section
+        # ENS Names section - USING EXACT WORKING PATTERN
         if ens_names:
             st.subheader("🏷️ Resolved ENS Names")
-            
+
             # Create ENS names table
             ens_data = []
             for addr, ens_name in ens_names.items():
                 validator_count = operator_validators.get(addr, 0)
                 active_count = validator_count - operator_exited.get(addr, 0)
-                
+
                 ens_data.append({
                     'ENS Name': ens_name,
                     'Address': addr,
                     'Active Validators': active_count,
                     'Total Validators': validator_count
                 })
-            
+
             if ens_data:
                 ens_df = pd.DataFrame(ens_data)
                 ens_df = ens_df.sort_values('Active Validators', ascending=False)
-                
+
+                # EXACT SAME METHOD as working table - convert numeric columns to strings
+                ens_df['Active Validators'] = ens_df['Active Validators'].astype(str)
+                ens_df['Total Validators'] = ens_df['Total Validators'].astype(str)
+
                 st.dataframe(
                     ens_df,
                     use_container_width=True,
                     hide_index=True,
                     column_config={
-                        "Address": st.column_config.TextColumn("Address", width="large")
+                        "ENS Name": st.column_config.TextColumn("ENS Name", width="small"),
+                        "Address": st.column_config.TextColumn("Address", width="large"),
+                        "Active Validators": st.column_config.TextColumn("Active Validators", width="small"),
+                        "Total Validators": st.column_config.TextColumn("Total Validators", width="small")
                     }
                 )
-                
+
                 # Download ENS data
                 ens_csv = ens_df.to_csv(index=False)
                 st.download_button(
