@@ -107,6 +107,18 @@ st.markdown("""
             line-height: 1.4;
         }
     }
+
+    /* ENS name styling */
+    .ens-name {
+        color: #007bff;
+        font-weight: 600;
+    }
+
+    .operator-address {
+        color: #6c757d;
+        font-family: monospace;
+        font-size: 0.9em;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -129,6 +141,33 @@ def load_validator_data():
                 st.error(f"❌ Error loading {cache_file}: {str(e)}")
 
     return None, None
+
+def format_operator_display(address: str, ens_names: dict, short: bool = False) -> str:
+    """Format operator address with ENS name if available for display."""
+    ens_name = ens_names.get(address)
+    
+    if ens_name:
+        if short:
+            return f"{ens_name}"
+        else:
+            return f"{ens_name}\n({address[:8]}...{address[-6:]})"
+    else:
+        return f"{address[:8]}...{address[-6:]}"
+
+def format_operator_display_plain(address: str, ens_names: dict, show_full_address: bool = False) -> str:
+    """Format operator address with ENS name for plain text (CSV exports)."""
+    ens_name = ens_names.get(address)
+    
+    if ens_name:
+        if show_full_address:
+            return f"{ens_name} ({address})"
+        else:
+            return f"{ens_name} ({address[:8]}...{address[-6:]})"
+    else:
+        if show_full_address:
+            return address
+        else:
+            return f"{address[:8]}...{address[-6:]}"
 
 def calculate_concentration_metrics(operator_validators):
     """Calculate concentration and decentralization metrics"""
@@ -181,7 +220,7 @@ def get_performance_category(performance):
     else:
         return 'Poor'
 
-def create_performance_analysis(operator_performance, operator_validators):
+def create_performance_analysis(operator_performance, operator_validators, ens_names):
     """Create performance analysis visualizations"""
     if not operator_performance:
         return None, None, None
@@ -191,8 +230,9 @@ def create_performance_analysis(operator_performance, operator_validators):
     for addr, performance in operator_performance.items():
         validator_count = operator_validators.get(addr, 0)
         if validator_count > 0:  # Only include operators with validators
+            display_name = format_operator_display_plain(addr, ens_names)
             perf_data.append({
-                'operator': f"{addr[:8]}...{addr[-6:]}",
+                'operator': display_name,
                 'full_address': addr,
                 'performance': performance,
                 'validator_count': validator_count,
@@ -246,8 +286,8 @@ def create_performance_analysis(operator_performance, operator_validators):
 
     return fig_scatter, fig_hist, df
 
-def create_concentration_pie(operator_validators, title="Validator Distribution"):
-    """Create pie chart showing operator concentration"""
+def create_concentration_pie(operator_validators, ens_names, title="Validator Distribution"):
+    """Create pie chart showing operator concentration with ENS names"""
     if not operator_validators:
         fig = go.Figure()
         fig.add_annotation(text="No data available", x=0.5, y=0.5, showarrow=False)
@@ -261,7 +301,8 @@ def create_concentration_pie(operator_validators, title="Validator Distribution"
 
     # Show top 8 operators individually
     for i, (addr, count) in enumerate(sorted_ops[:8]):
-        labels.append(f"{addr[:6]}...{addr[-4:]} ({count})")
+        display_name = format_operator_display_plain(addr, ens_names)
+        labels.append(f"{display_name} ({count})")
         values.append(count)
 
     # Group remaining operators
@@ -379,8 +420,8 @@ def create_concentration_curve(operator_validators):
 
     return fig
 
-def create_top_operators_table(operator_validators, operator_exited):
-    """Create formatted table of top operators"""
+def create_top_operators_table(operator_validators, operator_exited, ens_names):
+    """Create formatted table with Address first, then ENS Name"""
     if not operator_validators:
         return pd.DataFrame()
 
@@ -390,10 +431,13 @@ def create_top_operators_table(operator_validators, operator_exited):
         active_count = total_count - exited_count
         exit_rate = (exited_count / total_count * 100) if total_count > 0 else 0
 
+        # Get ENS name separately
+        ens_name = ens_names.get(addr, "")
+
         data.append({
             'Rank': 0,  # Will be set after sorting
-            'Operator': addr,
-            'Full Address': addr,
+            'Address': addr,
+            'ENS Name': ens_name,
             'Active': active_count,
             'Total': total_count,
             'Exited': exited_count,
@@ -407,8 +451,8 @@ def create_top_operators_table(operator_validators, operator_exited):
 
     return df
 
-def create_performance_table(operator_performance, operator_validators, operator_exited):
-    """Create enhanced operator table with performance data"""
+def create_performance_table(operator_performance, operator_validators, operator_exited, ens_names):
+    """Create performance table with Address first, then ENS Name"""
     if not operator_performance:
         return pd.DataFrame()
 
@@ -419,10 +463,13 @@ def create_performance_table(operator_performance, operator_validators, operator
         active_count = total_count - exited_count
 
         if total_count > 0:  # Only include operators with validators
+            # Get ENS name separately
+            ens_name = ens_names.get(addr, "")
+            
             data.append({
                 'Rank': 0,  # Will be set after sorting
-                'Operator': addr,
-                'Full Address': addr,
+                'Address': addr,
+                'ENS Name': ens_name,
                 'Performance': f"{performance:.2f}%",
                 'Performance_Raw': performance,
                 'Category': get_performance_category(performance),
@@ -572,10 +619,46 @@ def display_performance_health(operator_performance, operator_validators):
         st.markdown(f"**Consistency:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
         st.caption(f"Std dev: {perf_std:.2f}%")
 
+def display_ens_status(ens_names, operator_validators):
+    """Display ENS resolution status"""
+    if not ens_names:
+        return
+        
+    st.subheader("🏷️ ENS Name Resolution Status")
+    
+    total_operators = len(operator_validators)
+    ens_resolved = len(ens_names)
+    coverage_pct = (ens_resolved / total_operators * 100) if total_operators > 0 else 0
+    
+    col1, col2, col3, col4 = st.columns(4)
+    
+    with col1:
+        st.metric("ENS Names Found", f"{ens_resolved}")
+        
+    with col2:
+        st.metric("Total Operators", f"{total_operators}")
+        
+    with col3:
+        if coverage_pct >= 50:
+            color = "status-good"
+        elif coverage_pct >= 25:
+            color = "status-warning"
+        else:
+            color = "status-danger"
+        st.markdown(f"**Coverage:** <span class='{color}'>{coverage_pct:.1f}%</span>", unsafe_allow_html=True)
+        
+    with col4:
+        # Calculate validators covered by ENS
+        validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
+        total_validators = sum(operator_validators.values())
+        validator_coverage = (validators_with_ens / total_validators * 100) if total_validators > 0 else 0
+        st.metric("Validator Coverage", f"{validator_coverage:.1f}%")
+        st.caption(f"{validators_with_ens} of {total_validators} validators")
+
 def main():
     # Responsive header design
     st.title("🔗 NodeSet Validator Monitor")
-    st.markdown("*Monitoring and analysis of NodeSet protocol validators - data cache updated every 15 minutes hit \"Refresh Data\" button to reload. Latest cache time is reported in UTC time.*")
+    st.markdown("*Monitoring and analysis of NodeSet protocol validators with ENS name resolution - data cache updated every 15 minutes hit \"Refresh Data\" button to reload. Latest cache time is reported in UTC time.*")
 
     # Refresh button (full width on mobile, right-aligned on desktop)
     refresh_col1, refresh_col2 = st.columns([3, 1])
@@ -606,6 +689,8 @@ def main():
     operator_validators = cache.get('operator_validators', {})
     operator_exited = cache.get('exited_validators', {})
     operator_performance = cache.get('operator_performance', {})
+    ens_names = cache.get('ens_names', {})
+    ens_last_updated = cache.get('ens_last_updated', 0)
     total_validators = cache.get('total_validators', 0)
     total_exited = cache.get('total_exited', 0)
     last_block = cache.get('last_block', 0)
@@ -622,7 +707,14 @@ def main():
 
     # Data source info (responsive)
     last_update = datetime.fromtimestamp(os.path.getmtime(cache_file))
-    st.caption(f"📊 Block: {last_block:,} • 🕒 {last_update.strftime('%H:%M:%S')} • 📁 {cache_file.split('/')[-1]}")
+    
+    # ENS update info
+    ens_update_str = ""
+    if ens_last_updated > 0:
+        ens_update_time = datetime.fromtimestamp(ens_last_updated)
+        ens_update_str = f" • 🏷️ ENS: {ens_update_time.strftime('%H:%M:%S')}"
+    
+    st.caption(f"📊 Block: {last_block:,} • 🕒 {last_update.strftime('%H:%M:%S')}{ens_update_str} • 📁 {cache_file.split('/')[-1]}")
 
     # Responsive metrics layout
     st.markdown("### 📈 Network Overview")
@@ -715,10 +807,18 @@ def main():
 
         st.markdown(f"<div class='health-summary'><strong>Performance Health (24 hours):</strong> {' • '.join(perf_status)}</div>", unsafe_allow_html=True)
 
+    # ENS Status Summary
+    if ens_names:
+        ens_coverage = len(ens_names) / len(operator_validators) * 100 if operator_validators else 0
+        validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
+        validator_coverage = validators_with_ens / total_active * 100 if total_active > 0 else 0
+        
+        st.markdown(f"<div class='health-summary'><strong>ENS Resolution:</strong> {len(ens_names)} names found • {ens_coverage:.1f}% operator coverage • {validator_coverage:.1f}% validator coverage</div>", unsafe_allow_html=True)
+
     # Expandable detailed health metrics - responsive columns
     with st.expander("🔍 Detailed Health Metrics"):
         if concentration_metrics:
-            detail_col1, detail_col2 = st.columns([1, 1])
+            detail_col1, detail_col2, detail_col3 = st.columns([1, 1, 1])
             with detail_col1:
                 st.markdown("**Decentralization Metrics**")
                 st.write(f"• Gini Coefficient: {gini:.3f}")
@@ -734,6 +834,16 @@ def main():
                     st.write(f"• Poor Performers: {poor_pct:.1f}%")
                     performances = list(operator_performance.values())
                     st.write(f"• Performance Std Dev: {np.std(performances):.2f}%")
+                    
+            with detail_col3:
+                if ens_names:
+                    st.markdown("**ENS Resolution Metrics**")
+                    st.write(f"• Total ENS Names: {len(ens_names)}")
+                    st.write(f"• Operator Coverage: {ens_coverage:.1f}%")
+                    st.write(f"• Validator Coverage: {validator_coverage:.1f}%")
+                    if ens_last_updated > 0:
+                        hours_ago = (datetime.now().timestamp() - ens_last_updated) / 3600
+                        st.write(f"• Last Updated: {hours_ago:.1f}h ago")
 
     st.markdown("---")
 
@@ -875,35 +985,36 @@ def main():
             st.info("No concentration data available.")
 
     with tab3:
-        # Show all operators
+        # Show all operators with ENS names
         st.subheader("🏆 Top Operators by Active Validators")
 
-        df_operators = create_top_operators_table(operator_validators, operator_exited)
+        df_operators = create_top_operators_table(operator_validators, operator_exited, ens_names)
 
         if not df_operators.empty:
-            # Display table - show all operators with left-aligned numeric columns
-            display_df = df_operators.drop(['Full Address'], axis=1)
-            
+            # Display table with separate ENS and Address columns
+            display_df = df_operators.copy()
+
             # Convert numeric columns to strings to force left alignment
-            display_df_styled = display_df.copy()
-            display_df_styled['Active'] = display_df_styled['Active'].astype(str)
-            display_df_styled['Total'] = display_df_styled['Total'].astype(str)
-            display_df_styled['Exited'] = display_df_styled['Exited'].astype(str)
-            
+            display_df['Active'] = display_df['Active'].astype(str)
+            display_df['Total'] = display_df['Total'].astype(str)
+            display_df['Exited'] = display_df['Exited'].astype(str)
+
             st.dataframe(
-                display_df_styled,
+                display_df,
                 use_container_width=True,
                 hide_index=True,
                 column_config={
                     "Rank": st.column_config.NumberColumn("Rank", width="small"),
-                    "Active": st.column_config.TextColumn("Active", width="medium"),
-                    "Total": st.column_config.TextColumn("Total", width="medium"),
-                    "Exited": st.column_config.TextColumn("Exited", width="medium"),
+                    "Address": st.column_config.TextColumn("Address", width="large"),
+                    "ENS Name": st.column_config.TextColumn("ENS Name", width="small"),
+                    "Active": st.column_config.TextColumn("Active", width="small"),
+                    "Total": st.column_config.TextColumn("Total", width="small"),
+                    "Exited": st.column_config.TextColumn("Exited", width="small"),
                 }
             )
 
-            # Download CSV (use original numeric data)
-            csv = display_df.to_csv(index=False)
+            # Download CSV with separate columns
+            csv = df_operators.to_csv(index=False)
             st.download_button(
                 label="📥 Download CSV",
                 data=csv,
@@ -919,7 +1030,7 @@ def main():
 
         if operator_performance:
             fig_scatter, fig_hist, perf_df = create_performance_analysis(
-                operator_performance, operator_validators
+                operator_performance, operator_validators, ens_names
             )
 
             if fig_scatter and fig_hist:
@@ -947,24 +1058,37 @@ def main():
 
                     st.dataframe(summary_stats, use_container_width=True, hide_index=True)
 
-                # Enhanced performance table
+                # Enhanced performance table with ENS names
                 st.subheader("🏆 Operators by Performance")
                 perf_table_df = create_performance_table(
-                    operator_performance, operator_validators, operator_exited
+                    operator_performance, operator_validators, operator_exited, ens_names
                 )
 
                 if not perf_table_df.empty:
-                    display_perf_df = perf_table_df.drop(['Full Address', 'Performance_Raw'], axis=1)
+                    display_perf_df = perf_table_df.drop(['Performance_Raw'], axis=1)
                     st.dataframe(
                         display_perf_df,
                         use_container_width=True,
                         hide_index=True,
                         column_config={
+                            "Address": st.column_config.TextColumn("Address", width="large"),
+                            "ENS Name": st.column_config.TextColumn("ENS Name", width="small"),
                             "Category": st.column_config.TextColumn(
                                 "Category",
                                 help="Performance category based on percentage"
                             )
                         }
+                    )
+                    
+                    # Download performance data with separate columns
+                    export_perf_df = perf_table_df.drop(['Performance_Raw'], axis=1)
+                    
+                    perf_csv = export_perf_df.to_csv(index=False)
+                    st.download_button(
+                        label="📥 Download Performance Data",
+                        data=perf_csv,
+                        file_name=f"nodeset_performance_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                        mime="text/csv"
                     )
             else:
                 st.info("Insufficient performance data for analysis.")
@@ -1013,7 +1137,7 @@ def main():
                         )
                         st.plotly_chart(fig_scatter, use_container_width=True)
 
-            # Operators with highest exit rates
+            # Operators with highest exit rates (with ENS names)
             st.subheader("Operators with Exits")
             exited_operators_data = []
             for addr, exit_count in operator_exited.items():
@@ -1021,9 +1145,11 @@ def main():
                     total_count = operator_validators.get(addr, 0)
                     active_count = total_count - exit_count
                     exit_rate = (exit_count / total_count * 100) if total_count > 0 else 0
+                    display_name = format_operator_display_plain(addr, ens_names, show_full_address=True)
 
                     exited_operators_data.append({
-                        'Operator': addr,
+                        'Operator': display_name,
+                        'Full Address': addr,
                         'Exits': exit_count,
                         'Still Active': active_count,
                         'Total Ever': total_count,
@@ -1033,7 +1159,19 @@ def main():
             if exited_operators_data:
                 df_exited = pd.DataFrame(exited_operators_data)
                 df_exited = df_exited.sort_values('Exit Rate', key=lambda x: x.str.rstrip('%').astype(float), ascending=False)
-                st.dataframe(df_exited, use_container_width=True, hide_index=True)
+                
+                # Display table
+                display_exited_df = df_exited.drop(['Full Address'], axis=1)
+                st.dataframe(display_exited_df, use_container_width=True, hide_index=True)
+                
+                # Download exits data
+                exits_csv = display_exited_df.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Exit Data",
+                    data=exits_csv,
+                    file_name=f"nodeset_exits_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
             else:
                 st.info("No exits detected in current data.")
         else:
@@ -1104,7 +1242,7 @@ def main():
 
             st.markdown("---")
 
-            # Create operator cost table
+            # Create operator cost table with full addresses
             cost_data = []
             for operator, cost_info in operator_costs.items():
                 if cost_info['total_txs'] > 0:
@@ -1133,14 +1271,22 @@ def main():
 
                 # Add search functionality
                 search_term = st.text_input(
-                    "🔍 Search operators by address",
-                    placeholder="Enter full or partial address (e.g., 0x1878f36 or f36F8442)",
-                    help="Search is case-insensitive and matches any part of the address"
+                    "🔍 Search operators by address or ENS name",
+                    placeholder="Enter address, ENS name, or partial match (e.g., 0x1878f36, vitalik.eth)",
+                    help="Search is case-insensitive and matches any part of the address or ENS name",
+                    key="cost_search_input"
                 )
 
                 # Filter data based on search
                 if search_term:
-                    filtered_data = [row for row in cost_data if search_term.lower() in row['operator'].lower()]
+                    filtered_data = []
+                    for row in cost_data:
+                        ens_name = ens_names.get(row['operator'], "")
+                        # Search in address or ENS name
+                        if (search_term.lower() in row['operator'].lower() or 
+                            (ens_name and search_term.lower() in ens_name.lower())):
+                            filtered_data.append(row)
+                    
                     if filtered_data:
                         st.info(f"Found {len(filtered_data)} operators matching '{search_term}'")
                         display_data = filtered_data
@@ -1150,12 +1296,24 @@ def main():
                 else:
                     display_data = cost_data
 
-                # Create expandable table
+                # Create expandable table with enhanced display
                 for i, row in enumerate(display_data):
-                    with st.expander(
-                        f"#{i+1} {row['operator']} - {row['total_cost_eth']:.6f} ETH ({row['total_txs']} txs)",
-                        expanded=False
-                    ):
+                    # Create header with ENS name prominently displayed and full address
+                    ens_name = ens_names.get(row['operator'], "")
+                    if ens_name:
+                        header_display = f"#{i+1} 🏷️ {ens_name} ({row['operator']}) - {row['total_cost_eth']:.6f} ETH ({row['total_txs']} txs)"
+                        operator_info = f"**ENS:** {ens_name}  \n**Address:** `{row['operator']}`"
+                    else:
+                        header_display = f"#{i+1} {row['operator']} - {row['total_cost_eth']:.6f} ETH ({row['total_txs']} txs)"
+                        operator_info = f"**Address:** `{row['operator']}`"
+                    
+                    with st.expander(header_display, expanded=False):
+                        # Operator info section with prominent ENS display
+                        st.markdown("**🔗 Operator Information**")
+                        st.markdown(operator_info)
+                        
+                        st.markdown("---")
+                        
                         # Operator summary in columns
                         detail_col1, detail_col2, detail_col3 = st.columns(3)
 
@@ -1178,7 +1336,6 @@ def main():
                                 st.write(f"• Cost per Validator: **{row['cost_per_validator']:.6f} ETH**")
                             else:
                                 st.write(f"• Cost per Validator: **N/A**")
-                            st.write(f"• Full Address: `{row['operator']}`")
 
                         # Transaction details table
                         operator_txs = operator_transactions.get(row['operator'], [])
@@ -1242,11 +1399,18 @@ def main():
                             )
 
                             # Download individual operator data
+                            # Create filename with ENS name if available
+                            ens_name = ens_names.get(row['operator'], "")
+                            if ens_name:
+                                filename_part = ens_name.replace('.', '_')
+                            else:
+                                filename_part = f"{row['operator'][:8]}_{row['operator'][-6:]}"
+                            
                             csv_data = tx_df.to_csv(index=False)
                             st.download_button(
-                                label=f"📥 Download {row['operator_short']} transactions",
+                                label=f"📥 Download {ens_name if ens_name else row['operator'][:10]+'...'} transactions",
                                 data=csv_data,
-                                file_name=f"nodeset_costs_{row['operator_short']}_{datetime.now().strftime('%Y%m%d')}.csv",
+                                file_name=f"nodeset_costs_{filename_part}_{datetime.now().strftime('%Y%m%d')}.csv",
                                 mime="text/csv",
                                 key=f"download_{i}"
                             )
@@ -1257,12 +1421,27 @@ def main():
                 st.markdown("---")
                 col1, col2 = st.columns([3, 1])
                 with col2:
-                    # Create summary CSV
+                    # Create summary CSV with full addresses and ENS names
                     summary_df = pd.DataFrame(cost_data)
-                    summary_csv = summary_df[[
-                        'operator', 'total_cost_eth', 'total_txs', 'successful_txs',
-                        'failed_txs', 'success_rate', 'validators', 'cost_per_validator'
-                    ]].to_csv(index=False)
+                    
+                    # Add ENS names to the export
+                    export_cost_data = []
+                    for row in cost_data:
+                        ens_name = ens_names.get(row['operator'], "")
+                        export_cost_data.append({
+                            'address': row['operator'],
+                            'ens_name': ens_name,
+                            'total_cost_eth': row['total_cost_eth'],
+                            'total_txs': row['total_txs'],
+                            'successful_txs': row['successful_txs'],
+                            'failed_txs': row['failed_txs'],
+                            'success_rate': row['success_rate'],
+                            'validators': row['validators'],
+                            'cost_per_validator': row['cost_per_validator']
+                        })
+                    
+                    export_df = pd.DataFrame(export_cost_data)
+                    summary_csv = export_df.to_csv(index=False)
 
                     st.download_button(
                         label="📥 Download All Cost Data",
@@ -1280,7 +1459,8 @@ def main():
         col1, col2 = st.columns(2)
 
         with col1:
-            st.json({
+            # Enhanced cache summary with ENS info
+            cache_summary = {
                 "total_validators": cache.get('total_validators', 0),
                 "total_exited": cache.get('total_exited', 0),
                 "last_block": cache.get('last_block', 0),
@@ -1290,12 +1470,56 @@ def main():
                 "processed_transactions": len(cache.get('processed_transactions', [])),
                 "performance_metrics": len(cache.get('operator_performance', {})),
                 "cost_metrics": len(cache.get('operator_costs', {})),
-                "transaction_records": len(cache.get('operator_transactions', {}))
-            })
+                "transaction_records": len(cache.get('operator_transactions', {})),
+                "ens_names_resolved": len(cache.get('ens_names', {})),
+                "ens_last_updated": cache.get('ens_last_updated', 0),
+                "ens_update_failures": len(cache.get('ens_update_failures', {}))
+            }
+            
+            st.json(cache_summary)
 
         with col2:
             if st.button("📄 Show Full Cache"):
                 st.json(cache)
+
+        # ENS Names section
+        if ens_names:
+            st.subheader("🏷️ Resolved ENS Names")
+            
+            # Create ENS names table
+            ens_data = []
+            for addr, ens_name in ens_names.items():
+                validator_count = operator_validators.get(addr, 0)
+                active_count = validator_count - operator_exited.get(addr, 0)
+                
+                ens_data.append({
+                    'ENS Name': ens_name,
+                    'Address': addr,
+                    'Active Validators': active_count,
+                    'Total Validators': validator_count
+                })
+            
+            if ens_data:
+                ens_df = pd.DataFrame(ens_data)
+                ens_df = ens_df.sort_values('Active Validators', ascending=False)
+                
+                st.dataframe(
+                    ens_df,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "Address": st.column_config.TextColumn("Address", width="large")
+                    }
+                )
+                
+                # Download ENS data
+                ens_csv = ens_df.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download ENS Data",
+                    data=ens_csv,
+                    file_name=f"nodeset_ens_names_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
 
     # Auto-refresh handling
     if auto_refresh:
@@ -1305,7 +1529,8 @@ def main():
 
     # Footer
     st.markdown("---")
-    st.markdown(f"*Dashboard last refreshed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}*")
+    ens_info = f" | ENS: {len(ens_names)} names resolved" if ens_names else ""
+    st.markdown(f"*Dashboard last refreshed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}{ens_info}*")
 
 if __name__ == "__main__":
     main()
