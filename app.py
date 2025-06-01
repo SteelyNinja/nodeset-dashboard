@@ -15,7 +15,7 @@ st.set_page_config(
     page_title="NodeSet Validator Monitor",
     page_icon="🔗",
     layout="wide",
-    initial_sidebar_state="collapsed"  # Collapse sidebar by default
+    initial_sidebar_state="collapsed"
 )
 
 # Custom CSS for better styling and responsive design
@@ -46,7 +46,6 @@ st.markdown("""
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
     }
 
-    /* Hide sidebar completely */
     .css-1d391kg {
         display: none;
     }
@@ -55,14 +54,12 @@ st.markdown("""
         display: none;
     }
 
-    /* Responsive design adjustments */
     .main .block-container {
         padding-left: 1rem;
         padding-right: 1rem;
         max-width: none;
     }
 
-    /* Mobile-friendly adjustments */
     @media (max-width: 768px) {
         .main .block-container {
             padding-left: 0.5rem;
@@ -84,7 +81,6 @@ st.markdown("""
         }
     }
 
-    /* Tablet adjustments */
     @media (min-width: 769px) and (max-width: 1024px) {
         .main .block-container {
             padding-left: 0.75rem;
@@ -92,7 +88,6 @@ st.markdown("""
         }
     }
 
-    /* Wide screen adjustments */
     @media (min-width: 1400px) {
         .main .block-container {
             max-width: 1400px;
@@ -100,7 +95,6 @@ st.markdown("""
         }
     }
 
-    /* Health status responsive text */
     @media (max-width: 768px) {
         .health-summary {
             font-size: 0.9rem;
@@ -108,7 +102,6 @@ st.markdown("""
         }
     }
 
-    /* ENS name styling */
     .ens-name {
         color: #007bff;
         font-weight: 600;
@@ -122,9 +115,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-@st.cache_data(ttl=300)  # Cache for 5 minutes
+@st.cache_data(ttl=300)
 def load_validator_data():
-    """Load and process validator data from cache file"""
     cache_files = [
         'nodeset_validator_tracker_cache.json',
         './data/nodeset_validator_tracker_cache.json',
@@ -143,7 +135,6 @@ def load_validator_data():
     return None, None
 
 def format_operator_display(address: str, ens_names: dict, short: bool = False) -> str:
-    """Format operator address with ENS name if available for display."""
     ens_name = ens_names.get(address)
 
     if ens_name:
@@ -155,7 +146,6 @@ def format_operator_display(address: str, ens_names: dict, short: bool = False) 
         return f"{address[:8]}...{address[-6:]}"
 
 def format_operator_display_plain(address: str, ens_names: dict, show_full_address: bool = False) -> str:
-    """Format operator address with ENS name for plain text (CSV exports)."""
     ens_name = ens_names.get(address)
 
     if ens_name:
@@ -170,32 +160,25 @@ def format_operator_display_plain(address: str, ens_names: dict, show_full_addre
             return f"{address[:8]}...{address[-6:]}"
 
 def calculate_concentration_metrics(operator_validators):
-    """Calculate concentration and decentralization metrics"""
     if not operator_validators:
         return {}
 
     total_validators = sum(operator_validators.values())
     operator_counts = list(operator_validators.values())
 
-    # Sort in ascending order for proper Gini calculation
     operator_counts.sort()
 
-    # Gini coefficient calculation - CORRECTED VERSION
     n = len(operator_counts)
     if n == 0 or total_validators == 0:
         return {}
 
-    # Standard Gini formula
-    index = np.arange(1, n + 1)  # 1, 2, 3, ..., n
+    index = np.arange(1, n + 1)
     gini = (2 * np.sum(index * operator_counts)) / (n * total_validators) - (n + 1) / n
 
-    # Ensure Gini is between 0 and 1
     gini = max(0, min(1, gini))
 
-    # Sort in descending order for concentration ratios
     operator_counts_desc = sorted(operator_counts, reverse=True)
 
-    # Concentration ratios
     top_1_pct = (operator_counts_desc[0] / total_validators) * 100 if operator_counts_desc else 0
     top_5_pct = (sum(operator_counts_desc[:min(5, len(operator_counts_desc))]) / total_validators) * 100
     top_10_pct = (sum(operator_counts_desc[:min(10, len(operator_counts_desc))]) / total_validators) * 100
@@ -210,7 +193,6 @@ def calculate_concentration_metrics(operator_validators):
     }
 
 def get_performance_category(performance):
-    """Categorize performance levels"""
     if performance >= 99.5:
         return 'Excellent'
     elif performance >= 98.5:
@@ -221,15 +203,13 @@ def get_performance_category(performance):
         return 'Poor'
 
 def create_performance_analysis(operator_performance, operator_validators, ens_names):
-    """Create performance analysis visualizations"""
     if not operator_performance:
         return None, None, None
 
-    # Combine performance with validator counts
     perf_data = []
     for addr, performance in operator_performance.items():
         validator_count = operator_validators.get(addr, 0)
-        if validator_count > 0:  # Only include operators with validators
+        if validator_count > 0:
             display_name = format_operator_display_plain(addr, ens_names)
             perf_data.append({
                 'operator': display_name,
@@ -244,12 +224,10 @@ def create_performance_analysis(operator_performance, operator_validators, ens_n
 
     df = pd.DataFrame(perf_data)
 
-    # FIXED: Force categorical order for legend
     df['performance_category'] = pd.Categorical(df['performance_category'],
                                               categories=['Excellent', 'Good', 'Average', 'Poor'],
                                               ordered=True)
 
-    # Performance vs Validator Count scatter plot
     fig_scatter = px.scatter(
         df,
         x='validator_count',
@@ -273,7 +251,6 @@ def create_performance_analysis(operator_performance, operator_validators, ens_n
     )
     fig_scatter.update_layout(height=500)
 
-    # Performance distribution histogram
     fig_hist = px.histogram(
         df,
         x='performance',
@@ -287,25 +264,21 @@ def create_performance_analysis(operator_performance, operator_validators, ens_n
     return fig_scatter, fig_hist, df
 
 def create_concentration_pie(operator_validators, ens_names, title="Validator Distribution"):
-    """Create pie chart showing operator concentration with ENS names"""
     if not operator_validators:
         fig = go.Figure()
         fig.add_annotation(text="No data available", x=0.5, y=0.5, showarrow=False)
         return fig
 
-    # Group smaller operators
     sorted_ops = sorted(operator_validators.items(), key=lambda x: x[1], reverse=True)
 
     labels = []
     values = []
 
-    # Show top 8 operators individually
     for i, (addr, count) in enumerate(sorted_ops[:8]):
         display_name = format_operator_display_plain(addr, ens_names)
         labels.append(f"{display_name} ({count})")
         values.append(count)
 
-    # Group remaining operators
     if len(sorted_ops) > 8:
         remaining_count = sum(count for _, count in sorted_ops[8:])
         remaining_ops = len(sorted_ops) - 8
@@ -330,13 +303,11 @@ def create_concentration_pie(operator_validators, ens_names, title="Validator Di
     return fig
 
 def create_distribution_histogram(operator_validators):
-    """Create histogram of validator counts per operator with discrete bins"""
     if not operator_validators:
         return go.Figure()
 
     validator_counts = list(operator_validators.values())
 
-    # Get the range of validator counts
     min_validators = min(validator_counts)
     max_validators = max(validator_counts)
 
@@ -347,31 +318,28 @@ def create_distribution_histogram(operator_validators):
         color_discrete_sequence=['#667eea']
     )
 
-    # Override with custom bins to ensure whole number alignment
     fig.update_traces(
         xbins=dict(
             start=min_validators - 0.5,
             end=max_validators + 0.5,
-            size=1  # Each bin represents exactly 1 validator
+            size=1
         )
     )
 
-    # Set x-axis to show only whole numbers
     fig.update_layout(
         height=400,
         showlegend=False,
         xaxis=dict(
             tick0=min_validators,
-            dtick=1,  # Show tick marks at every whole number
+            dtick=1,
             tickmode='linear'
         ),
-        bargap=0.1  # Small gap between bars for clarity
+        bargap=0.1
     )
 
     return fig
 
 def create_concentration_curve(operator_validators):
-    """Create Lorenz curve showing concentration"""
     if not operator_validators:
         return go.Figure()
 
@@ -382,16 +350,13 @@ def create_concentration_curve(operator_validators):
     if total_validators == 0:
         return go.Figure()
 
-    # Calculate cumulative percentages
     cum_operators = np.arange(1, n + 1) / n * 100
     cum_validators = np.cumsum(validator_counts) / total_validators * 100
 
-    # Perfect equality line
     equality_line = np.linspace(0, 100, 100)
 
     fig = go.Figure()
 
-    # Add Lorenz curve
     fig.add_trace(go.Scatter(
         x=cum_operators,
         y=cum_validators,
@@ -401,7 +366,6 @@ def create_concentration_curve(operator_validators):
         marker=dict(size=4)
     ))
 
-    # Add perfect equality line
     fig.add_trace(go.Scatter(
         x=equality_line,
         y=equality_line,
@@ -421,7 +385,6 @@ def create_concentration_curve(operator_validators):
     return fig
 
 def create_top_operators_table(operator_validators, operator_exited, ens_names):
-    """Create formatted table with Address first, then ENS Name"""
     if not operator_validators:
         return pd.DataFrame()
 
@@ -431,11 +394,10 @@ def create_top_operators_table(operator_validators, operator_exited, ens_names):
         active_count = total_count - exited_count
         exit_rate = (exited_count / total_count * 100) if total_count > 0 else 0
 
-        # Get ENS name separately
         ens_name = ens_names.get(addr, "")
 
         data.append({
-            'Rank': 0,  # Will be set after sorting
+            'Rank': 0,
             'Address': addr,
             'ENS Name': ens_name,
             'Active': active_count,
@@ -452,7 +414,6 @@ def create_top_operators_table(operator_validators, operator_exited, ens_names):
     return df
 
 def create_performance_table(operator_performance, operator_validators, operator_exited, ens_names):
-    """Create performance table with Address first, then ENS Name"""
     if not operator_performance:
         return pd.DataFrame()
 
@@ -462,12 +423,11 @@ def create_performance_table(operator_performance, operator_validators, operator
         exited_count = operator_exited.get(addr, 0)
         active_count = total_count - exited_count
 
-        if total_count > 0:  # Only include operators with validators
-            # Get ENS name separately
+        if total_count > 0:
             ens_name = ens_names.get(addr, "")
 
             data.append({
-                'Rank': 0,  # Will be set after sorting
+                'Rank': 0,
                 'Address': addr,
                 'ENS Name': ens_name,
                 'Performance': f"{performance:.2f}%",
@@ -482,20 +442,17 @@ def create_performance_table(operator_performance, operator_validators, operator
         return pd.DataFrame()
 
     df = pd.DataFrame(data)
-    # Sort by performance first, then by active validators
     df = df.sort_values(['Performance_Raw', 'Active'], ascending=[False, False]).reset_index(drop=True)
     df['Rank'] = range(1, len(df) + 1)
 
     return df
 
 def display_health_status(concentration_metrics, total_active, total_exited):
-    """Display network health indicators"""
     st.subheader("🏥 Network Health Status")
 
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        # Decentralization health
         gini = concentration_metrics.get('gini_coefficient', 0)
         if gini < 0.5:
             status = "🟢 Good"
@@ -511,7 +468,6 @@ def display_health_status(concentration_metrics, total_active, total_exited):
         st.caption(f"Gini: {gini:.3f} (lower is better)")
 
     with col2:
-        # Exit rate health
         total_validators = total_active + total_exited
         exit_rate = (total_exited / total_validators * 100) if total_validators > 0 else 0
 
@@ -529,7 +485,6 @@ def display_health_status(concentration_metrics, total_active, total_exited):
         st.caption(f"{exit_rate:.1f}% validators exited")
 
     with col3:
-        # Operator diversity - UPDATED THRESHOLDS
         total_ops = concentration_metrics.get('total_operators', 0)
         avg_validators = (total_active / total_ops) if total_ops > 0 else 0
 
@@ -547,13 +502,11 @@ def display_health_status(concentration_metrics, total_active, total_exited):
         st.caption(f"{avg_validators:.1f} avg validators/operator")
 
 def display_performance_health(operator_performance, operator_validators):
-    """Display performance-based health indicators"""
     if not operator_performance:
         return
 
     st.subheader("🎯 Performance Health Status")
 
-    # Calculate weighted average performance
     total_weighted_performance = 0
     total_validators = 0
 
@@ -602,7 +555,6 @@ def display_performance_health(operator_performance, operator_validators):
         st.caption(f"{perf_categories['Poor']} validators")
 
     with col4:
-        # Performance consistency (std deviation)
         performances = list(operator_performance.values())
         perf_std = np.std(performances) if performances else 0
 
@@ -620,7 +572,6 @@ def display_performance_health(operator_performance, operator_validators):
         st.caption(f"Std dev: {perf_std:.2f}%")
 
 def display_ens_status(ens_names, operator_validators):
-    """Display ENS resolution status"""
     if not ens_names:
         return
 
@@ -648,7 +599,6 @@ def display_ens_status(ens_names, operator_validators):
         st.markdown(f"**Coverage:** <span class='{color}'>{coverage_pct:.1f}%</span>", unsafe_allow_html=True)
 
     with col4:
-        # Calculate validators covered by ENS
         validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
         total_validators = sum(operator_validators.values())
         validator_coverage = (validators_with_ens / total_validators * 100) if total_validators > 0 else 0
@@ -656,18 +606,15 @@ def display_ens_status(ens_names, operator_validators):
         st.caption(f"{validators_with_ens} of {total_validators} validators")
 
 def main():
-    # Responsive header design
     st.title("🔗 NodeSet Validator Monitor")
     st.markdown("*Monitoring and analysis of NodeSet protocol validators with ENS name resolution - data cache updated every 15 minutes hit \"Refresh Data\" button to reload. Latest cache time is reported in UTC time.*")
 
-    # Refresh button (full width on mobile, right-aligned on desktop)
     refresh_col1, refresh_col2 = st.columns([3, 1])
     with refresh_col2:
         if st.button("🔄 Refresh Data", help="Reload validator data", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
 
-    # Load data
     cache_data = load_validator_data()
     if cache_data[0] is None:
         st.error("❌ **Cache file not found!**")
@@ -685,7 +632,6 @@ def main():
 
     cache, cache_file = cache_data
 
-    # Extract data
     operator_validators = cache.get('operator_validators', {})
     operator_exited = cache.get('exited_validators', {})
     operator_performance = cache.get('operator_performance', {})
@@ -695,7 +641,6 @@ def main():
     total_exited = cache.get('total_exited', 0)
     last_block = cache.get('last_block', 0)
 
-    # Calculate active validators per operator
     active_validators = {}
     for operator, total_count in operator_validators.items():
         exited_count = operator_exited.get(operator, 0)
@@ -705,10 +650,8 @@ def main():
 
     total_active = sum(active_validators.values())
 
-    # Data source info (responsive)
     last_update = datetime.fromtimestamp(os.path.getmtime(cache_file))
 
-    # ENS update info
     ens_update_str = ""
     if ens_last_updated > 0:
         ens_update_time = datetime.fromtimestamp(ens_last_updated)
@@ -716,41 +659,68 @@ def main():
 
     st.caption(f"📊 Block: {last_block:,} • 🕒 {last_update.strftime('%H:%M:%S')}{ens_update_str} • 📁 {cache_file.split('/')[-1]}")
 
-    # Responsive metrics layout
     st.markdown("### 📈 Network Overview")
 
-    # Use responsive columns - fewer on mobile
-    col1, col2, col3, col4 = st.columns(4)
+    validator_indices = cache.get('validator_indices', {})
+    pending_pubkeys = cache.get('pending_pubkeys', [])
+
+    total_activated = len(validator_indices) if validator_indices else 0
+    total_queued = len(pending_pubkeys) if pending_pubkeys else 0
+
+    col1, col2, col3, col4, col5, col6 = st.columns(6)
 
     with col1:
-        st.metric("Active Validators", f"{total_active:,}")
+        st.metric("Total Deposited Validators", f"{total_activated + total_queued:,}", 
+                  help="All validators that have been deposited (includes activated and queued)")
 
     with col2:
-        st.metric("Active Operators", len(active_validators))
+        st.metric("Activated Validators", f"{total_activated:,}", 
+                  help="Validators with assigned index numbers (participating in consensus)")
 
     with col3:
-        st.metric("Exited Validators", f"{total_exited:,}")
+        st.metric("Validators in Queue", f"{total_queued:,}", 
+                  help="Validators deposited but waiting for activation")
 
     with col4:
+        st.metric("Active Operators", len(active_validators))
+
+    with col5:
+        st.metric("Exited Validators", f"{total_exited:,}")
+
+    with col6:
         exit_rate = (total_exited / total_validators * 100) if total_validators > 0 else 0
         st.metric("Exit Rate", f"{exit_rate:.1f}%")
 
-    # Auto-refresh in separate row for better mobile layout
-    st.markdown("---")
+    if total_active > 0:
+        activation_rate = (total_activated / (total_activated + total_queued) * 100)
+        queue_rate = (total_queued / (total_activated + total_queued) * 100)
+        
+        st.markdown("---")
+        act_col1, act_col2 = st.columns(2)
+        
+        with act_col1:
+            color = "status-good" if activation_rate >= 95 else "status-warning" if activation_rate >= 85 else "status-danger"
+            st.markdown(f"**Activation Rate:** <span class='{color}'>{activation_rate:.1f}%</span>", 
+                       unsafe_allow_html=True)
+            st.caption(f"{total_activated:,} of {total_activated + total_queued:,} validators activated")
+        
+        with act_col2:
+            color = "status-good" if queue_rate <= 5 else "status-warning" if queue_rate <= 15 else "status-danger"
+            st.markdown(f"**Queue Rate:** <span class='{color}'>{queue_rate:.1f}%</span>", 
+                       unsafe_allow_html=True)
+            st.caption(f"{total_queued:,} validators waiting for activation")
+
     auto_refresh_col1, auto_refresh_col2 = st.columns([3, 1])
     with auto_refresh_col2:
         auto_refresh = st.checkbox("🔄 Auto-refresh (60s)")
 
-    # Combined health status with responsive design
     concentration_metrics = calculate_concentration_metrics(active_validators)
 
-    # Network Health Summary (responsive text)
     if concentration_metrics:
         gini = concentration_metrics.get('gini_coefficient', 0)
         total_ops = concentration_metrics.get('total_operators', 0)
         avg_validators = (total_active / total_ops) if total_ops > 0 else 0
 
-        # Determine overall health status
         health_indicators = []
         if gini < 0.5:
             health_indicators.append("🟢 Well Decentralized")
@@ -773,10 +743,15 @@ def main():
         else:
             health_indicators.append("🔴 Large Operators")
 
-        # Responsive health display
+        if activation_rate >= 95:
+            health_indicators.append("🟢 Fully Activated")
+        elif activation_rate >= 85:
+            health_indicators.append("🟡 Mostly Activated")
+        else:
+            health_indicators.append("🔴 Activation Pending")
+
         st.markdown(f"<div class='health-summary'><strong>Network Health:</strong> {' • '.join(health_indicators)}</div>", unsafe_allow_html=True)
 
-    # Performance summary (if available) - responsive
     if operator_performance:
         total_weighted_performance = 0
         total_validators_perf = 0
@@ -807,7 +782,6 @@ def main():
 
         st.markdown(f"<div class='health-summary'><strong>Performance Health (24 hours):</strong> {' • '.join(perf_status)}</div>", unsafe_allow_html=True)
 
-    # ENS Status Summary
     if ens_names:
         ens_coverage = len(ens_names) / len(operator_validators) * 100 if operator_validators else 0
         validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
@@ -815,10 +789,9 @@ def main():
 
         st.markdown(f"<div class='health-summary'><strong>ENS Resolution:</strong> {len(ens_names)} names found • {ens_coverage:.1f}% operator coverage • {validator_coverage:.1f}% validator coverage</div>", unsafe_allow_html=True)
 
-    # Expandable detailed health metrics - responsive columns
     with st.expander("🔍 Detailed Health Metrics"):
         if concentration_metrics:
-            detail_col1, detail_col2, detail_col3 = st.columns([1, 1, 1])
+            detail_col1, detail_col2, detail_col3, detail_col4 = st.columns([1, 1, 1, 1])
             with detail_col1:
                 st.markdown("**Decentralization Metrics**")
                 st.write(f"• Gini Coefficient: {gini:.3f}")
@@ -845,9 +818,14 @@ def main():
                         hours_ago = (datetime.now().timestamp() - ens_last_updated) / 3600
                         st.write(f"• Last Updated: {hours_ago:.1f}h ago")
 
+            with detail_col4:
+                st.markdown("**Activation Metrics**")
+                st.write(f"• Activation Rate: {activation_rate:.1f}%")
+                st.write(f"• Activated Count: {total_activated:,}")
+                st.write(f"• Queue Count: {total_queued:,}")
+
     st.markdown("---")
 
-    # Detailed analysis tabs
     tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         "📈 Distribution",
         "🎯 Concentration",
@@ -859,15 +837,12 @@ def main():
     ])
 
     with tab1:
-        # UPDATED: Remove pie chart, keep only histogram
         if active_validators:
             fig_hist = create_distribution_histogram(active_validators)
             st.plotly_chart(fig_hist, use_container_width=True)
 
-            # Enhanced Key insights with 15 total metrics
             st.subheader("📊 Key Insights")
 
-            # Calculate all metrics
             validator_counts = list(active_validators.values())
             max_validators = max(validator_counts) if validator_counts else 0
             total_validators_dist = sum(validator_counts)
@@ -876,7 +851,6 @@ def main():
             median_validators = np.median(validator_counts) if validator_counts else 0
             min_validators = min(validator_counts) if validator_counts else 0
 
-            # Concentration metrics
             sorted_validators = sorted(validator_counts, reverse=True)
             top_3_validators = sum(sorted_validators[:3]) if len(sorted_validators) >= 3 else sum(sorted_validators)
             top_3_percentage = (top_3_validators / total_validators_dist * 100) if total_validators_dist > 0 else 0
@@ -885,35 +859,26 @@ def main():
             top_10_validators = sum(sorted_validators[:10]) if len(sorted_validators) >= 10 else sum(sorted_validators)
             top_10_percentage = (top_10_validators / total_validators_dist * 100) if total_validators_dist > 0 else 0
 
-            # Distribution analysis
             below_avg_count = sum(1 for count in validator_counts if count < avg_validators_dist)
             below_avg_percentage = (below_avg_count / total_operators * 100) if total_operators > 0 else 0
 
-            # Large operators (above median)
             large_operators_count = sum(1 for count in validator_counts if count > median_validators)
             large_operators_percentage = (large_operators_count / total_operators * 100) if total_operators > 0 else 0
 
-            # Cap-based calculations
-            cap_level = max_validators  # Current maximum becomes the cap
+            cap_level = max_validators
 
-            # Calculate validators needed to reach cap for each operator
             validators_to_cap = sum(max(0, cap_level - count) for count in validator_counts)
 
-            # ETH needed (32 ETH per validator)
             eth_to_cap = validators_to_cap * 32
 
-            # Operators already at cap
             operators_at_cap = sum(1 for count in validator_counts if count == cap_level)
             operators_at_cap_percentage = (operators_at_cap / total_operators * 100) if total_operators > 0 else 0
 
-            # Operators at 75% or higher of cap
             operators_near_cap = sum(1 for count in validator_counts if count >= cap_level * 0.75)
             operators_near_cap_percentage = (operators_near_cap / total_operators * 100) if total_operators > 0 else 0
 
-            # Display metrics in a responsive grid - now 4 columns per row
             col1, col2, col3, col4 = st.columns(4)
 
-            # Row 1: Basic Distribution Metrics (4 metrics)
             with col1:
                 st.metric("Largest Operator", f"{max_validators} validators")
             with col2:
@@ -923,7 +888,6 @@ def main():
             with col4:
                 st.metric("Smallest Operator", f"{min_validators} validators")
 
-            # Row 2: Concentration Metrics (4 metrics)
             col5, col6, col7, col8 = st.columns(4)
             with col5:
                 st.metric("Top 3 Operators Control", f"{top_3_percentage:.1f}%")
@@ -938,7 +902,6 @@ def main():
                 st.metric("Below Average Operators", f"{below_avg_percentage:.1f}%")
                 st.caption(f"{below_avg_count} operators")
 
-            # Row 3: Cap-Based Metrics (4 metrics)
             col9, col10, col11, col12 = st.columns(4)
             with col9:
                 st.metric("Validators to Cap", f"{validators_to_cap:,}")
@@ -985,16 +948,13 @@ def main():
             st.info("No concentration data available.")
 
     with tab3:
-        # Show all operators with ENS names
         st.subheader("🏆 Top Operators by Active Validators")
 
         df_operators = create_top_operators_table(operator_validators, operator_exited, ens_names)
 
         if not df_operators.empty:
-            # Display table with separate ENS and Address columns - USING EXACT WORKING PATTERN
             display_df = df_operators.copy()
 
-            # EXACT SAME METHOD as working table - convert numeric columns to strings
             display_df['Active'] = display_df['Active'].astype(str)
             display_df['Total'] = display_df['Total'].astype(str)
             display_df['Exited'] = display_df['Exited'].astype(str)
@@ -1015,7 +975,6 @@ def main():
                 }
             )
 
-            # Download CSV with separate columns
             csv = df_operators.to_csv(index=False)
             st.download_button(
                 label="📥 Download CSV",
@@ -1036,17 +995,14 @@ def main():
             )
 
             if fig_scatter and fig_hist:
-                # Performance scatter plot
                 st.plotly_chart(fig_scatter, use_container_width=True)
 
                 col1, col2 = st.columns(2)
 
                 with col1:
-                    # Performance distribution
                     st.plotly_chart(fig_hist, use_container_width=True)
 
                 with col2:
-                    # Performance summary stats
                     st.subheader("📊 Performance Summary")
                     performances = list(operator_performance.values())
 
@@ -1060,7 +1016,6 @@ def main():
 
                     st.dataframe(summary_stats, use_container_width=True, hide_index=True)
 
-                # Enhanced performance table with ENS names - USING EXACT WORKING PATTERN
                 st.subheader("🏆 Operators by Performance")
                 perf_table_df = create_performance_table(
                     operator_performance, operator_validators, operator_exited, ens_names
@@ -1068,12 +1023,11 @@ def main():
 
                 if not perf_table_df.empty:
                     display_perf_df = perf_table_df.drop(['Performance_Raw'], axis=1).copy()
-                    
-                    # EXACT SAME METHOD as working table - convert numeric columns to strings
+
                     display_perf_df['Active'] = display_perf_df['Active'].astype(str)
                     display_perf_df['Total'] = display_perf_df['Total'].astype(str)
                     display_perf_df['Exited'] = display_perf_df['Exited'].astype(str)
-                    
+
                     st.dataframe(
                         display_perf_df,
                         use_container_width=True,
@@ -1090,7 +1044,6 @@ def main():
                         }
                     )
 
-                    # Download performance data with separate columns
                     export_perf_df = perf_table_df.drop(['Performance_Raw'], axis=1)
 
                     perf_csv = export_perf_df.to_csv(index=False)
@@ -1112,7 +1065,6 @@ def main():
             col1, col2 = st.columns(2)
 
             with col1:
-                # Exit distribution
                 exit_counts = [count for count in operator_exited.values() if count > 0]
                 if exit_counts:
                     fig_exits = px.histogram(
@@ -1124,11 +1076,10 @@ def main():
                     st.plotly_chart(fig_exits, use_container_width=True)
 
             with col2:
-                # Exit rate by operator size
                 if operator_validators and operator_exited:
                     exit_rate_data = []
                     for addr, total_count in operator_validators.items():
-                        if total_count >= 2:  # Only include operators with 2+ validators
+                        if total_count >= 2:
                             exited_count = operator_exited.get(addr, 0)
                             exit_rate = (exited_count / total_count * 100) if total_count > 0 else 0
                             exit_rate_data.append({
@@ -1147,7 +1098,6 @@ def main():
                         )
                         st.plotly_chart(fig_scatter, use_container_width=True)
 
-            # Operators with highest exit rates (with ENS names) - USING EXACT WORKING PATTERN
             st.subheader("Operators with Exits")
             exited_operators_data = []
             for addr, exit_count in operator_exited.items():
@@ -1170,16 +1120,14 @@ def main():
                 df_exited = pd.DataFrame(exited_operators_data)
                 df_exited = df_exited.sort_values('Exit Rate', key=lambda x: x.str.rstrip('%').astype(float), ascending=False)
 
-                # EXACT SAME METHOD as working table - convert numeric columns to strings
                 df_exited['Exits'] = df_exited['Exits'].astype(str)
                 df_exited['Still Active'] = df_exited['Still Active'].astype(str)
                 df_exited['Total Ever'] = df_exited['Total Ever'].astype(str)
 
-                # Display table
                 display_exited_df = df_exited.drop(['Full Address'], axis=1)
                 st.dataframe(
-                    display_exited_df, 
-                    use_container_width=True, 
+                    display_exited_df,
+                    use_container_width=True,
                     hide_index=True,
                     column_config={
                         "Operator": st.column_config.TextColumn("Operator", width="large"),
@@ -1190,7 +1138,6 @@ def main():
                     }
                 )
 
-                # Download exits data
                 exits_csv = display_exited_df.to_csv(index=False)
                 st.download_button(
                     label="📥 Download Exit Data",
@@ -1219,14 +1166,12 @@ def main():
             3. Cost data will be collected for all operators
             """)
         else:
-            # Summary metrics at the top
             total_gas_spent = sum(cost['total_cost_eth'] for cost in operator_costs.values())
             total_transactions = sum(cost['total_txs'] for cost in operator_costs.values())
             total_successful = sum(cost['successful_txs'] for cost in operator_costs.values())
             total_failed = sum(cost['failed_txs'] for cost in operator_costs.values())
             operators_with_costs = len([c for c in operator_costs.values() if c['total_txs'] > 0])
 
-            # Cost summary cards
             col1, col2, col3, col4 = st.columns(4)
 
             with col1:
@@ -1243,7 +1188,6 @@ def main():
                 avg_cost = total_gas_spent / total_transactions if total_transactions > 0 else 0
                 st.metric("Avg Cost/TX", f"{avg_cost:.6f} ETH")
 
-            # Additional summary row
             col5, col6, col7, col8 = st.columns(4)
 
             with col5:
@@ -1253,7 +1197,6 @@ def main():
                 st.metric("Failed Transactions", f"{total_failed:,}")
 
             with col7:
-                # Cost per validator
                 total_active_validators = sum(v - operator_exited.get(k, 0) for k, v in operator_validators.items())
                 cost_per_validator = total_gas_spent / total_active_validators if total_active_validators > 0 else 0
                 st.metric("Cost per Validator", f"{cost_per_validator:.6f} ETH")
@@ -1268,7 +1211,6 @@ def main():
 
             st.markdown("---")
 
-            # Create operator cost table with full addresses
             cost_data = []
             for operator, cost_info in operator_costs.items():
                 if cost_info['total_txs'] > 0:
@@ -1289,13 +1231,11 @@ def main():
                     })
 
             if cost_data:
-                # Sort by total cost descending
                 cost_data.sort(key=lambda x: x['total_cost_eth'], reverse=True)
 
                 st.subheader("📊 Operator Cost Rankings")
                 st.caption(f"Showing {len(cost_data)} operators with transaction data, sorted by total gas spent")
 
-                # Add search functionality
                 search_term = st.text_input(
                     "🔍 Search operators by address or ENS name",
                     placeholder="Enter address, ENS name, or partial match (e.g., 0x1878f36, vitalik.eth)",
@@ -1303,12 +1243,10 @@ def main():
                     key="cost_search_input"
                 )
 
-                # Filter data based on search
                 if search_term:
                     filtered_data = []
                     for row in cost_data:
                         ens_name = ens_names.get(row['operator'], "")
-                        # Search in address or ENS name
                         if (search_term.lower() in row['operator'].lower() or
                             (ens_name and search_term.lower() in ens_name.lower())):
                             filtered_data.append(row)
@@ -1322,9 +1260,7 @@ def main():
                 else:
                     display_data = cost_data
 
-                # Create expandable table with enhanced display
                 for i, row in enumerate(display_data):
-                    # Create header with ENS name prominently displayed and full address
                     ens_name = ens_names.get(row['operator'], "")
                     if ens_name:
                         header_display = f"#{i+1} 🏷️ {ens_name} ({row['operator']}) - {row['total_cost_eth']:.6f} ETH ({row['total_txs']} txs)"
@@ -1334,13 +1270,11 @@ def main():
                         operator_info = f"**Address:** `{row['operator']}`"
 
                     with st.expander(header_display, expanded=False):
-                        # Operator info section with prominent ENS display
                         st.markdown("**🔗 Operator Information**")
                         st.markdown(operator_info)
 
                         st.markdown("---")
 
-                        # Operator summary in columns
                         detail_col1, detail_col2, detail_col3 = st.columns(3)
 
                         with detail_col1:
@@ -1363,37 +1297,30 @@ def main():
                             else:
                                 st.write(f"• Cost per Validator: **N/A**")
 
-                        # Transaction details table - USING EXACT WORKING PATTERN
                         operator_txs = operator_transactions.get(row['operator'], [])
                         if operator_txs:
                             st.markdown("**📋 Transaction History**")
 
-                            # Convert to DataFrame and sort by date/time
                             tx_df = pd.DataFrame(operator_txs)
                             tx_df['datetime'] = pd.to_datetime(tx_df['date'] + ' ' + tx_df['time'])
                             tx_df = tx_df.sort_values('datetime', ascending=False)
 
-                            # Add validator count column for successful transactions
                             tx_df['validator_count'] = tx_df.apply(
                                 lambda row_data: row_data.get('validator_count', 0) if row_data['status'] == 'Successful' else 0,
                                 axis=1
                             )
 
-                            # Ensure validator_count is numeric
                             tx_df['validator_count'] = pd.to_numeric(tx_df['validator_count'], errors='coerce').fillna(0).astype(int)
 
-                            # Format for display - show empty string for failed transactions
                             display_tx_df = tx_df[['date', 'time', 'total_cost_eth', 'status', 'validator_count', 'gas_used', 'gas_price']].copy()
                             display_tx_df['validator_count_display'] = display_tx_df.apply(
                                 lambda row: str(row['validator_count']) if row['status'] == 'Successful' and row['validator_count'] > 0 else '',
                                 axis=1
                             )
 
-                            # Create final display dataframe - USING EXACT WORKING PATTERN
                             final_display_df = display_tx_df[['date', 'time', 'total_cost_eth', 'status', 'validator_count_display', 'gas_used', 'gas_price']].copy()
                             final_display_df.columns = ['Date', 'Time', 'Cost (ETH)', 'Status', 'Validators', 'Gas Used', 'Gas Price']
 
-                            # EXACT SAME METHOD as working table - convert numeric columns to strings
                             final_display_df['Gas Used'] = final_display_df['Gas Used'].astype(str)
                             final_display_df['Gas Price'] = final_display_df['Gas Price'].astype(str)
 
@@ -1412,8 +1339,6 @@ def main():
                                 }
                             )
 
-                            # Download individual operator data
-                            # Create filename with ENS name if available
                             ens_name = ens_names.get(row['operator'], "")
                             if ens_name:
                                 filename_part = ens_name.replace('.', '_')
@@ -1431,14 +1356,11 @@ def main():
                         else:
                             st.info("No detailed transaction data available for this operator.")
 
-                # Download all cost data
                 st.markdown("---")
                 col1, col2 = st.columns([3, 1])
                 with col2:
-                    # Create summary CSV with full addresses and ENS names
                     summary_df = pd.DataFrame(cost_data)
 
-                    # Add ENS names to the export
                     export_cost_data = []
                     for row in cost_data:
                         ens_name = ens_names.get(row['operator'], "")
@@ -1473,7 +1395,6 @@ def main():
         col1, col2 = st.columns(2)
 
         with col1:
-            # Enhanced cache summary with ENS info
             cache_summary = {
                 "total_validators": cache.get('total_validators', 0),
                 "total_exited": cache.get('total_exited', 0),
@@ -1487,7 +1408,9 @@ def main():
                 "transaction_records": len(cache.get('operator_transactions', {})),
                 "ens_names_resolved": len(cache.get('ens_names', {})),
                 "ens_last_updated": cache.get('ens_last_updated', 0),
-                "ens_update_failures": len(cache.get('ens_update_failures', {}))
+                "ens_update_failures": len(cache.get('ens_update_failures', {})),
+                "validator_indices": len(cache.get('validator_indices', {})),
+                "validators_in_queue": len(cache.get('pending_pubkeys', []))
             }
 
             st.json(cache_summary)
@@ -1496,11 +1419,9 @@ def main():
             if st.button("📄 Show Full Cache"):
                 st.json(cache)
 
-        # ENS Names section - USING EXACT WORKING PATTERN
         if ens_names:
             st.subheader("🏷️ Resolved ENS Names")
 
-            # Create ENS names table
             ens_data = []
             for addr, ens_name in ens_names.items():
                 validator_count = operator_validators.get(addr, 0)
@@ -1517,7 +1438,6 @@ def main():
                 ens_df = pd.DataFrame(ens_data)
                 ens_df = ens_df.sort_values('Active Validators', ascending=False)
 
-                # EXACT SAME METHOD as working table - convert numeric columns to strings
                 ens_df['Active Validators'] = ens_df['Active Validators'].astype(str)
                 ens_df['Total Validators'] = ens_df['Total Validators'].astype(str)
 
@@ -1533,7 +1453,6 @@ def main():
                     }
                 )
 
-                # Download ENS data
                 ens_csv = ens_df.to_csv(index=False)
                 st.download_button(
                     label="📥 Download ENS Data",
@@ -1542,13 +1461,11 @@ def main():
                     mime="text/csv"
                 )
 
-    # Auto-refresh handling
     if auto_refresh:
         import time
         time.sleep(60)
         st.rerun()
 
-    # Footer
     st.markdown("---")
     ens_info = f" | ENS: {len(ens_names)} names resolved" if ens_names else ""
     st.markdown(f"*Dashboard last refreshed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}{ens_info}*")
