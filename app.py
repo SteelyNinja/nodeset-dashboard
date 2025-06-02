@@ -134,6 +134,25 @@ def load_validator_data():
 
     return None, None
 
+@st.cache_data(ttl=300)
+def load_proposals_data():
+    proposals_files = [
+        'proposals.json',
+        './data/proposals.json',
+        '../proposals.json'
+    ]
+    
+    for proposals_file in proposals_files:
+        if os.path.exists(proposals_file):
+            try:
+                with open(proposals_file, 'r') as f:
+                    data = json.load(f)
+                return data, proposals_file
+            except Exception as e:
+                st.error(f"❌ Error loading {proposals_file}: {str(e)}")
+    
+    return None, None
+
 def format_operator_display(address: str, ens_names: dict, short: bool = False) -> str:
     ens_name = ens_names.get(address)
 
@@ -447,6 +466,41 @@ def create_performance_table(operator_performance, operator_validators, operator
 
     return df
 
+def create_proposals_operators_table(proposals_data, ens_names):
+    if not proposals_data:
+        return []
+    
+    operator_summary = proposals_data.get('operator_summary', {})
+    proposals = proposals_data.get('proposals', [])
+    
+    table_data = []
+    for addr, summary in operator_summary.items():
+        operator_proposals = [p for p in proposals if p['operator'] == addr]
+        
+        if operator_proposals:
+            dates = [p['date'] for p in operator_proposals]
+            gas_used = sum(p['gas_used'] for p in operator_proposals)
+            avg_gas_util = sum(p['gas_utilization'] for p in operator_proposals) / len(operator_proposals)
+            avg_txs = sum(p['tx_count'] for p in operator_proposals) / len(operator_proposals)
+            highest_value = max(p['total_value_eth'] for p in operator_proposals)
+            
+            table_data.append({
+                'operator': addr,
+                'ens_name': ens_names.get(addr, ''),
+                'proposal_count': summary['proposal_count'],
+                'total_value_eth': summary['total_value_eth'],
+                'average_value_eth': summary['average_value_eth'],
+                'highest_value_eth': highest_value,
+                'total_gas_used': gas_used,
+                'avg_gas_utilization': avg_gas_util,
+                'avg_tx_count': avg_txs,
+                'first_proposal': min(dates),
+                'last_proposal': max(dates),
+                'proposals': operator_proposals
+            })
+    
+    return sorted(table_data, key=lambda x: x['proposal_count'], reverse=True)
+
 def display_health_status(concentration_metrics, total_active, total_exited):
     st.subheader("🏥 Network Health Status")
 
@@ -670,15 +724,15 @@ def main():
     col1, col2, col3, col4, col5, col6 = st.columns(6)
 
     with col1:
-        st.metric("Total Deposited Validators", f"{total_activated + total_queued:,}", 
+        st.metric("Total Deposited Validators", f"{total_activated + total_queued:,}",
                   help="All validators that have been deposited (includes activated and queued)")
 
     with col2:
-        st.metric("Activated Validators", f"{total_activated:,}", 
+        st.metric("Activated Validators", f"{total_activated:,}",
                   help="Validators with assigned index numbers (participating in consensus)")
 
     with col3:
-        st.metric("Validators in Queue", f"{total_queued:,}", 
+        st.metric("Validators in Queue", f"{total_queued:,}",
                   help="Validators deposited but waiting for activation")
 
     with col4:
@@ -694,19 +748,19 @@ def main():
     if total_active > 0:
         activation_rate = (total_activated / (total_activated + total_queued) * 100)
         queue_rate = (total_queued / (total_activated + total_queued) * 100)
-        
+
         st.markdown("---")
         act_col1, act_col2 = st.columns(2)
-        
+
         with act_col1:
             color = "status-good" if activation_rate >= 95 else "status-warning" if activation_rate >= 85 else "status-danger"
-            st.markdown(f"**Activation Rate:** <span class='{color}'>{activation_rate:.1f}%</span>", 
+            st.markdown(f"**Activation Rate:** <span class='{color}'>{activation_rate:.1f}%</span>",
                        unsafe_allow_html=True)
             st.caption(f"{total_activated:,} of {total_activated + total_queued:,} validators activated")
-        
+
         with act_col2:
             color = "status-good" if queue_rate <= 5 else "status-warning" if queue_rate <= 15 else "status-danger"
-            st.markdown(f"**Queue Rate:** <span class='{color}'>{queue_rate:.1f}%</span>", 
+            st.markdown(f"**Queue Rate:** <span class='{color}'>{queue_rate:.1f}%</span>",
                        unsafe_allow_html=True)
             st.caption(f"{total_queued:,} validators waiting for activation")
 
@@ -826,11 +880,12 @@ def main():
 
     st.markdown("---")
 
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
         "📈 Distribution",
         "🎯 Concentration",
         "🏆 Top Operators",
         "⚡ Performance",
+        "🍀 Proposals",
         "🚪 Exit Analysis",
         "💰 Costs",
         "📋 Raw Data"
@@ -1059,6 +1114,210 @@ def main():
             st.info("No performance data available in cache file.")
 
     with tab5:
+        st.subheader("🍀 Proposal Analysis")
+        
+        proposals_cache = load_proposals_data()
+        if proposals_cache[0] is None:
+            st.error("❌ **Proposals data file not found!**")
+            st.markdown("""
+            **Setup Instructions:**
+            1. Ensure `proposals.json` exists in your directory
+            2. Place the file alongside this dashboard script
+            
+            **Expected file locations:**
+            - `./proposals.json`
+            - `./data/proposals.json`
+            """)
+        else:
+            proposals_data, proposals_file = proposals_cache
+            metadata = proposals_data.get('metadata', {})
+            
+            col1, col2, col3, col4 = st.columns(4)
+            
+            with col1:
+                st.metric("Total Proposals", f"{metadata.get('total_proposals', 0):,}")
+                
+            with col2:
+                st.metric("Total ETH Value", f"{metadata.get('total_value_eth', 0):.3f} ETH")
+                
+            with col3:
+                st.metric("Operators with Proposals", f"{metadata.get('operators_tracked', 0)}")
+                
+            with col4:
+                total_proposals = metadata.get('total_proposals', 1)
+                total_value = metadata.get('total_value_eth', 0)
+                avg_value = total_value / max(total_proposals, 1)
+                st.metric("Avg Value/Proposal", f"{avg_value:.4f} ETH")
+            
+            if metadata.get('last_updated'):
+                st.caption(f"📊 Proposals: {metadata['last_updated']} • 📁 {proposals_file.split('/')[-1]}")
+            
+            proposals_operators = create_proposals_operators_table(proposals_data, ens_names)
+            
+            if proposals_operators:
+                st.subheader("🏆 Proposal Operators by Proposal Count")
+                st.caption(f"Showing {len(proposals_operators)} operators with proposals")
+                
+                search_term = st.text_input(
+                    "🔍 Search proposal operators by address or ENS name",
+                    placeholder="Enter address, ENS name, or partial match",
+                    key="proposals_search_input"
+                )
+                
+                if search_term:
+                    filtered_ops = []
+                    for op in proposals_operators:
+                        ens_name = op['ens_name']
+                        if (search_term.lower() in op['operator'].lower() or
+                            (ens_name and search_term.lower() in ens_name.lower())):
+                            filtered_ops.append(op)
+                    
+                    if filtered_ops:
+                        st.info(f"Found {len(filtered_ops)} operators matching '{search_term}'")
+                        display_ops = filtered_ops
+                    else:
+                        st.warning(f"No operators found matching '{search_term}'")
+                        display_ops = []
+                else:
+                    display_ops = proposals_operators
+                
+                for i, op_data in enumerate(display_ops):
+                    ens_name = op_data['ens_name']
+                    operator = op_data['operator']
+                    
+                    if ens_name:
+                        header = f"#{i+1} 🏷️ {ens_name} ({operator}) - {op_data['proposal_count']} proposals"
+                    else:
+                        header = f"#{i+1} {operator} - {op_data['proposal_count']} proposals"
+                    
+                    header += f" ({op_data['total_value_eth']:.4f} ETH)"
+                    
+                    with st.expander(header, expanded=False):
+                        if ens_name:
+                            st.markdown(f"**ENS:** {ens_name}")
+                        st.markdown(f"**Address:** `{operator}`")
+                        
+                        st.markdown("---")
+                        
+                        detail_col1, detail_col2, detail_col3 = st.columns(3)
+                        
+                        with detail_col1:
+                            st.markdown("**💰 Proposal Performance**")
+                            st.write(f"• Proposals: **{op_data['proposal_count']}**")
+                            st.write(f"• Total Value: **{op_data['total_value_eth']:.4f} ETH**")
+                            st.write(f"• Average: **{op_data['average_value_eth']:.4f} ETH**")
+                            st.write(f"• Highest: **{op_data['highest_value_eth']:.4f} ETH**")
+                        
+                        with detail_col2:
+                            st.markdown("**⚡ Block Performance**")
+                            st.write(f"• Gas Used: **{op_data['total_gas_used']:,}**")
+                            st.write(f"• Avg Gas Util: **{op_data['avg_gas_utilization']:.1f}%**")
+                            st.write(f"• Avg TXs: **{op_data['avg_tx_count']:.0f}**")
+                            
+                            efficiency = op_data['total_value_eth'] / (op_data['total_gas_used'] / 1e9) if op_data['total_gas_used'] > 0 else 0
+                            st.write(f"• ETH/M Gas: **{efficiency:.6f}**")
+                        
+                        with detail_col3:
+                            st.markdown("**📅 Activity**")
+                            st.write(f"• First: **{op_data['first_proposal']}**")
+                            st.write(f"• Latest: **{op_data['last_proposal']}**")
+                            
+                            if len(op_data['proposals']) > 1:
+                                try:
+                                    first = datetime.strptime(op_data['first_proposal'], '%Y-%m-%d %H:%M:%S')
+                                    last = datetime.strptime(op_data['last_proposal'], '%Y-%m-%d %H:%M:%S')
+                                    span = (last - first).days
+                                    st.write(f"• Span: **{span} days**")
+                                    if span > 0:
+                                        freq = op_data['proposal_count'] / span
+                                        st.write(f"• Rate: **{freq:.2f}/day**")
+                                except:
+                                    pass
+                        
+                        st.markdown("**📋 Proposal History**")
+                        proposals_list = op_data['proposals']
+                        
+                        if proposals_list:
+                            df = pd.DataFrame(proposals_list)
+                            
+                            display_df = df[['date', 'slot', 'total_value_eth', 'gas_used', 'gas_utilization', 'tx_count', 'base_fee', 'validator_pubkey']].copy()
+                            display_df.columns = ['Date', 'Slot', 'ETH Value', 'Gas Used', 'Gas %', 'TXs', 'Base Fee', 'Validator Pubkey']
+                            
+                            display_df['ETH Value'] = display_df['ETH Value'].apply(lambda x: f"{x:.4f}")
+                            display_df['Gas Used'] = display_df['Gas Used'].astype(str)
+                            display_df['Gas %'] = display_df['Gas %'].apply(lambda x: f"{x:.1f}%")
+                            display_df['TXs'] = display_df['TXs'].astype(str)
+                            display_df['Base Fee'] = display_df['Base Fee'].astype(str)
+                            display_df['Slot'] = display_df['Slot'].astype(str)
+                            # Keep validator pubkey full - no truncation
+                            
+                            display_df = display_df.sort_values('Date', ascending=False)
+                            
+                            st.dataframe(
+                                display_df,
+                                use_container_width=True,
+                                hide_index=True,
+                                column_config={
+                                    "Date": st.column_config.TextColumn("Date", width="medium"),
+                                    "Slot": st.column_config.TextColumn("Slot", width="small"),
+                                    "ETH Value": st.column_config.TextColumn("ETH Value", width="small"),
+                                    "Gas Used": st.column_config.TextColumn("Gas Used", width="small"),
+                                    "Gas %": st.column_config.TextColumn("Gas %", width="small"),
+                                    "TXs": st.column_config.TextColumn("TXs", width="small"),
+                                    "Base Fee": st.column_config.TextColumn("Base Fee", width="small"),
+                                    "Validator Pubkey": st.column_config.TextColumn("Validator Pubkey", width="large")
+                                }
+                            )
+                            
+                            if ens_name:
+                                filename = ens_name.replace('.', '_')
+                            else:
+                                filename = f"{operator[:8]}_{operator[-6:]}"
+                            
+                            csv = df.to_csv(index=False)
+                            st.download_button(
+                                label=f"📥 Download {ens_name if ens_name else operator[:10]+'...'} proposals",
+                                data=csv,
+                                file_name=f"proposals_{filename}_{datetime.now().strftime('%Y%m%d')}.csv",
+                                mime="text/csv",
+                                key=f"proposals_download_{i}"
+                            )
+                        else:
+                            st.info("No proposal details available.")
+                
+                st.markdown("---")
+                col1, col2 = st.columns([3, 1])
+                with col2:
+                    export_data = []
+                    for op in proposals_operators:
+                        export_data.append({
+                            'address': op['operator'],
+                            'ens_name': op['ens_name'],
+                            'proposal_count': op['proposal_count'],
+                            'total_value_eth': op['total_value_eth'],
+                            'average_value_eth': op['average_value_eth'],
+                            'highest_value_eth': op['highest_value_eth'],
+                            'total_gas_used': op['total_gas_used'],
+                            'avg_gas_utilization': op['avg_gas_utilization'],
+                            'avg_tx_count': op['avg_tx_count'],
+                            'first_proposal': op['first_proposal'],
+                            'last_proposal': op['last_proposal']
+                        })
+                    
+                    export_df = pd.DataFrame(export_data)
+                    export_csv = export_df.to_csv(index=False)
+                    
+                    st.download_button(
+                        label="📥 Download All Proposal Data",
+                        data=export_csv,
+                        file_name=f"proposals_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                        mime="text/csv",
+                        use_container_width=True
+                    )
+            else:
+                st.info("No proposal data available.")
+
+    with tab6:
         if total_exited > 0:
             st.subheader("🚪 Exit Analysis")
 
@@ -1150,7 +1409,7 @@ def main():
         else:
             st.info("😊 Great news! No validator exits detected yet.")
 
-    with tab6:
+    with tab7:
         st.subheader("💰 Transaction Cost Analysis")
 
         operator_costs = cache.get('operator_costs', {})
@@ -1389,7 +1648,7 @@ def main():
             else:
                 st.info("No operators found with transaction cost data.")
 
-    with tab7:
+    with tab8:
         st.subheader("📋 Raw Cache Data")
 
         col1, col2 = st.columns(2)
