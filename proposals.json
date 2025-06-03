@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "last_updated": "2025-06-03T10:00:01.782862",
-    "total_proposals": 117,
-    "total_value_eth": 4.634519676217129,
+    "last_updated": "2025-06-03T10:15:02.484263",
+    "total_proposals": 118,
+    "total_value_eth": 4.667372901037704,
     "operators_tracked": 73
   },
   "operator_summary": {
@@ -312,9 +312,9 @@
       "average_value_eth": 0.034729428520700344
     },
     "0x938db97C43c94963068480E7b2Bcb02C3d7fa6dc": {
-      "proposal_count": 1,
-      "total_value_eth": 0.020564093280200597,
-      "average_value_eth": 0.020564093280200597
+      "proposal_count": 2,
+      "total_value_eth": 0.05341731810077625,
+      "average_value_eth": 0.026708659050388123
     },
     "0xCcD704788d9c6B44ec8273BAdD8d0449E4B3FbD9": {
       "proposal_count": 1,
@@ -2712,6 +2712,26 @@
       "gas_utilization": 29.37921189645601,
       "consensus_reward_eth": 2.5e-06,
       "execution_fees_eth": 0.019562282715806074
+    },
+    {
+      "slot": 11843413,
+      "epoch": 370106,
+      "block_number": 22623405,
+      "timestamp": 1748944979,
+      "date": "2025-06-03 10:02:59",
+      "validator_index": 1942089,
+      "validator_pubkey": "0xa6f8c119ac136ad763367a91e2d5870700b60bdda35f3f026e3f20171673fba86034dc65814fbdc00d8d623fc95bc3b6",
+      "operator": "0x938db97C43c94963068480E7b2Bcb02C3d7fa6dc",
+      "operator_name": "h2o-nodes-nodeset.eth (0x938db9...7fa6dc)",
+      "total_value_wei": 3.2853224820575652e+16,
+      "total_value_eth": 0.03285322482057565,
+      "gas_used": 18454733,
+      "gas_limit": 36000000,
+      "base_fee": 1780070447,
+      "tx_count": 243,
+      "gas_utilization": 51.26314722222223,
+      "consensus_reward_eth": 2.5e-06,
+      "execution_fees_eth": 0.032850724820575654
     }
   ]
 }
