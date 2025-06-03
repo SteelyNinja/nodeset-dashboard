@@ -466,6 +466,45 @@ def create_performance_table(operator_performance, operator_validators, operator
 
     return df
 
+def create_latest_proposals_table(proposals_data, ens_names, limit=5):
+    """Create a table showing the latest proposals across all operators"""
+    if not proposals_data:
+        return pd.DataFrame()
+    
+    proposals = proposals_data.get('proposals', [])
+    
+    if not proposals:
+        return pd.DataFrame()
+    
+    # Sort proposals by date (latest first) and take the top N
+    latest_proposals = sorted(proposals, key=lambda x: x['date'], reverse=True)[:limit]
+    
+    # Format the data for display
+    table_data = []
+    for proposal in latest_proposals:
+        operator_address = proposal['operator']
+        ens_name = ens_names.get(operator_address, "")
+        
+        # Format operator display
+        if ens_name:
+            operator_display = f"{ens_name} ({operator_address[:8]}...{operator_address[-6:]})"
+        else:
+            operator_display = f"{operator_address[:8]}...{operator_address[-6:]}"
+        
+        table_data.append({
+            'Date': proposal['date'],
+            'Operator': operator_display,
+            'Operator Address': operator_address,
+            'Validator Pubkey': proposal['validator_pubkey'],
+            'ETH Value': f"{proposal['total_value_eth']:.4f}",
+            'Slot': proposal['slot'],
+            'Gas Used': f"{proposal['gas_used']:,}",
+            'Gas Utilization': f"{proposal['gas_utilization']:.1f}%",
+            'TX Count': proposal['tx_count']
+        })
+    
+    return pd.DataFrame(table_data)
+
 def create_proposals_operators_table(proposals_data, ens_names):
     if not proposals_data:
         return []
@@ -1151,6 +1190,45 @@ def main():
             
             if metadata.get('last_updated'):
                 st.caption(f"📊 Proposals: {metadata['last_updated']} • 📁 {proposals_file.split('/')[-1]}")
+            
+            # Add Latest Proposals Table
+            st.subheader("🕒 Latest Proposals")
+            st.caption("Showing the 5 most recent proposals across all operators")
+            
+            latest_proposals_df = create_latest_proposals_table(proposals_data, ens_names, limit=5)
+            
+            if not latest_proposals_df.empty:
+                # Display the table
+                display_latest_df = latest_proposals_df.drop(['Operator Address'], axis=1)  # Hide full address for cleaner display
+                
+                st.dataframe(
+                    display_latest_df,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "Date": st.column_config.TextColumn("Date", width="medium"),
+                        "Operator": st.column_config.TextColumn("Operator", width="large"),
+                        "Validator Pubkey": st.column_config.TextColumn("Validator Pubkey", width="large"),
+                        "ETH Value": st.column_config.TextColumn("ETH Value", width="small"),
+                        "Slot": st.column_config.TextColumn("Slot", width="small"),
+                        "Gas Used": st.column_config.TextColumn("Gas Used", width="small"),
+                        "Gas Utilization": st.column_config.TextColumn("Gas %", width="small"),
+                        "TX Count": st.column_config.TextColumn("TXs", width="small")
+                    }
+                )
+                
+                # Optional: Add download button for latest proposals
+                latest_csv = latest_proposals_df.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Latest Proposals",
+                    data=latest_csv,
+                    file_name=f"latest_proposals_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
+            else:
+                st.info("No recent proposals available.")
+            
+            st.markdown("---")  # Add separator before the next section
             
             proposals_operators = create_proposals_operators_table(proposals_data, ens_names)
             
