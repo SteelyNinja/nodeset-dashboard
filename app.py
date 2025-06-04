@@ -1232,9 +1232,9 @@ def main():
             
             # Add Largest Proposals Table (NEW)
             st.subheader("💎 Largest Proposals by Value")
-            st.caption("Showing the 3 highest value proposals across all operators")
+            st.caption("Showing the 5 highest value proposals across all operators")
             
-            largest_proposals_df = create_largest_proposals_table(proposals_data, ens_names, limit=3)
+            largest_proposals_df = create_largest_proposals_table(proposals_data, ens_names, limit=5)
             
             if not largest_proposals_df.empty:
                 # Display the table
