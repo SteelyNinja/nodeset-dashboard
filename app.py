@@ -130,7 +130,7 @@ def load_validator_data():
                     cache = json.load(f)
                 return cache, cache_file
             except Exception as e:
-                st.error(f"❌ Error loading {cache_file}: {str(e)}")
+                st.error(f"⚠ Error loading {cache_file}: {str(e)}")
 
     return None, None
 
@@ -149,7 +149,7 @@ def load_proposals_data():
                     data = json.load(f)
                 return data, proposals_file
             except Exception as e:
-                st.error(f"❌ Error loading {proposals_file}: {str(e)}")
+                st.error(f"⚠ Error loading {proposals_file}: {str(e)}")
     
     return None, None
 
@@ -466,6 +466,45 @@ def create_performance_table(operator_performance, operator_validators, operator
 
     return df
 
+def create_largest_proposals_table(proposals_data, ens_names, limit=3):
+    """Create a table showing the largest proposals by ETH value"""
+    if not proposals_data:
+        return pd.DataFrame()
+    
+    proposals = proposals_data.get('proposals', [])
+    
+    if not proposals:
+        return pd.DataFrame()
+    
+    # Sort proposals by ETH value (largest first) and take the top N
+    largest_proposals = sorted(proposals, key=lambda x: x['total_value_eth'], reverse=True)[:limit]
+    
+    # Format the data for display
+    table_data = []
+    for proposal in largest_proposals:
+        operator_address = proposal['operator']
+        ens_name = ens_names.get(operator_address, "")
+        
+        # Format operator display
+        if ens_name:
+            operator_display = f"{ens_name} ({operator_address[:8]}...{operator_address[-6:]})"
+        else:
+            operator_display = f"{operator_address[:8]}...{operator_address[-6:]}"
+        
+        table_data.append({
+            'Date': proposal['date'],
+            'Operator': operator_display,
+            'Operator Address': operator_address,
+            'Validator Pubkey': proposal['validator_pubkey'],
+            'ETH Value': f"{proposal['total_value_eth']:.4f}",
+            'Slot': proposal['slot'],
+            'Gas Used': f"{proposal['gas_used']:,}",
+            'Gas Utilization': f"{proposal['gas_utilization']:.1f}%",
+            'TX Count': proposal['tx_count']
+        })
+    
+    return pd.DataFrame(table_data)
+
 def create_latest_proposals_table(proposals_data, ens_names, limit=5):
     """Create a table showing the latest proposals across all operators"""
     if not proposals_data:
@@ -710,7 +749,7 @@ def main():
 
     cache_data = load_validator_data()
     if cache_data[0] is None:
-        st.error("❌ **Cache file not found!**")
+        st.error("⚠ **Cache file not found!**")
         st.markdown("""
         **Setup Instructions:**
         1. Run your NodeSet validator tracker script first
@@ -750,7 +789,7 @@ def main():
         ens_update_time = datetime.fromtimestamp(ens_last_updated)
         ens_update_str = f" • 🏷️ ENS: {ens_update_time.strftime('%H:%M:%S')}"
 
-    st.caption(f"📊 Block: {last_block:,} • 🕒 {last_update.strftime('%H:%M:%S')}{ens_update_str} • 📁 {cache_file.split('/')[-1]}")
+    st.caption(f"📊 Block: {last_block:,} • 🕐 {last_update.strftime('%H:%M:%S')}{ens_update_str} • 📁 {cache_file.split('/')[-1]}")
 
     st.markdown("### 📈 Network Overview")
 
@@ -924,7 +963,7 @@ def main():
         "🎯 Concentration",
         "🏆 Top Operators",
         "⚡ Performance",
-        "🍀 Proposals",
+        "🤲 Proposals",
         "🚪 Exit Analysis",
         "💰 Costs",
         "📋 Raw Data"
@@ -1021,7 +1060,7 @@ def main():
                 st.plotly_chart(fig_curve, use_container_width=True)
 
             with col2:
-                st.subheader("📏 Concentration Metrics")
+                st.subheader("🔍 Concentration Metrics")
 
                 metrics_df = pd.DataFrame([
                     {"Metric": "Gini Coefficient", "Value": f"{concentration_metrics['gini_coefficient']:.4f}"},
@@ -1153,11 +1192,11 @@ def main():
             st.info("No performance data available in cache file.")
 
     with tab5:
-        st.subheader("🍀 Proposal Analysis")
+        st.subheader("🤲 Proposal Analysis")
         
         proposals_cache = load_proposals_data()
         if proposals_cache[0] is None:
-            st.error("❌ **Proposals data file not found!**")
+            st.error("⚠ **Proposals data file not found!**")
             st.markdown("""
             **Setup Instructions:**
             1. Ensure `proposals.json` exists in your directory
@@ -1191,8 +1230,47 @@ def main():
             if metadata.get('last_updated'):
                 st.caption(f"📊 Proposals: {metadata['last_updated']} • 📁 {proposals_file.split('/')[-1]}")
             
+            # Add Largest Proposals Table (NEW)
+            st.subheader("💎 Largest Proposals by Value")
+            st.caption("Showing the 3 highest value proposals across all operators")
+            
+            largest_proposals_df = create_largest_proposals_table(proposals_data, ens_names, limit=3)
+            
+            if not largest_proposals_df.empty:
+                # Display the table
+                display_largest_df = largest_proposals_df.drop(['Operator Address'], axis=1)  # Hide full address for cleaner display
+                
+                st.dataframe(
+                    display_largest_df,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "Date": st.column_config.TextColumn("Date", width="medium"),
+                        "Operator": st.column_config.TextColumn("Operator", width="large"),
+                        "Validator Pubkey": st.column_config.TextColumn("Validator Pubkey", width="large"),
+                        "ETH Value": st.column_config.TextColumn("ETH Value", width="small"),
+                        "Slot": st.column_config.TextColumn("Slot", width="small"),
+                        "Gas Used": st.column_config.TextColumn("Gas Used", width="small"),
+                        "Gas Utilization": st.column_config.TextColumn("Gas %", width="small"),
+                        "TX Count": st.column_config.TextColumn("TXs", width="small")
+                    }
+                )
+                
+                # Optional: Add download button for largest proposals
+                largest_csv = largest_proposals_df.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Largest Proposals",
+                    data=largest_csv,
+                    file_name=f"largest_proposals_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
+            else:
+                st.info("No proposals available.")
+            
+            st.markdown("---")  # Add separator between the two tables
+            
             # Add Latest Proposals Table
-            st.subheader("🕒 Latest Proposals")
+            st.subheader("🕐 Latest Proposals")
             st.caption("Showing the 5 most recent proposals across all operators")
             
             latest_proposals_df = create_latest_proposals_table(proposals_data, ens_names, limit=5)
@@ -1753,7 +1831,7 @@ def main():
             st.json(cache_summary)
 
         with col2:
-            if st.button("📄 Show Full Cache"):
+            if st.button("🔄 Show Full Cache"):
                 st.json(cache)
 
         if ens_names:
