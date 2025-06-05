@@ -153,6 +153,26 @@ def load_proposals_data():
     
     return None, None
 
+@st.cache_data(ttl=300)
+def load_mev_analysis_data():
+    """Load MEV relay analysis data for gas limit analysis"""
+    mev_files = [
+        'mev_analysis_results.json',
+        './data/mev_analysis_results.json', 
+        '../mev_analysis_results.json'
+    ]
+    
+    for mev_file in mev_files:
+        if os.path.exists(mev_file):
+            try:
+                with open(mev_file, 'r') as f:
+                    data = json.load(f)
+                return data, mev_file
+            except Exception as e:
+                st.error(f"⚠ Error loading {mev_file}: {str(e)}")
+    
+    return None, None
+
 def format_operator_display(address: str, ens_names: dict, short: bool = False) -> str:
     ens_name = ens_names.get(address)
 
@@ -579,6 +599,171 @@ def create_proposals_operators_table(proposals_data, ens_names):
     
     return sorted(table_data, key=lambda x: x['proposal_count'], reverse=True)
 
+def analyze_gas_limits_by_operator(mev_data, ens_names):
+    """Analyze gas limit choices by operator"""
+    if not mev_data:
+        return []
+    
+    operator_analysis = mev_data.get('operator_analysis', {})
+    gas_data = []
+    
+    for operator_addr, data in operator_analysis.items():
+        gas_limits = data.get('gas_limits', [])
+        if gas_limits:
+            # Calculate gas limit statistics for this operator
+            unique_limits = list(set(gas_limits))
+            avg_gas = data.get('average_gas_limit', 0)
+            
+            # Determine operator's gas strategy
+            if len(unique_limits) == 1:
+                strategy = "Consistent"
+                consistency_score = 100.0
+            else:
+                strategy = "Mixed"
+                # Calculate consistency as percentage of validators using most common limit
+                most_common_limit = max(set(gas_limits), key=gas_limits.count)
+                consistency_score = (gas_limits.count(most_common_limit) / len(gas_limits)) * 100
+            
+            # Categorize gas limit approach
+            max_gas = max(gas_limits)
+            if max_gas >= 60000000:
+                gas_category = "Ultra High (60M+)"
+                gas_emoji = "🔥🔥🔥"
+            elif max_gas >= 36000000:
+                gas_category = "High (36M)"
+                gas_emoji = "🔥🔥"
+            elif max_gas >= 30000000:
+                gas_category = "Standard (30M)"
+                gas_emoji = "🔥"
+            else:
+                gas_category = "Conservative"
+                gas_emoji = "❄️"
+            
+            # Get display name
+            ens_name = ens_names.get(operator_addr, "")
+            if ens_name:
+                display_name = f"{ens_name} ({operator_addr[:8]}...{operator_addr[-6:]})"
+            else:
+                display_name = f"{operator_addr[:8]}...{operator_addr[-6:]}"
+            
+            gas_data.append({
+                'operator': operator_addr,
+                'display_name': display_name,
+                'ens_name': ens_name,
+                'total_validators': len(gas_limits),
+                'gas_limits': gas_limits,
+                'unique_limits': unique_limits,
+                'average_gas_limit': avg_gas,
+                'max_gas_limit': max_gas,
+                'min_gas_limit': min(gas_limits),
+                'strategy': strategy,
+                'consistency_score': consistency_score,
+                'gas_category': gas_category,
+                'gas_emoji': gas_emoji
+            })
+    
+    return sorted(gas_data, key=lambda x: x['max_gas_limit'], reverse=True)
+
+def create_gas_limit_distribution_chart(mev_data):
+    """Create gas limit distribution chart"""
+    if not mev_data:
+        return None
+    
+    gas_analysis = mev_data.get('gas_limit_analysis', {})
+    distribution = gas_analysis.get('distribution', {})
+    
+    if not distribution:
+        return None
+    
+    # Convert to human readable format and sort by gas limit (ascending)
+    gas_data = []
+    for gas_limit, count in distribution.items():
+        gas_limit_int = int(gas_limit)
+        if gas_limit_int >= 60000000:
+            label = f"Ultra High\n{gas_limit_int//1000000}M gas"
+            color = '#FF4444'  # Red
+        elif gas_limit_int >= 36000000:
+            label = f"High\n{gas_limit_int//1000000}M gas"
+            color = '#FF8800'  # Orange
+        else:
+            label = f"Standard\n{gas_limit_int//1000000}M gas"
+            color = '#4488FF'  # Blue
+        
+        gas_data.append({
+            'gas_limit': gas_limit_int,
+            'label': label,
+            'count': count,
+            'color': color
+        })
+    
+    # Sort by gas limit in ascending order
+    gas_data.sort(key=lambda x: x['gas_limit'])
+    
+    labels = [item['label'] for item in gas_data]
+    values = [item['count'] for item in gas_data]
+    colors = [item['color'] for item in gas_data]
+    
+    fig = go.Figure(data=[go.Bar(
+        x=labels,
+        y=values,
+        marker_color=colors,
+        text=values,
+        textposition='auto'
+    )])
+    
+    fig.update_layout(
+        title="🔥 Gas Limit Distribution Across All Validators",
+        xaxis_title="Gas Limit Setting",
+        yaxis_title="Number of Validators",
+        height=400,
+        showlegend=False
+    )
+    
+    return fig
+
+def create_operator_gas_strategy_chart(gas_data):
+    """Create operator gas strategy comparison"""
+    if not gas_data:
+        return None
+    
+    # Group by gas category
+    category_counts = {}
+    for operator in gas_data:
+        category = operator['gas_category']
+        if category not in category_counts:
+            category_counts[category] = 0
+        category_counts[category] += 1
+    
+    # Create pie chart
+    labels = list(category_counts.keys())
+    values = list(category_counts.values())
+    
+    # Assign colors based on gas level
+    color_map = {
+        'Ultra High (60M+)': '#FF4444',
+        'High (36M)': '#FF8800', 
+        'Standard (30M)': '#4488FF',
+        'Conservative': '#88FF88'
+    }
+    colors = [color_map.get(label, '#CCCCCC') for label in labels]
+    
+    fig = go.Figure(data=[go.Pie(
+        labels=labels,
+        values=values,
+        hole=0.4,
+        marker_colors=colors,
+        textinfo='label+percent+value',
+        textposition='outside'
+    )])
+    
+    fig.update_layout(
+        title="🎯 Operator Gas Strategy Distribution",
+        height=600,
+        showlegend=True
+    )
+    
+    return fig
+
 def display_health_status(concentration_metrics, total_active, total_exited):
     st.subheader("🏥 Network Health Status")
 
@@ -789,7 +974,7 @@ def main():
         ens_update_time = datetime.fromtimestamp(ens_last_updated)
         ens_update_str = f" • 🏷️ ENS: {ens_update_time.strftime('%H:%M:%S')}"
 
-    st.caption(f"📊 Block: {last_block:,} • 🕐 {last_update.strftime('%H:%M:%S')}{ens_update_str} • 📁 {cache_file.split('/')[-1]}")
+    st.caption(f"📊 Block: {last_block:,} • 🕘 {last_update.strftime('%H:%M:%S')}{ens_update_str} • 📁 {cache_file.split('/')[-1]}")
 
     st.markdown("### 📈 Network Overview")
 
@@ -958,7 +1143,7 @@ def main():
 
     st.markdown("---")
 
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
         "📈 Distribution",
         "🎯 Concentration",
         "🏆 Top Operators",
@@ -966,6 +1151,7 @@ def main():
         "🤲 Proposals",
         "🚪 Exit Analysis",
         "💰 Costs",
+        "🔥 Pump the Gas!",
         "📋 Raw Data"
     ])
 
@@ -1270,7 +1456,7 @@ def main():
             st.markdown("---")  # Add separator between the two tables
             
             # Add Latest Proposals Table
-            st.subheader("🕐 Latest Proposals")
+            st.subheader("🕘 Latest Proposals")
             st.caption("Showing the 5 most recent proposals across all operators")
             
             latest_proposals_df = create_latest_proposals_table(proposals_data, ens_names, limit=5)
@@ -1805,6 +1991,183 @@ def main():
                 st.info("No operators found with transaction cost data.")
 
     with tab8:
+        st.subheader("🔥 Pump the Gas! - Gas Limit Analysis")
+        st.markdown("*Analysis of gas limit configurations across NodeSet operators*")
+        
+        # Load MEV analysis data
+        mev_cache = load_mev_analysis_data()
+        if mev_cache[0] is None:
+            st.error("⚠ **MEV analysis data file not found!**")
+            st.markdown("""
+            **Setup Instructions:**
+            1. Ensure `mev_analysis_results.json` exists in your directory
+            2. Place the file alongside this dashboard script
+            
+            **Expected file locations:**
+            - `./mev_analysis_results.json`
+            - `./data/mev_analysis_results.json`
+            """)
+        else:
+            mev_data, mev_file = mev_cache
+            
+            # Overall gas limit statistics
+            gas_analysis = mev_data.get('gas_limit_analysis', {})
+            distribution = gas_analysis.get('distribution', {})
+            consistency_stats = gas_analysis.get('consistency_stats', {})
+            
+            if distribution:
+                # Summary metrics
+                col1, col2, col3, col4 = st.columns(4)
+                
+                total_validators = sum(distribution.values())
+                ultra_high = distribution.get('60000000', 0)
+                high = distribution.get('36000000', 0) 
+                standard = distribution.get('30000000', 0)
+                
+                with col1:
+                    ultra_pct = (ultra_high / total_validators * 100) if total_validators > 0 else 0
+                    st.metric("🔥🔥🔥 Ultra High Gas (60M)", f"{ultra_high:,}", f"{ultra_pct:.1f}%")
+                
+                with col2:
+                    high_pct = (high / total_validators * 100) if total_validators > 0 else 0
+                    st.metric("🔥🔥 High Gas (36M)", f"{high:,}", f"{high_pct:.1f}%")
+                
+                with col3:
+                    std_pct = (standard / total_validators * 100) if total_validators > 0 else 0
+                    st.metric("🔥 Standard Gas (30M)", f"{standard:,}", f"{std_pct:.1f}%")
+                
+                with col4:
+                    consistency_rate = consistency_stats.get('consistency_rate', 0)
+                    st.metric("🎯 Consistency Rate", f"{consistency_rate:.1f}%")
+                
+                # Gas limit distribution chart
+                fig_distribution = create_gas_limit_distribution_chart(mev_data)
+                if fig_distribution:
+                    st.plotly_chart(fig_distribution, use_container_width=True)
+                
+                # Operator analysis
+                gas_operator_data = analyze_gas_limits_by_operator(mev_data, ens_names)
+                
+                if gas_operator_data:
+                    # Make the pie chart larger by giving it full width
+                    fig_strategy = create_operator_gas_strategy_chart(gas_operator_data)
+                    if fig_strategy:
+                        st.plotly_chart(fig_strategy, use_container_width=True)
+                    
+                    # Detailed operator breakdown
+                    st.subheader("🏆 Operator Gas Limit Rankings")
+                    st.caption("Operators ranked by their maximum gas limit settings")
+                    
+                    # Search functionality
+                    search_term = st.text_input(
+                        "🔍 Search operators by address or ENS name",
+                        placeholder="Enter address, ENS name, or partial match",
+                        key="gas_search_input"
+                    )
+                    
+                    if search_term:
+                        filtered_data = []
+                        for op in gas_operator_data:
+                            if (search_term.lower() in op['operator'].lower() or
+                                (op['ens_name'] and search_term.lower() in op['ens_name'].lower())):
+                                filtered_data.append(op)
+                        
+                        if filtered_data:
+                            st.info(f"Found {len(filtered_data)} operators matching '{search_term}'")
+                            display_data = filtered_data
+                        else:
+                            st.warning(f"No operators found matching '{search_term}'")
+                            display_data = []
+                    else:
+                        display_data = gas_operator_data
+                    
+                    # Display operator details
+                    for i, op_data in enumerate(display_data):
+                        ens_name = op_data['ens_name']
+                        
+                        header = f"#{i+1} {op_data['gas_emoji']} "
+                        if ens_name:
+                            header += f"{ens_name} ({op_data['operator'][:8]}...{op_data['operator'][-6:]})"
+                        else:
+                            header += f"{op_data['operator'][:8]}...{op_data['operator'][-6:]}"
+                        
+                        header += f" - {op_data['gas_category']} | {op_data['total_validators']} validators"
+                        
+                        with st.expander(header, expanded=False):
+                            if ens_name:
+                                st.markdown(f"**🏷️ ENS:** {ens_name}")
+                            st.markdown(f"**🔍 Address:** `{op_data['operator']}`")
+                            
+                            st.markdown("---")
+                            
+                            detail_col1, detail_col2, detail_col3 = st.columns(3)
+                            
+                            with detail_col1:
+                                st.markdown("**🔥 Gas Limit Strategy**")
+                                st.write(f"• Category: **{op_data['gas_category']}**")
+                                st.write(f"• Strategy: **{op_data['strategy']}**")
+                                st.write(f"• Consistency: **{op_data['consistency_score']:.1f}%**")
+                            
+                            with detail_col2:
+                                st.markdown("**📊 Gas Limit Stats**")
+                                st.write(f"• Maximum: **{op_data['max_gas_limit']:,}**")
+                                st.write(f"• Average: **{op_data['average_gas_limit']:,.0f}**")
+                                st.write(f"• Minimum: **{op_data['min_gas_limit']:,}**")
+                            
+                            with detail_col3:
+                                st.markdown("**🔍 Validator Details**")
+                                st.write(f"• Total Validators: **{op_data['total_validators']}**")
+                                st.write(f"• Unique Gas Limits: **{len(op_data['unique_limits'])}**")
+                                if len(op_data['unique_limits']) > 1:
+                                    st.write(f"• Limits Used: **{', '.join(f'{x:,}' for x in sorted(op_data['unique_limits'], reverse=True))}**")
+                            
+                            # Show individual validator gas limits if mixed strategy
+                            if op_data['strategy'] == "Mixed":
+                                st.markdown("**⚠️ Mixed Gas Limit Configuration**")
+                                gas_limit_counts = {}
+                                for limit in op_data['gas_limits']:
+                                    gas_limit_counts[limit] = gas_limit_counts.get(limit, 0) + 1
+                                
+                                for limit, count in sorted(gas_limit_counts.items(), reverse=True):
+                                    pct = (count / op_data['total_validators'] * 100)
+                                    st.write(f"• **{limit:,}** gas: {count} validators ({pct:.1f}%)")
+                    
+                    # Download functionality
+                    st.markdown("---")
+                    col1, col2 = st.columns([3, 1])
+                    with col2:
+                        # Prepare export data
+                        export_data = []
+                        for op in gas_operator_data:
+                            export_data.append({
+                                'address': op['operator'],
+                                'ens_name': op['ens_name'],
+                                'total_validators': op['total_validators'],
+                                'max_gas_limit': op['max_gas_limit'],
+                                'average_gas_limit': op['average_gas_limit'],
+                                'min_gas_limit': op['min_gas_limit'],
+                                'gas_category': op['gas_category'],
+                                'strategy': op['strategy'],
+                                'consistency_score': op['consistency_score'],
+                                'unique_gas_limits': len(op['unique_limits'])
+                            })
+                        
+                        export_df = pd.DataFrame(export_data)
+                        export_csv = export_df.to_csv(index=False)
+                        
+                        st.download_button(
+                            label="📥 Download Gas Analysis",
+                            data=export_csv,
+                            file_name=f"gas_limit_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                            mime="text/csv",
+                            use_container_width=True
+                        )
+                else:
+                    st.info("No operator gas limit data available for analysis.")
+            else:
+                st.info("No gas limit distribution data available.")
+
+    with tab9:
         st.subheader("📋 Raw Cache Data")
 
         col1, col2 = st.columns(2)
