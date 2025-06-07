@@ -60,6 +60,11 @@ st.markdown("""
         max-width: none;
     }
 
+    .logo-container {
+        text-align: left;
+        margin-bottom: 1rem;
+    }
+
     @media (max-width: 768px) {
         .main .block-container {
             padding-left: 0.5rem;
@@ -78,6 +83,10 @@ st.markdown("""
         .metric-container {
             padding: 0.5rem;
             margin: 0.25rem 0;
+        }
+
+        .logo-container img {
+            max-height: 80px;
         }
     }
 
@@ -114,6 +123,75 @@ st.markdown("""
     }
 </style>
 """, unsafe_allow_html=True)
+
+def display_logo():
+    """Display the appropriate logo based on system theme preference"""
+    dark_logo_path = "Nodeset_dark_mode.png"
+    light_logo_path = "Nodeset_light_mode.png"
+    
+    # Check if files exist
+    dark_exists = os.path.exists(dark_logo_path)
+    light_exists = os.path.exists(light_logo_path)
+    
+    if dark_exists and light_exists:
+        # Convert images to base64 for embedding
+        dark_b64 = get_base64_image(dark_logo_path)
+        light_b64 = get_base64_image(light_logo_path)
+        
+        if dark_b64 and light_b64:
+            # Use CSS media queries for automatic theme switching
+            logo_html = f"""
+            <div class="logo-container">
+                <style>
+                .logo-dark {{
+                    display: block;
+                    height: 60px;
+                    width: auto;
+                }}
+                .logo-light {{
+                    display: none;
+                    height: 60px;
+                    width: auto;
+                }}
+                @media (prefers-color-scheme: light) {{
+                    .logo-dark {{
+                        display: none;
+                    }}
+                    .logo-light {{
+                        display: block;
+                    }}
+                }}
+                </style>
+                <img src="data:image/png;base64,{dark_b64}" class="logo-dark" alt="NodeSet Dark Logo">
+                <img src="data:image/png;base64,{light_b64}" class="logo-light" alt="NodeSet Light Logo">
+            </div>
+            """
+            st.markdown(logo_html, unsafe_allow_html=True)
+        else:
+            # Fallback if base64 conversion fails
+            st.image(dark_logo_path, width=204)
+            
+    elif dark_exists:
+        st.markdown('<div class="logo-container">', unsafe_allow_html=True)
+        st.image(dark_logo_path, width=204)
+        st.markdown('</div>', unsafe_allow_html=True)
+    elif light_exists:
+        st.markdown('<div class="logo-container">', unsafe_allow_html=True)
+        st.image(light_logo_path, width=204)
+        st.markdown('</div>', unsafe_allow_html=True)
+    else:
+        st.error("Logo files not found: Nodeset_dark_mode.png and Nodeset_light_mode.png")
+        st.title("🔗 NodeSet Validator Monitor")
+
+def get_base64_image(image_path):
+    """Convert image to base64 string for embedding in HTML"""
+    import base64
+    try:
+        with open(image_path, "rb") as img_file:
+            return base64.b64encode(img_file.read()).decode()
+    except Exception as e:
+        st.error(f"Error loading image {image_path}: {str(e)}")
+        return ""
 
 @st.cache_data(ttl=300)
 def load_validator_data():
@@ -923,7 +1001,7 @@ def display_ens_status(ens_names, operator_validators):
         st.caption(f"{validators_with_ens} of {total_validators} validators")
 
 def main():
-    st.title("🔗 NodeSet Validator Monitor")
+    display_logo()
     st.markdown("*Monitoring and analysis of NodeSet protocol validators with ENS name resolution - data cache updated every 15 minutes hit \"Refresh Data\" button to reload. Latest cache time is reported in UTC time.*")
     st.markdown("*** This site is independently maintained and is not affiliated with or managed by Nodeset. ***")
 
