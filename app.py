@@ -1002,7 +1002,7 @@ def display_ens_status(ens_names, operator_validators):
 
 def main():
     display_logo()
-    st.markdown("*Monitoring and analysis of NodeSet protocol validators with ENS name resolution - data cache updated every 15 minutes hit \"Refresh Data\" button to reload. Latest cache time is reported in UTC time.*")
+    st.markdown("*Monitoring and analysis of NodeSet protocol validators on Stakewise - data cache updated every 15 minutes hit \"Refresh Data\" button to reload. Latest cache time is reported in UTC time.*")
     st.markdown("*** This site is independently maintained and is not affiliated with or managed by Nodeset. ***")
 
     refresh_col1, refresh_col2 = st.columns([3, 1])
