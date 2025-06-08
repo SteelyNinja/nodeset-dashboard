@@ -1576,7 +1576,7 @@ def main():
             proposals_operators = create_proposals_operators_table(proposals_data, ens_names)
             
             if proposals_operators:
-                st.subheader("🏆 Proposal Operators by Proposal Count")
+                st.subheader("🏆Operators by Proposal Count")
                 st.caption(f"Showing {len(proposals_operators)} operators with proposals")
                 
                 search_term = st.text_input(
