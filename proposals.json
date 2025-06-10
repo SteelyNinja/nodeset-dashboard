@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "last_updated": "2025-06-10T05:00:02.030094",
-    "total_proposals": 224,
-    "total_value_eth": 7.894792309142404,
+    "last_updated": "2025-06-10T05:15:01.979629",
+    "total_proposals": 225,
+    "total_value_eth": 7.91071950578919,
     "operators_tracked": 110
   },
   "operator_summary": {
@@ -487,9 +487,9 @@
       "average_value_eth": 0.07679478973857634
     },
     "0x56742914Bd97438917F10bEfCFDe8DE58251d2ca": {
-      "proposal_count": 1,
-      "total_value_eth": 0.00838295391278932,
-      "average_value_eth": 0.00838295391278932
+      "proposal_count": 2,
+      "total_value_eth": 0.024310150559575097,
+      "average_value_eth": 0.012155075279787549
     },
     "0xC6258c243c4D27D8642fbACb370D02F7005EDBea": {
       "proposal_count": 2,
@@ -5037,6 +5037,26 @@
       "gas_utilization": 37.87520243769119,
       "consensus_reward_eth": 2.5e-06,
       "execution_fees_eth": 0.01939461170239542
+    },
+    {
+      "slot": 11892343,
+      "epoch": 371635,
+      "block_number": 22671977,
+      "timestamp": 1749532139,
+      "date": "2025-06-10 05:08:59",
+      "validator_index": 1942414,
+      "validator_pubkey": "0xb362dd45438c224fdc0c0d3a591b903646a149d154125818ef03fe7e64904b633561e0a15b5466f5f44870296d0c2bce",
+      "operator": "0x56742914Bd97438917F10bEfCFDe8DE58251d2ca",
+      "operator_name": "0x567429...51d2ca",
+      "total_value_wei": 1.592719664678578e+16,
+      "total_value_eth": 0.01592719664678578,
+      "gas_used": 15835646,
+      "gas_limit": 35964674,
+      "base_fee": 1005623430,
+      "tx_count": 187,
+      "gas_utilization": 44.03111230759384,
+      "consensus_reward_eth": 2.5e-06,
+      "execution_fees_eth": 0.01592469664678578
     }
   ]
 }
