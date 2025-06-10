@@ -86,7 +86,7 @@ st.markdown("""
         }
 
         .logo-container img {
-            max-height: 80px;
+            max-height: 120px;
         }
     }
 
@@ -145,12 +145,12 @@ def display_logo():
                 <style>
                 .logo-dark {{
                     display: block;
-                    height: 60px;
+                    height: 90px;
                     width: auto;
                 }}
                 .logo-light {{
                     display: none;
-                    height: 60px;
+                    height: 90px;
                     width: auto;
                 }}
                 @media (prefers-color-scheme: light) {{
@@ -169,7 +169,7 @@ def display_logo():
             st.markdown(logo_html, unsafe_allow_html=True)
         else:
             # Fallback if base64 conversion fails
-            st.image(dark_logo_path, width=204)
+            st.image(dark_logo_path, width=306)
             
     elif dark_exists:
         st.markdown('<div class="logo-container">', unsafe_allow_html=True)
@@ -177,7 +177,7 @@ def display_logo():
         st.markdown('</div>', unsafe_allow_html=True)
     elif light_exists:
         st.markdown('<div class="logo-container">', unsafe_allow_html=True)
-        st.image(light_logo_path, width=204)
+        st.image(light_logo_path, width=306)
         st.markdown('</div>', unsafe_allow_html=True)
     else:
         st.error("Logo files not found: Nodeset_dark_mode.png and Nodeset_light_mode.png")
