@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "last_updated": "2025-06-10T06:00:02.402167",
-    "total_proposals": 226,
-    "total_value_eth": 7.932332428147691,
-    "operators_tracked": 110
+    "last_updated": "2025-06-10T06:15:02.494974",
+    "total_proposals": 228,
+    "total_value_eth": 7.969593950155333,
+    "operators_tracked": 112
   },
   "operator_summary": {
     "0x93373F548355225C479bC7aA2380158ef868623e": {
@@ -555,6 +555,16 @@
       "proposal_count": 1,
       "total_value_eth": 0.04054400997471534,
       "average_value_eth": 0.04054400997471534
+    },
+    "0xe1D21E76820610938CACfb7CC6a669Be9C65DBEd": {
+      "proposal_count": 1,
+      "total_value_eth": 0.01906527712484426,
+      "average_value_eth": 0.01906527712484426
+    },
+    "0xf4D701A53034e747F654da41AaB08a70D0a7464E": {
+      "proposal_count": 1,
+      "total_value_eth": 0.01819624488279735,
+      "average_value_eth": 0.01819624488279735
     }
   },
   "proposals": [
@@ -5077,6 +5087,46 @@
       "gas_utilization": 48.33978888888889,
       "consensus_reward_eth": 2.5e-06,
       "execution_fees_eth": 0.021610422358501264
+    },
+    {
+      "slot": 11892653,
+      "epoch": 371645,
+      "block_number": 22672285,
+      "timestamp": 1749535859,
+      "date": "2025-06-10 06:10:59",
+      "validator_index": 1938531,
+      "validator_pubkey": "0xace1273d2c2bfc7191b31ba17f118fdad68a331c9be0f912804ea250c70a9e0c12f4841305816ceef22d0cf2caf0502a",
+      "operator": "0xe1D21E76820610938CACfb7CC6a669Be9C65DBEd",
+      "operator_name": "ns.operatooor.eth (0xe1D21E...65DBEd)",
+      "total_value_wei": 1.906527712484426e+16,
+      "total_value_eth": 0.01906527712484426,
+      "gas_used": 16121038,
+      "gas_limit": 36000000,
+      "base_fee": 1182478270,
+      "tx_count": 205,
+      "gas_utilization": 44.78066111111111,
+      "consensus_reward_eth": 2.5e-06,
+      "execution_fees_eth": 0.01906277712484426
+    },
+    {
+      "slot": 11892657,
+      "epoch": 371645,
+      "block_number": 22672289,
+      "timestamp": 1749535907,
+      "date": "2025-06-10 06:11:47",
+      "validator_index": 1922604,
+      "validator_pubkey": "0x91351620a1fd33c1ab4e970cc32c8634df67057155f1afeb8dcf79e98675d17a8fc3705e94ecd300cffcacf0f5b2832c",
+      "operator": "0xf4D701A53034e747F654da41AaB08a70D0a7464E",
+      "operator_name": "0xf4D701...a7464E",
+      "total_value_wei": 1.8196244882797348e+16,
+      "total_value_eth": 0.01819624488279735,
+      "gas_used": 14922751,
+      "gas_limit": 35964845,
+      "base_fee": 1219195099,
+      "tx_count": 149,
+      "gas_utilization": 41.49260479226311,
+      "consensus_reward_eth": 2.5e-06,
+      "execution_fees_eth": 0.018193744882797347
     }
   ]
 }
