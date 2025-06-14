@@ -2071,7 +2071,7 @@ def main():
 
     with tab8:
         st.subheader("🔥 Pump the Gas! - Gas Limit Analysis")
-        st.markdown("*Analysis of gas limit configurations across NodeSet operators*")
+        st.markdown("*Analysis of gas limit configurations across NodeSet operators- updates daily*")
         
         # Load MEV analysis data
         mev_cache = load_mev_analysis_data()
