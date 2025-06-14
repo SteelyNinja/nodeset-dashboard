@@ -1106,10 +1106,6 @@ def main():
                        unsafe_allow_html=True)
             st.caption(f"{total_queued:,} validators waiting for activation")
 
-    auto_refresh_col1, auto_refresh_col2 = st.columns([3, 1])
-    with auto_refresh_col2:
-        auto_refresh = st.checkbox("🔄 Auto-refresh (60s)")
-
     concentration_metrics = calculate_concentration_metrics(active_validators)
 
     if concentration_metrics:
@@ -2318,9 +2314,6 @@ def main():
                     mime="text/csv"
                 )
 
-    if auto_refresh:
-        import time
-        time.sleep(60)
         st.rerun()
 
     st.markdown("---")
