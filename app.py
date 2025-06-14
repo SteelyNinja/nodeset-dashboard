@@ -2314,8 +2314,6 @@ def main():
                     mime="text/csv"
                 )
 
-        st.rerun()
-
     st.markdown("---")
     ens_info = f" | ENS: {len(ens_names)} names resolved" if ens_names else ""
     st.markdown(f"*Dashboard last refreshed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}{ens_info}*")
