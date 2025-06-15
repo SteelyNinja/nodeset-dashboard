@@ -189,7 +189,7 @@ def display_health_summary(cache, operator_validators, operator_exited, operator
         st.markdown(f"<div class='health-summary'><strong>ENS Resolution:</strong> {len(ens_names)} names found • {ens_coverage:.1f}% operator coverage • {validator_coverage:.1f}% validator coverage</div>", unsafe_allow_html=True)
 
     # Add the detailed health metrics expander
-    with st.expander("🔍 Detailed Health Metrics"):
+    with st.expander("🔍 Detailed Metrics"):
         if concentration_metrics:
             detail_col1, detail_col2, detail_col3, detail_col4 = st.columns([1, 1, 1, 1])
             
