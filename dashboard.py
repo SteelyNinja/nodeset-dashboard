@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+import psutil  # Added for memory usage monitoring
 from datetime import datetime
 from collections import Counter
 
@@ -16,6 +17,21 @@ from tables import (create_top_operators_table, create_performance_table, create
 from components import (display_health_status, display_performance_health, display_ens_status,
                        display_network_overview, display_cache_info, show_refresh_button)
 from utils import format_operator_display_plain, get_performance_category
+
+def get_memory_usage():
+    """Get current memory usage statistics"""
+    # Get current process memory info
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    
+    # Memory usage in MB
+    memory_mb = memory_info.rss / (1024 * 1024)
+    
+    # Calculate percentage of Streamlit's 1GB limit
+    streamlit_limit_mb = 1024  # 1GB in MB
+    memory_percentage = (memory_mb / streamlit_limit_mb) * 100
+    
+    return memory_mb, memory_percentage
 
 def run_dashboard():
     """Main dashboard function"""
@@ -34,7 +50,7 @@ def run_dashboard():
     # Load data
     cache_data = load_validator_data()
     if cache_data[0] is None:
-        st.error("⚠ **Cache file not found!**")
+        st.error("⚠️ **Cache file not found!**")
         st.markdown("""
         **Setup Instructions:**
         1. Run your NodeSet validator tracker script first
@@ -411,7 +427,7 @@ def create_proposals_tab(ens_names):
     
     proposals_cache = load_proposals_data()
     if proposals_cache[0] is None:
-        st.error("⚠ **Proposals data file not found!**")
+        st.error("⚠️ **Proposals data file not found!**")
         st.markdown("""
         **Setup Instructions:**
         1. Ensure `proposals.json` exists in your directory
@@ -1022,7 +1038,7 @@ def create_gas_analysis_tab(ens_names):
     
     mev_cache = load_mev_analysis_data()
     if mev_cache[0] is None:
-        st.error("⚠ **MEV analysis data file not found!**")
+        st.error("⚠️ **MEV analysis data file not found!**")
         st.markdown("""
         **Setup Instructions:**
         1. Ensure `mev_analysis_results.json` exists in your directory
@@ -1193,9 +1209,60 @@ def create_gas_analysis_tab(ens_names):
             st.info("No gas limit distribution data available.")
 
 def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
-    """Create the raw data tab"""
+    """Create the raw data tab with memory usage indicator"""
     st.subheader("📋 Raw Cache Data")
     
+    # Memory Usage Section
+    st.markdown("### 💾 Memory Usage")
+    
+    try:
+        memory_mb, memory_percentage = get_memory_usage()
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.metric(
+                "Current Memory Usage", 
+                f"{memory_mb:.1f} MB",
+                help="Current memory usage of the Streamlit application"
+            )
+        
+        with col2:
+            # Color code based on usage percentage
+            if memory_percentage < 70:
+                color_class = "status-good"
+                status_emoji = "🟢"
+            elif memory_percentage < 85:
+                color_class = "status-warning" 
+                status_emoji = "🟡"
+            else:
+                color_class = "status-danger"
+                status_emoji = "🔴"
+            
+            st.metric(
+                "Streamlit Limit Usage",
+                f"{memory_percentage:.1f}%",
+                help="Percentage of Streamlit's 1GB memory limit used"
+            )
+            st.markdown(f"<span class='{color_class}'>{status_emoji} {memory_percentage:.1f}% of 1GB limit</span>", 
+                       unsafe_allow_html=True)
+        
+        with col3:
+            remaining_mb = 1024 - memory_mb
+            st.metric(
+                "Memory Remaining",
+                f"{remaining_mb:.1f} MB",
+                help="Remaining memory before hitting Streamlit's 1GB limit"
+            )
+    
+    except ImportError:
+        st.warning("⚠️ Install 'psutil' package to see memory usage: `pip install psutil`")
+    except Exception as e:
+        st.error(f"⚠️ Could not retrieve memory usage: {str(e)}")
+    
+    st.markdown("---")
+    
+    # Rest of the existing raw data tab code continues below...
     col1, col2 = st.columns(2)
 
     with col1:
@@ -1223,6 +1290,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
         if st.button("🔄 Show Full Cache"):
             st.json(cache)
 
+    # Rest of the ENS names section continues as before...
     if ens_names:
         st.subheader("🏷️ Resolved ENS Names")
 
