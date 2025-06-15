@@ -4,7 +4,7 @@ A web dashboard for monitoring nodeset validator metrics.
 
 ```
 nodeset-dashboard/
-├── main.py                 # Entry point - run this file
+├── app.py                 # Entry point - run this file
 ├── dashboard.py            # Main dashboard logic and tab organization
 ├── config.py              # Configuration, constants, and CSS styling
 ├── data_loader.py          # Data loading and caching functions
