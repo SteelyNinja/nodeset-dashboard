@@ -188,6 +188,65 @@ def display_health_summary(cache, operator_validators, operator_exited, operator
 
         st.markdown(f"<div class='health-summary'><strong>ENS Resolution:</strong> {len(ens_names)} names found • {ens_coverage:.1f}% operator coverage • {validator_coverage:.1f}% validator coverage</div>", unsafe_allow_html=True)
 
+    # Add the detailed health metrics expander
+    with st.expander("🔍 Detailed Health Metrics"):
+        if concentration_metrics:
+            detail_col1, detail_col2, detail_col3, detail_col4 = st.columns([1, 1, 1, 1])
+            
+            with detail_col1:
+                st.markdown("**Decentralization Metrics**")
+                st.write(f"• Gini Coefficient: {gini:.3f}")
+                st.write(f"• Top 1 Operator: {concentration_metrics['top_1_concentration']:.1f}%")
+                st.write(f"• Top 5 Operators: {concentration_metrics['top_5_concentration']:.1f}%")
+                st.write(f"• Average Validators/Operator: {avg_validators:.1f}")
+
+            with detail_col2:
+                if operator_performance:
+                    st.markdown("**Performance Metrics**")
+                    # Calculate the performance metrics here
+                    total_weighted_performance = 0
+                    total_validators_perf = 0
+                    perf_categories = {'Excellent': 0, 'Good': 0, 'Average': 0, 'Poor': 0}
+
+                    for addr, performance in operator_performance.items():
+                        validator_count = operator_validators.get(addr, 0)
+                        if validator_count > 0:
+                            total_weighted_performance += performance * validator_count
+                            total_validators_perf += validator_count
+                            perf_categories[get_performance_category(performance)] += validator_count
+
+                    avg_performance = total_weighted_performance / total_validators_perf if total_validators_perf > 0 else 0
+                    excellent_pct = (perf_categories['Excellent'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
+                    poor_pct = (perf_categories['Poor'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
+                    
+                    st.write(f"• Network Average: {avg_performance:.2f}%")
+                    st.write(f"• Excellent Performers: {excellent_pct:.1f}%")
+                    st.write(f"• Poor Performers: {poor_pct:.1f}%")
+                    performances = list(operator_performance.values())
+                    st.write(f"• Performance Std Dev: {np.std(performances):.2f}%")
+
+            with detail_col3:
+                if ens_names:
+                    st.markdown("**ENS Resolution Metrics**")
+                    ens_coverage = len(ens_names) / len(operator_validators) * 100 if operator_validators else 0
+                    validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
+                    validator_coverage = validators_with_ens / total_active * 100 if total_active > 0 else 0
+                    
+                    st.write(f"• Total ENS Names: {len(ens_names)}")
+                    st.write(f"• Operator Coverage: {ens_coverage:.1f}%")
+                    st.write(f"• Validator Coverage: {validator_coverage:.1f}%")
+                    if cache.get('ens_last_updated', 0) > 0:
+                        ens_last_updated = cache.get('ens_last_updated', 0)
+                        hours_ago = (datetime.now().timestamp() - ens_last_updated) / 3600
+                        st.write(f"• Last Updated: {hours_ago:.1f}h ago")
+
+            with detail_col4:
+                st.markdown("**Activation Metrics**")
+                activation_rate = (total_activated / (total_activated + total_queued) * 100) if (total_activated + total_queued) > 0 else 0
+                st.write(f"• Activation Rate: {activation_rate:.1f}%")
+                st.write(f"• Activated Count: {total_activated:,}")
+                st.write(f"• Queue Count: {total_queued:,}")
+
 def create_dashboard_tabs(cache, operator_validators, operator_exited, operator_performance, 
                          ens_names, active_validators, concentration_metrics):
     """Create the main dashboard tabs"""

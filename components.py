@@ -135,7 +135,7 @@ def display_ens_status(ens_names, operator_validators):
     if not ens_names:
         return
 
-    st.subheader("�️ ENS Name Resolution Status")
+    st.subheader("🏷️ ENS Name Resolution Status")
 
     total_operators = len(operator_validators)
     ens_resolved = len(ens_names)
@@ -208,6 +208,26 @@ def display_network_overview(cache, operator_validators, operator_exited):
         exit_rate = (total_exited / total_validators * 100) if total_validators > 0 else 0
         st.metric("Exit Rate", f"{exit_rate:.1f}%")
 
+    # Add activation/queue rate percentage display with color coding
+    if total_activated + total_queued > 0:
+        activation_rate = (total_activated / (total_activated + total_queued) * 100)
+        queue_rate = (total_queued / (total_activated + total_queued) * 100)
+
+        st.markdown("---")
+        act_col1, act_col2 = st.columns(2)
+
+        with act_col1:
+            color = "status-good" if activation_rate >= 95 else "status-warning" if activation_rate >= 85 else "status-danger"
+            st.markdown(f"**Activation Rate:** <span class='{color}'>{activation_rate:.1f}%</span>",
+                       unsafe_allow_html=True)
+            st.caption(f"{total_activated:,} of {total_activated + total_queued:,} validators activated")
+
+        with act_col2:
+            color = "status-good" if queue_rate <= 5 else "status-warning" if queue_rate <= 15 else "status-danger"
+            st.markdown(f"**Queue Rate:** <span class='{color}'>{queue_rate:.1f}%</span>",
+                       unsafe_allow_html=True)
+            st.caption(f"{total_queued:,} validators waiting for activation")
+
     return total_activated, total_queued, active_validators
 
 def display_cache_info(cache_file, last_block, ens_last_updated):
@@ -217,7 +237,7 @@ def display_cache_info(cache_file, last_block, ens_last_updated):
     ens_update_str = ""
     if ens_last_updated > 0:
         ens_update_time = datetime.fromtimestamp(ens_last_updated)
-        ens_update_str = f" • �️ ENS: {ens_update_time.strftime('%H:%M:%S')}"
+        ens_update_str = f" • 🏷️ ENS: {ens_update_time.strftime('%H:%M:%S')}"
 
     st.caption(f"📊 Block: {last_block:,} • 🕘 {last_update.strftime('%H:%M:%S')}{ens_update_str} • 📁 {cache_file.split('/')[-1]}")
 
