@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "last_updated": "2025-06-16T22:00:41.753135",
-    "total_proposals": 310,
-    "total_value_eth": 10.477678072245501,
+    "last_updated": "2025-06-16T22:15:44.306552",
+    "total_proposals": 311,
+    "total_value_eth": 10.494929475661761,
     "operators_tracked": 130
   },
   "operator_summary": {
@@ -157,9 +157,9 @@
       "average_value_eth": 0.045886658265558294
     },
     "0xAE3a2333a191786b4C5c4161A1577167ECb0A1a7": {
-      "proposal_count": 2,
-      "total_value_eth": 0.06997392047953363,
-      "average_value_eth": 0.034986960239766815
+      "proposal_count": 3,
+      "total_value_eth": 0.0872253238957949,
+      "average_value_eth": 0.029075107965264968
     },
     "0x0AA6c0e6591062a1f7244eF2986215d9778a11cf": {
       "proposal_count": 4,
@@ -6857,6 +6857,26 @@
       "gas_utilization": 54.05061111111111,
       "consensus_reward_eth": 2.5e-06,
       "execution_fees_eth": 0.03842028586157252
+    },
+    {
+      "slot": 11940676,
+      "epoch": 373146,
+      "block_number": 22719996,
+      "timestamp": 1750112135,
+      "date": "2025-06-16 22:15:35",
+      "validator_index": 1940778,
+      "validator_pubkey": "0x91c3b936abf66bd18721a63c4b926e93324f640fa66c1c96e21f0e91301123b903354a7beb732c0419ac460421da2577",
+      "operator": "0xAE3a2333a191786b4C5c4161A1577167ECb0A1a7",
+      "operator_name": "Lenoftawa (0xAE3a23...b0A1a7)",
+      "total_value_wei": 1.7251403416261278e+16,
+      "total_value_eth": 0.017251403416261277,
+      "gas_used": 20461319,
+      "gas_limit": 35964811,
+      "base_fee": 843000562,
+      "tx_count": 166,
+      "gas_utilization": 56.892608166354606,
+      "consensus_reward_eth": 2.5e-06,
+      "execution_fees_eth": 0.01724890341626128
     }
   ]
 }
