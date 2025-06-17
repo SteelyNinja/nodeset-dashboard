@@ -1,12 +1,12 @@
 {
   "metadata": {
-    "last_updated": "2025-06-17T11:28:08.701584",
+    "last_updated": "2025-06-17T18:00:51.855104",
     "total_periods_tracked": 15,
     "total_validators_in_committees": 18,
-    "total_attestations_tracked": 138861,
-    "total_successful_attestations": 136214,
-    "total_missed_attestations": 2647,
-    "overall_participation_rate": 98.09
+    "total_attestations_tracked": 140811,
+    "total_successful_attestations": 138148,
+    "total_missed_attestations": 2663,
+    "overall_participation_rate": 98.11
   },
   "period_summary": {
     "1427": {
@@ -109,10 +109,10 @@
     },
     "1458": {
       "our_validators_count": 1,
-      "total_slots": 698,
-      "total_successful": 689,
-      "total_missed": 9,
-      "participation_rate": 98.71060171919771
+      "total_slots": 2648,
+      "total_successful": 2623,
+      "total_missed": 25,
+      "participation_rate": 99.0558912386707
     }
   },
   "operator_summary": {
@@ -223,10 +223,10 @@
     },
     "0x273A7984f387F4C9fC623336B79664E399Ab7e84": {
       "total_periods": 1,
-      "total_slots": 698,
-      "total_successful": 689,
-      "total_missed": 9,
-      "participation_rate": 98.71060171919771
+      "total_slots": 2648,
+      "total_successful": 2623,
+      "total_missed": 25,
+      "participation_rate": 99.0558912386707
     }
   },
   "detailed_stats": [
@@ -546,13 +546,13 @@
       "validator_pubkey": "0x88c502e5f7b74daa0ce83ba8ef4460e9671ecabbbe8671848e3ac4773eb03fad05bc54bdc840de4b8acc4c473f10ad1f",
       "operator": "0x273A7984f387F4C9fC623336B79664E399Ab7e84",
       "operator_name": "0x273A79...Ab7e84",
-      "total_slots": 698,
-      "successful_attestations": 689,
-      "missed_attestations": 9,
-      "participation_rate": 98.71,
+      "total_slots": 2648,
+      "successful_attestations": 2623,
+      "missed_attestations": 25,
+      "participation_rate": 99.06,
       "is_partial_period": true,
-      "scan_start_slot": 11944411,
-      "scan_end_slot": 11944637
+      "scan_start_slot": 11946560,
+      "scan_end_slot": 11946601
     }
   ]
 }
