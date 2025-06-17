@@ -196,3 +196,109 @@ def create_proposals_operators_table(proposals_data, ens_names):
             })
     
     return sorted(table_data, key=lambda x: x['proposal_count'], reverse=True)
+
+def create_sync_committee_operators_table(sync_data, ens_names):
+    """Create table of operators ranked by sync committee participation"""
+    if not sync_data:
+        return pd.DataFrame()
+    
+    operator_summary = sync_data.get('operator_summary', {})
+    
+    data = []
+    for addr, stats in operator_summary.items():
+        ens_name = ens_names.get(addr, "")
+        
+        data.append({
+            'Rank': 0,
+            'Address': addr,
+            'ENS Name': ens_name,
+            'Participation Rate': f"{stats['participation_rate']:.2f}%",
+            'Participation_Raw': stats['participation_rate'],
+            'Total Periods': stats['total_periods'],
+            'Total Slots': f"{stats['total_slots']:,}",
+            'Successful': f"{stats['total_successful']:,}",
+            'Missed': f"{stats['total_missed']:,}",
+        })
+    
+    if not data:
+        return pd.DataFrame()
+    
+    df = pd.DataFrame(data)
+    # CHANGE 1: Sort by Total Periods (highest first), then by Participation Rate for ties
+    df = df.sort_values(['Total Periods', 'Participation_Raw'], ascending=[False, False]).reset_index(drop=True)
+    df['Rank'] = range(1, len(df) + 1)
+    
+    return df
+
+def create_sync_committee_periods_table(sync_data):
+    """Create table showing participation by period"""
+    if not sync_data:
+        return pd.DataFrame()
+    
+    period_summary = sync_data.get('period_summary', {})
+    
+    data = []
+    for period, stats in period_summary.items():
+        data.append({
+            'Period': period,
+            'Validators': stats['our_validators_count'],
+            'Total Slots': f"{stats['total_slots']:,}",
+            'Successful': f"{stats['total_successful']:,}",
+            'Missed': f"{stats['total_missed']:,}",
+            'Participation Rate': f"{stats['participation_rate']:.2f}%",
+            'Participation_Raw': stats['participation_rate']
+        })
+    
+    if not data:
+        return pd.DataFrame()
+    
+    df = pd.DataFrame(data)
+    df = df.sort_values('Period', ascending=False)
+    
+    return df
+
+def create_sync_committee_detailed_table(sync_data, ens_names):
+    """Create detailed table of individual validator sync committee performance"""
+    if not sync_data:
+        return pd.DataFrame()
+    
+    detailed_stats = sync_data.get('detailed_stats', [])
+    
+    data = []
+    for entry in detailed_stats:
+        ens_name = ens_names.get(entry['operator'], "")
+        operator_display = ens_name if ens_name else f"{entry['operator'][:8]}...{entry['operator'][-6:]}"
+        
+        # CHANGE 2: Calculate successful and missed percentages
+        total_slots = entry['total_slots']
+        successful_count = entry['successful_attestations']
+        missed_count = entry['missed_attestations']
+        
+        # Calculate percentages
+        successful_percentage = (successful_count / total_slots * 100) if total_slots > 0 else 0
+        missed_percentage = (missed_count / total_slots * 100) if total_slots > 0 else 0
+        
+        data.append({
+            'Period': entry['period'],
+            'Operator': operator_display,
+            'Operator Address': entry['operator'],
+            'Validator Index': entry['validator_index'],
+            'Validator Pubkey': entry['validator_pubkey'],
+            'Participation Rate': f"{entry['participation_rate']:.2f}%",
+            'Total Slots': f"{entry['total_slots']:,}",
+            'Successful': f"{entry['successful_attestations']:,}",
+            'Missed': f"{entry['missed_attestations']:,}",
+            'Successful %': f"{successful_percentage:.2f}%",  # NEW COLUMN
+            'Missed %': f"{missed_percentage:.2f}%",  # NEW COLUMN
+            'Start Epoch': entry['start_epoch'],
+            'End Epoch': entry['end_epoch'],
+            'Partial Period': "Yes" if entry.get('is_partial_period', False) else "No"
+        })
+    
+    if not data:
+        return pd.DataFrame()
+    
+    df = pd.DataFrame(data)
+    df = df.sort_values(['Period', 'Participation Rate'], ascending=[False, False])
+    
+    return df

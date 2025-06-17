@@ -8,12 +8,13 @@ from collections import Counter
 
 # Import our modules
 from config import apply_page_config, apply_custom_css
-from data_loader import load_validator_data, load_proposals_data, load_mev_analysis_data, display_logo
+from data_loader import load_validator_data, load_proposals_data, load_mev_analysis_data, load_sync_committee_data, display_logo
 from analysis import calculate_concentration_metrics, create_performance_analysis, analyze_gas_limits_by_operator
 from charts import (create_performance_charts, create_concentration_pie, create_distribution_histogram, 
                    create_concentration_curve, create_gas_limit_distribution_chart, create_operator_gas_strategy_chart)
 from tables import (create_top_operators_table, create_performance_table, create_largest_proposals_table,
-                   create_latest_proposals_table, create_proposals_operators_table)
+                   create_latest_proposals_table, create_proposals_operators_table,
+                   create_sync_committee_operators_table, create_sync_committee_periods_table, create_sync_committee_detailed_table)
 from components import (display_health_status, display_performance_health, display_ens_status,
                        display_network_overview, display_cache_info, show_refresh_button)
 from utils import format_operator_display_plain, get_performance_category
@@ -253,12 +254,13 @@ def create_dashboard_tabs(cache, operator_validators, operator_exited, operator_
     
     st.markdown("---")
 
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
         "📈 Distribution",
         "🎯 Concentration", 
         "🏆 Top Operators",
         "⚡ Performance",
         "🤲 Proposals",
+        "📡 Sync Committee",
         "🚪 Exit Analysis",
         "💰 Costs",
         "🔥 Pump the Gas!",
@@ -281,15 +283,18 @@ def create_dashboard_tabs(cache, operator_validators, operator_exited, operator_
         create_proposals_tab(ens_names)
 
     with tab6:
-        create_exit_analysis_tab(operator_validators, operator_exited, ens_names)
+        create_sync_committee_tab(ens_names)
 
     with tab7:
-        create_costs_tab(cache, operator_validators, operator_exited, ens_names)
+        create_exit_analysis_tab(operator_validators, operator_exited, ens_names)
 
     with tab8:
-        create_gas_analysis_tab(ens_names)
+        create_costs_tab(cache, operator_validators, operator_exited, ens_names)
 
     with tab9:
+        create_gas_analysis_tab(ens_names)
+
+    with tab10:
         create_raw_data_tab(cache, operator_validators, operator_exited, ens_names)
 
 def create_distribution_tab(active_validators):
@@ -769,6 +774,173 @@ def create_proposals_tab(ens_names):
                 )
         else:
             st.info("No proposal data available.")
+
+def create_sync_committee_tab(ens_names):
+    """Create the sync committee analysis tab"""
+    st.subheader("📡 Sync Committee Participation Analysis")
+    st.markdown("*Analysis of validator participation in Ethereum sync committees*")
+    
+    sync_cache = load_sync_committee_data()
+    if sync_cache[0] is None:
+        st.error("⚠️ **Sync committee data file not found!**")
+        st.markdown("""
+        **Setup Instructions:**
+        1. Ensure `sync_committee_participation.json` exists in your directory
+        2. Place the file alongside this dashboard script
+        
+        **Expected file locations:**
+        - `./sync_committee_participation.json`
+        - `./data/sync_committee_participation.json`
+        """)
+    else:
+        sync_data, sync_file = sync_cache
+        metadata = sync_data.get('metadata', {})
+        
+        # Summary metrics
+        col1, col2, col3, col4 = st.columns(4)
+        with col1:
+            st.metric("Overall Participation", f"{metadata.get('overall_participation_rate', 0):.2f}%")
+        with col2:
+            st.metric("Total Periods Tracked", f"{metadata.get('total_periods_tracked', 0)}")
+        with col3:
+            st.metric("Total Attestations", f"{metadata.get('total_attestations_tracked', 0):,}")
+        with col4:
+            success_rate = (metadata.get('total_successful_attestations', 0) / max(metadata.get('total_attestations_tracked', 1), 1) * 100)
+            st.metric("Success Rate", f"{success_rate:.2f}%")
+        
+        if metadata.get('last_updated'):
+            st.caption(f"📊 Last Updated: {metadata['last_updated']} • 📄 {sync_file.split('/')[-1]}")
+        
+        st.markdown("---")
+        
+        # Operator Rankings
+        st.subheader("🏆 Operator Participation Rankings")
+        st.caption("Operators ranked by sync committee participation rate")
+        
+        operators_df = create_sync_committee_operators_table(sync_data, ens_names)
+        
+        if not operators_df.empty:
+            display_operators_df = operators_df.drop(['Participation_Raw'], axis=1)
+            st.dataframe(
+                display_operators_df,
+                use_container_width=True,
+                hide_index=True,
+                column_config={
+                    "Rank": st.column_config.NumberColumn("Rank", width="small"),
+                    "Address": st.column_config.TextColumn("Address", width="large"),
+                    "ENS Name": st.column_config.TextColumn("ENS Name", width="medium"),
+                    "Participation Rate": st.column_config.TextColumn("Participation Rate", width="small"),
+                    "Total Periods": st.column_config.NumberColumn("Periods", width="small"),
+                    "Total Slots": st.column_config.TextColumn("Total Slots", width="small"),
+                    "Successful": st.column_config.TextColumn("Successful", width="small"),
+                    "Missed": st.column_config.TextColumn("Missed", width="small")
+                }
+            )
+            
+            operators_csv = operators_df.to_csv(index=False)
+            st.download_button(
+                label="📥 Download Operator Data",
+                data=operators_csv,
+                file_name=f"sync_committee_operators_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv"
+            )
+        else:
+            st.info("No operator sync committee data available.")
+        
+        st.markdown("---")
+        
+        # Period Analysis
+        st.subheader("📊 Period-by-Period Analysis")
+        st.caption("Sync committee performance across different periods")
+        
+        periods_df = create_sync_committee_periods_table(sync_data)
+        
+        if not periods_df.empty:
+            display_periods_df = periods_df.drop(['Participation_Raw'], axis=1)
+            st.dataframe(
+                display_periods_df,
+                use_container_width=True,
+                hide_index=True,
+                column_config={
+                    "Period": st.column_config.TextColumn("Period", width="small"),
+                    "Validators": st.column_config.NumberColumn("Validators", width="small"),
+                    "Total Slots": st.column_config.TextColumn("Total Slots", width="small"),
+                    "Successful": st.column_config.TextColumn("Successful", width="small"),
+                    "Missed": st.column_config.TextColumn("Missed", width="small"),
+                    "Participation Rate": st.column_config.TextColumn("Participation Rate", width="small")
+                }
+            )
+            
+            periods_csv = periods_df.to_csv(index=False)
+            st.download_button(
+                label="📥 Download Period Data",
+                data=periods_csv,
+                file_name=f"sync_committee_periods_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv"
+            )
+        else:
+            st.info("No period data available.")
+        
+        st.markdown("---")
+        
+        # Detailed Analysis
+        st.subheader("🔍 Detailed Validator Analysis")
+        st.caption("Individual validator performance in sync committees")
+        
+        detailed_df = create_sync_committee_detailed_table(sync_data, ens_names)
+        
+        if not detailed_df.empty:
+            # Search functionality
+            search_term = st.text_input(
+                "🔍 Search by operator address or ENS name",
+                placeholder="Enter address, ENS name, or partial match",
+                key="sync_search_input"
+            )
+            
+            if search_term:
+                filtered_df = detailed_df[
+                    detailed_df['Operator'].str.contains(search_term, case=False, na=False) |
+                    detailed_df['Operator Address'].str.contains(search_term, case=False, na=False)
+                ]
+                
+                if not filtered_df.empty:
+                    st.info(f"Found {len(filtered_df)} records matching '{search_term}'")
+                    display_detailed_df = filtered_df.drop(['Operator Address'], axis=1)
+                else:
+                    st.warning(f"No records found matching '{search_term}'")
+                    display_detailed_df = pd.DataFrame()
+            else:
+                display_detailed_df = detailed_df.drop(['Operator Address'], axis=1)
+            
+            if not display_detailed_df.empty:
+                st.dataframe(
+                    display_detailed_df,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "Period": st.column_config.TextColumn("Period", width="small"),
+                        "Operator": st.column_config.TextColumn("Operator", width="medium"),
+                        "Validator Index": st.column_config.NumberColumn("Val Index", width="small"),
+                        "Validator Pubkey": st.column_config.TextColumn("Validator Pubkey", width="large"),
+                        "Participation Rate": st.column_config.TextColumn("Participation Rate", width="small"),
+                        "Total Slots": st.column_config.TextColumn("Total Slots", width="small"),
+                        "Successful": st.column_config.TextColumn("Successful", width="small"),
+                        "Missed": st.column_config.TextColumn("Missed", width="small"),
+                        "Start Epoch": st.column_config.NumberColumn("Start Epoch", width="small"),
+                        "End Epoch": st.column_config.NumberColumn("End Epoch", width="small"),
+                        "Partial Period": st.column_config.TextColumn("Partial", width="small")
+                    }
+                )
+                
+                detailed_csv = detailed_df.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Detailed Data",
+                    data=detailed_csv,
+                    file_name=f"sync_committee_detailed_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
+        else:
+            st.info("No detailed sync committee data available.")
 
 def create_exit_analysis_tab(operator_validators, operator_exited, ens_names):
     """Create the exit analysis tab"""
