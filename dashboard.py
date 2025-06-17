@@ -514,7 +514,7 @@ def create_proposals_tab(ens_names):
             st.metric("Avg Value/Proposal", f"{avg_value:.4f} ETH")
         
         if metadata.get('last_updated'):
-            st.caption(f"📊 Proposals: {metadata['last_updated']} • 📁 {proposals_file.split('/')[-1]}")
+            st.caption(f"📊 Proposals: {metadata['last_updated']} • 📄 {proposals_file.split('/')[-1]}")
         
         # Add Largest Proposals Table
         st.subheader("💎 Largest Proposals by Value")
@@ -530,9 +530,14 @@ def create_proposals_tab(ens_names):
                 hide_index=True,
                 column_config={
                     "Date": st.column_config.TextColumn("Date", width="medium"),
-                    "Operator": st.column_config.TextColumn("Operator", width="large"),
+                    "Operator": st.column_config.TextColumn("Operator", width="medium"),
                     "Validator Pubkey": st.column_config.TextColumn("Validator Pubkey", width="large"),
                     "ETH Value": st.column_config.TextColumn("ETH Value", width="small"),
+                    "Execution Rewards": st.column_config.TextColumn("Exec Rewards", width="small"),
+                    "Consensus Rewards": st.column_config.TextColumn("Cons Rewards", width="small"),
+                    "MEV Rewards": st.column_config.TextColumn("MEV Rewards", width="small"),
+                    "Total Rewards": st.column_config.TextColumn("Total Rewards", width="small"),
+                    "MEV Block": st.column_config.TextColumn("MEV", width="small"),
                     "Slot": st.column_config.TextColumn("Slot", width="small"),
                     "Gas Used": st.column_config.TextColumn("Gas Used", width="small"),
                     "Gas Utilization": st.column_config.TextColumn("Gas %", width="small"),
@@ -566,9 +571,14 @@ def create_proposals_tab(ens_names):
                 hide_index=True,
                 column_config={
                     "Date": st.column_config.TextColumn("Date", width="medium"),
-                    "Operator": st.column_config.TextColumn("Operator", width="large"),
+                    "Operator": st.column_config.TextColumn("Operator", width="medium"),
                     "Validator Pubkey": st.column_config.TextColumn("Validator Pubkey", width="large"),
                     "ETH Value": st.column_config.TextColumn("ETH Value", width="small"),
+                    "Execution Rewards": st.column_config.TextColumn("Exec Rewards", width="small"),
+                    "Consensus Rewards": st.column_config.TextColumn("Cons Rewards", width="small"),
+                    "MEV Rewards": st.column_config.TextColumn("MEV Rewards", width="small"),
+                    "Total Rewards": st.column_config.TextColumn("Total Rewards", width="small"),
+                    "MEV Block": st.column_config.TextColumn("MEV", width="small"),
                     "Slot": st.column_config.TextColumn("Slot", width="small"),
                     "Gas Used": st.column_config.TextColumn("Gas Used", width="small"),
                     "Gas Utilization": st.column_config.TextColumn("Gas %", width="small"),
@@ -679,8 +689,12 @@ def create_proposals_tab(ens_names):
                     if proposals_list:
                         df = pd.DataFrame(proposals_list)
                         
-                        display_df = df[['date', 'slot', 'total_value_eth', 'gas_used', 'gas_utilization', 'tx_count', 'base_fee', 'validator_pubkey']].copy()
-                        display_df.columns = ['Date', 'Slot', 'ETH Value', 'Gas Used', 'Gas %', 'TXs', 'Base Fee', 'Validator Pubkey']
+                        # Handle missing MEV block data gracefully
+                        if 'is_mev_boost_block' not in df.columns:
+                            df['is_mev_boost_block'] = False
+                        
+                        display_df = df[['date', 'slot', 'total_value_eth', 'gas_used', 'gas_utilization', 'tx_count', 'base_fee', 'is_mev_boost_block', 'validator_pubkey']].copy()
+                        display_df.columns = ['Date', 'Slot', 'ETH Value', 'Gas Used', 'Gas %', 'TXs', 'Base Fee', 'MEV Block', 'Validator Pubkey']
                         
                         display_df['ETH Value'] = display_df['ETH Value'].apply(lambda x: f"{x:.4f}")
                         display_df['Gas Used'] = display_df['Gas Used'].astype(str)
@@ -688,6 +702,7 @@ def create_proposals_tab(ens_names):
                         display_df['TXs'] = display_df['TXs'].astype(str)
                         display_df['Base Fee'] = display_df['Base Fee'].astype(str)
                         display_df['Slot'] = display_df['Slot'].astype(str)
+                        display_df['MEV Block'] = display_df['MEV Block'].apply(lambda x: "✓" if x else "✗")
                         
                         display_df = display_df.sort_values('Date', ascending=False)
                         
@@ -703,6 +718,7 @@ def create_proposals_tab(ens_names):
                                 "Gas %": st.column_config.TextColumn("Gas %", width="small"),
                                 "TXs": st.column_config.TextColumn("TXs", width="small"),
                                 "Base Fee": st.column_config.TextColumn("Base Fee", width="small"),
+                                "MEV Block": st.column_config.TextColumn("MEV Block", width="small"),
                                 "Validator Pubkey": st.column_config.TextColumn("Validator Pubkey", width="large")
                             }
                         )

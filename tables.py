@@ -92,12 +92,21 @@ def create_largest_proposals_table(proposals_data, ens_names, limit=3):
         else:
             operator_display = f"{operator_address[:8]}...{operator_address[-6:]}"
         
+        # MEV boost indicator
+        is_mev_boost = proposal.get('is_mev_boost_block', False)
+        mev_indicator = "✓" if is_mev_boost else "✗"
+        
         table_data.append({
             'Date': proposal['date'],
             'Operator': operator_display,
             'Operator Address': operator_address,
             'Validator Pubkey': proposal['validator_pubkey'],
             'ETH Value': f"{proposal['total_value_eth']:.4f}",
+            'Execution Rewards': f"{proposal.get('execution_fees_eth', 0):.4f}",
+            'Consensus Rewards': f"{proposal.get('consensus_reward_eth', 0):.4f}",
+            'MEV Rewards': f"{proposal.get('mev_breakdown_eth', 0):.4f}",
+            'Total Rewards': f"{proposal.get('total_rewards_eth', 0):.4f}",
+            'MEV Block': mev_indicator,
             'Slot': proposal['slot'],
             'Gas Used': f"{proposal['gas_used']:,}",
             'Gas Utilization': f"{proposal['gas_utilization']:.1f}%",
@@ -131,12 +140,21 @@ def create_latest_proposals_table(proposals_data, ens_names, limit=5):
         else:
             operator_display = f"{operator_address[:8]}...{operator_address[-6:]}"
         
+        # MEV boost indicator
+        is_mev_boost = proposal.get('is_mev_boost_block', False)
+        mev_indicator = "✓" if is_mev_boost else "✗"
+        
         table_data.append({
             'Date': proposal['date'],
             'Operator': operator_display,
             'Operator Address': operator_address,
             'Validator Pubkey': proposal['validator_pubkey'],
             'ETH Value': f"{proposal['total_value_eth']:.4f}",
+            'Execution Rewards': f"{proposal.get('execution_fees_eth', 0):.4f}",
+            'Consensus Rewards': f"{proposal.get('consensus_reward_eth', 0):.4f}",
+            'MEV Rewards': f"{proposal.get('mev_breakdown_eth', 0):.4f}",
+            'Total Rewards': f"{proposal.get('total_rewards_eth', 0):.4f}",
+            'MEV Block': mev_indicator,
             'Slot': proposal['slot'],
             'Gas Used': f"{proposal['gas_used']:,}",
             'Gas Utilization': f"{proposal['gas_utilization']:.1f}%",
