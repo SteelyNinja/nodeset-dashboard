@@ -1,9 +1,9 @@
 {
   "metadata": {
-    "last_updated": "2025-06-17T01:00:42.840640",
-    "total_proposals": 312,
-    "total_value_eth": 10.554135328753802,
-    "operators_tracked": 130
+    "last_updated": "2025-06-17T01:15:42.216517",
+    "total_proposals": 313,
+    "total_value_eth": 10.561406556586839,
+    "operators_tracked": 131
   },
   "operator_summary": {
     "0x93373F548355225C479bC7aA2380158ef868623e": {
@@ -655,6 +655,11 @@
       "proposal_count": 1,
       "total_value_eth": 0.009162267263336816,
       "average_value_eth": 0.009162267263336816
+    },
+    "0x943185823FABb7E7bD6fED459B6390219c1668B0": {
+      "proposal_count": 1,
+      "total_value_eth": 0.00727122783303755,
+      "average_value_eth": 0.00727122783303755
     }
   },
   "proposals": [
@@ -6897,6 +6902,26 @@
       "gas_utilization": 57.62733055555556,
       "consensus_reward_eth": 2.5e-06,
       "execution_fees_eth": 0.05920335309203929
+    },
+    {
+      "slot": 11941512,
+      "epoch": 373172,
+      "block_number": 22720826,
+      "timestamp": 1750122167,
+      "date": "2025-06-17 01:02:47",
+      "validator_index": 1920521,
+      "validator_pubkey": "0x8fb21703495bd461e03d2859a6ebb108eb29d45b96ee46fac81bed6af6f2e6f96e22591cf7f7b51c504363b551a9e5c9",
+      "operator": "0x943185823FABb7E7bD6fED459B6390219c1668B0",
+      "operator_name": "chonghe (0x943185...1668B0)",
+      "total_value_wei": 7271227833037550.0,
+      "total_value_eth": 0.00727122783303755,
+      "gas_used": 9252749,
+      "gas_limit": 35964845,
+      "base_fee": 785574950,
+      "tx_count": 58,
+      "gas_utilization": 25.72720388479361,
+      "consensus_reward_eth": 2.5e-06,
+      "execution_fees_eth": 0.00726872783303755
     }
   ]
 }
