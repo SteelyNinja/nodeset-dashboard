@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "last_updated": "2025-06-18T05:46:10.233333",
+    "last_updated": "2025-06-18T06:00:55.767485",
     "total_periods_tracked": 15,
     "total_validators_in_committees": 18,
-    "total_attestations_tracked": 144301,
-    "total_successful_attestations": 141617,
-    "total_missed_attestations": 2684,
+    "total_attestations_tracked": 144374,
+    "total_successful_attestations": 141689,
+    "total_missed_attestations": 2685,
     "overall_participation_rate": 98.14
   },
   "period_summary": {
@@ -109,10 +109,10 @@
     },
     "1458": {
       "our_validators_count": 1,
-      "total_slots": 6138,
-      "total_successful": 6092,
-      "total_missed": 46,
-      "participation_rate": 99.25057021831215
+      "total_slots": 6211,
+      "total_successful": 6164,
+      "total_missed": 47,
+      "participation_rate": 99.2432780550636
     }
   },
   "operator_summary": {
@@ -223,10 +223,10 @@
     },
     "0x273A7984f387F4C9fC623336B79664E399Ab7e84": {
       "total_periods": 1,
-      "total_slots": 6138,
-      "total_successful": 6092,
-      "total_missed": 46,
-      "participation_rate": 99.25057021831215
+      "total_slots": 6211,
+      "total_successful": 6164,
+      "total_missed": 47,
+      "participation_rate": 99.2432780550636
     }
   },
   "detailed_stats": [
@@ -546,13 +546,13 @@
       "validator_pubkey": "0x88c502e5f7b74daa0ce83ba8ef4460e9671ecabbbe8671848e3ac4773eb03fad05bc54bdc840de4b8acc4c473f10ad1f",
       "operator": "0x273A7984f387F4C9fC623336B79664E399Ab7e84",
       "operator_name": "0x273A79...Ab7e84",
-      "total_slots": 6138,
-      "successful_attestations": 6092,
-      "missed_attestations": 46,
-      "participation_rate": 99.25,
+      "total_slots": 6211,
+      "successful_attestations": 6164,
+      "missed_attestations": 47,
+      "participation_rate": 99.24,
       "is_partial_period": true,
-      "scan_start_slot": 11950064,
-      "scan_end_slot": 11950126
+      "scan_start_slot": 11950127,
+      "scan_end_slot": 11950201
     }
   ]
 }
