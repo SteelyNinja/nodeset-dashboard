@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "last_updated": "2025-06-18T02:46:03.531225",
+    "last_updated": "2025-06-18T03:03:56.874839",
     "total_periods_tracked": 15,
     "total_validators_in_committees": 18,
-    "total_attestations_tracked": 143411,
-    "total_successful_attestations": 140739,
-    "total_missed_attestations": 2672,
+    "total_attestations_tracked": 143498,
+    "total_successful_attestations": 140825,
+    "total_missed_attestations": 2673,
     "overall_participation_rate": 98.14
   },
   "period_summary": {
@@ -109,10 +109,10 @@
     },
     "1458": {
       "our_validators_count": 1,
-      "total_slots": 5248,
-      "total_successful": 5214,
-      "total_missed": 34,
-      "participation_rate": 99.35213414634147
+      "total_slots": 5335,
+      "total_successful": 5300,
+      "total_missed": 35,
+      "participation_rate": 99.34395501405811
     }
   },
   "operator_summary": {
@@ -223,10 +223,10 @@
     },
     "0x273A7984f387F4C9fC623336B79664E399Ab7e84": {
       "total_periods": 1,
-      "total_slots": 5248,
-      "total_successful": 5214,
-      "total_missed": 34,
-      "participation_rate": 99.35213414634147
+      "total_slots": 5335,
+      "total_successful": 5300,
+      "total_missed": 35,
+      "participation_rate": 99.34395501405811
     }
   },
   "detailed_stats": [
@@ -546,13 +546,13 @@
       "validator_pubkey": "0x88c502e5f7b74daa0ce83ba8ef4460e9671ecabbbe8671848e3ac4773eb03fad05bc54bdc840de4b8acc4c473f10ad1f",
       "operator": "0x273A7984f387F4C9fC623336B79664E399Ab7e84",
       "operator_name": "0x273A79...Ab7e84",
-      "total_slots": 5248,
-      "successful_attestations": 5214,
-      "missed_attestations": 34,
-      "participation_rate": 99.35,
+      "total_slots": 5335,
+      "successful_attestations": 5300,
+      "missed_attestations": 35,
+      "participation_rate": 99.34,
       "is_partial_period": true,
-      "scan_start_slot": 11949153,
-      "scan_end_slot": 11949227
+      "scan_start_slot": 11949228,
+      "scan_end_slot": 11949315
     }
   ]
 }
