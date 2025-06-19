@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "last_updated": "2025-06-19T11:00:54.447974",
+    "last_updated": "2025-06-19T11:15:58.232009",
     "total_periods_tracked": 16,
     "total_validators_in_committees": 19,
-    "total_attestations_tracked": 153022,
-    "total_successful_attestations": 150105,
-    "total_missed_attestations": 2917,
+    "total_attestations_tracked": 153097,
+    "total_successful_attestations": 150178,
+    "total_missed_attestations": 2919,
     "overall_participation_rate": 98.09
   },
   "period_summary": {
@@ -116,10 +116,10 @@
     },
     "1459": {
       "our_validators_count": 1,
-      "total_slots": 6731,
-      "total_successful": 6506,
-      "total_missed": 225,
-      "participation_rate": 96.65725746545833
+      "total_slots": 6806,
+      "total_successful": 6579,
+      "total_missed": 227,
+      "participation_rate": 96.66470761093153
     }
   },
   "operator_summary": {
@@ -237,10 +237,10 @@
     },
     "0x803C5b4d660E6CF43D8E5481fAbE207a6936012a": {
       "total_periods": 1,
-      "total_slots": 6731,
-      "total_successful": 6506,
-      "total_missed": 225,
-      "participation_rate": 96.65725746545833
+      "total_slots": 6806,
+      "total_successful": 6579,
+      "total_missed": 227,
+      "participation_rate": 96.66470761093153
     }
   },
   "detailed_stats": [
@@ -578,13 +578,13 @@
       "validator_pubkey": "0xace9c2f051f47f0b60ff08d2cd76ca608a224fa3fee288b516e68fd8292565dacc281c3dbadb41f233487b5d68c06216",
       "operator": "0x803C5b4d660E6CF43D8E5481fAbE207a6936012a",
       "operator_name": "nodeset.rocketdoc.eth (0x803C5b...36012a)",
-      "total_slots": 6731,
-      "successful_attestations": 6506,
-      "missed_attestations": 225,
+      "total_slots": 6806,
+      "successful_attestations": 6579,
+      "missed_attestations": 227,
       "participation_rate": 96.66,
       "is_partial_period": true,
-      "scan_start_slot": 11958827,
-      "scan_end_slot": 11958901
+      "scan_start_slot": 11958902,
+      "scan_end_slot": 11958976
     }
   ]
 }
