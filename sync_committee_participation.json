@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "last_updated": "2025-06-19T11:46:14.468736",
+    "last_updated": "2025-06-19T12:00:59.404716",
     "total_periods_tracked": 16,
     "total_validators_in_committees": 19,
-    "total_attestations_tracked": 153246,
-    "total_successful_attestations": 150322,
-    "total_missed_attestations": 2924,
+    "total_attestations_tracked": 153319,
+    "total_successful_attestations": 150392,
+    "total_missed_attestations": 2927,
     "overall_participation_rate": 98.09
   },
   "period_summary": {
@@ -116,10 +116,10 @@
     },
     "1459": {
       "our_validators_count": 1,
-      "total_slots": 6955,
-      "total_successful": 6723,
-      "total_missed": 232,
-      "participation_rate": 96.66427030913012
+      "total_slots": 7028,
+      "total_successful": 6793,
+      "total_missed": 235,
+      "participation_rate": 96.65623221400114
     }
   },
   "operator_summary": {
@@ -237,10 +237,10 @@
     },
     "0x803C5b4d660E6CF43D8E5481fAbE207a6936012a": {
       "total_periods": 1,
-      "total_slots": 6955,
-      "total_successful": 6723,
-      "total_missed": 232,
-      "participation_rate": 96.66427030913012
+      "total_slots": 7028,
+      "total_successful": 6793,
+      "total_missed": 235,
+      "participation_rate": 96.65623221400114
     }
   },
   "detailed_stats": [
@@ -578,13 +578,13 @@
       "validator_pubkey": "0xace9c2f051f47f0b60ff08d2cd76ca608a224fa3fee288b516e68fd8292565dacc281c3dbadb41f233487b5d68c06216",
       "operator": "0x803C5b4d660E6CF43D8E5481fAbE207a6936012a",
       "operator_name": "nodeset.rocketdoc.eth (0x803C5b...36012a)",
-      "total_slots": 6955,
-      "successful_attestations": 6723,
-      "missed_attestations": 232,
+      "total_slots": 7028,
+      "successful_attestations": 6793,
+      "missed_attestations": 235,
       "participation_rate": 96.66,
       "is_partial_period": true,
-      "scan_start_slot": 11959063,
-      "scan_end_slot": 11959126
+      "scan_start_slot": 11959127,
+      "scan_end_slot": 11959201
     }
   ]
 }
