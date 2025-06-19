@@ -421,7 +421,7 @@ def create_top_operators_tab(operator_validators, operator_exited, ens_names):
 def create_performance_tab(operator_performance, operator_validators, operator_exited, ens_names):
     """Create the performance analysis tab"""
     st.subheader("⚡ Operator Performance Analysis (24 hours)")
-    st.info("ℹ️ This is last 24 hour data only - note updates every 6 hours due to API limitations")
+    st.info("ℹ️ This is last 24 hour data only - note updates every 3 hours due to API limitations")
 
     if operator_performance:
         fig_scatter, fig_hist = create_performance_charts(operator_performance, operator_validators, ens_names)
