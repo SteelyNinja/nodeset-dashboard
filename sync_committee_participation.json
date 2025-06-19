@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "last_updated": "2025-06-19T06:15:54.403580",
+    "last_updated": "2025-06-19T06:30:54.571430",
     "total_periods_tracked": 16,
     "total_validators_in_committees": 19,
-    "total_attestations_tracked": 151609,
-    "total_successful_attestations": 148737,
-    "total_missed_attestations": 2872,
+    "total_attestations_tracked": 151682,
+    "total_successful_attestations": 148808,
+    "total_missed_attestations": 2874,
     "overall_participation_rate": 98.11
   },
   "period_summary": {
@@ -116,10 +116,10 @@
     },
     "1459": {
       "our_validators_count": 1,
-      "total_slots": 5318,
-      "total_successful": 5138,
-      "total_missed": 180,
-      "participation_rate": 96.61526889808198
+      "total_slots": 5391,
+      "total_successful": 5209,
+      "total_missed": 182,
+      "participation_rate": 96.62400296790949
     }
   },
   "operator_summary": {
@@ -237,10 +237,10 @@
     },
     "0x803C5b4d660E6CF43D8E5481fAbE207a6936012a": {
       "total_periods": 1,
-      "total_slots": 5318,
-      "total_successful": 5138,
-      "total_missed": 180,
-      "participation_rate": 96.61526889808198
+      "total_slots": 5391,
+      "total_successful": 5209,
+      "total_missed": 182,
+      "participation_rate": 96.62400296790949
     }
   },
   "detailed_stats": [
@@ -578,13 +578,13 @@
       "validator_pubkey": "0xace9c2f051f47f0b60ff08d2cd76ca608a224fa3fee288b516e68fd8292565dacc281c3dbadb41f233487b5d68c06216",
       "operator": "0x803C5b4d660E6CF43D8E5481fAbE207a6936012a",
       "operator_name": "nodeset.rocketdoc.eth (0x803C5b...36012a)",
-      "total_slots": 5318,
-      "successful_attestations": 5138,
-      "missed_attestations": 180,
+      "total_slots": 5391,
+      "successful_attestations": 5209,
+      "missed_attestations": 182,
       "participation_rate": 96.62,
       "is_partial_period": true,
-      "scan_start_slot": 11957414,
-      "scan_end_slot": 11957476
+      "scan_start_slot": 11957477,
+      "scan_end_slot": 11957551
     }
   ]
 }
