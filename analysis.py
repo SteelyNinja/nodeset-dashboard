@@ -129,3 +129,126 @@ def analyze_gas_limits_by_operator(mev_data, ens_names):
             })
     
     return sorted(gas_data, key=lambda x: x['max_gas_limit'], reverse=True)
+
+def analyze_client_diversity(proposals_data, cache_data, ens_names):
+    """Analyze client diversity from proposal graffiti data"""
+    if not proposals_data or not cache_data:
+        return None
+    
+    # Get validator to operator mapping
+    validator_pubkeys = cache_data.get('validator_pubkeys', {})
+    operator_validators = cache_data.get('operator_validators', {})
+    
+    # Reverse the mapping: validator_pubkey -> operator_address
+    pubkey_to_operator = {}
+    for operator, pubkeys in validator_pubkeys.items():
+        for pubkey in pubkeys:
+            pubkey_to_operator[pubkey] = operator
+    
+    # Process proposals to find latest for each operator
+    operator_proposals = {}
+    proposals = proposals_data.get('proposals', [])
+    
+    for proposal in proposals:
+        validator_pubkey = proposal.get('validator_pubkey')
+        timestamp = proposal.get('timestamp', 0)
+        graffiti_text = proposal.get('graffiti_text', '')
+        
+        if not validator_pubkey or not graffiti_text:
+            continue
+            
+        operator = pubkey_to_operator.get(validator_pubkey)
+        if not operator:
+            continue
+            
+        # Parse graffiti text - expect format like "NSNNX v1.2.1" 
+        if not graffiti_text.startswith('NS') or len(graffiti_text) < 5:
+            continue
+            
+        # Extract client codes (3rd, 4th, 5th characters)
+        try:
+            execution_client = graffiti_text[2]  # 3rd character
+            consensus_client = graffiti_text[3]  # 4th character
+            setup_type = graffiti_text[4]       # 5th character
+        except IndexError:
+            continue
+            
+        # Validate client codes
+        valid_execution = execution_client in ['G', 'N', 'B', 'R']
+        valid_consensus = consensus_client in ['L', 'S', 'N', 'P', 'T']
+        valid_setup = setup_type in ['L', 'X']
+        
+        if not (valid_execution and valid_consensus and valid_setup):
+            continue
+            
+        # Keep only the latest proposal per operator
+        if operator not in operator_proposals or timestamp > operator_proposals[operator]['timestamp']:
+            operator_proposals[operator] = {
+                'timestamp': timestamp,
+                'execution_client': execution_client,
+                'consensus_client': consensus_client,
+                'setup_type': setup_type,
+                'graffiti_text': graffiti_text
+            }
+    
+    if not operator_proposals:
+        return None
+    
+    # Client mappings for display
+    execution_names = {
+        'G': 'Geth',
+        'N': 'Nethermind', 
+        'B': 'Besu',
+        'R': 'Reth'
+    }
+    
+    consensus_names = {
+        'L': 'Lighthouse',
+        'S': 'Lodestar',
+        'N': 'Nimbus',
+        'P': 'Prysm',
+        'T': 'Teku'
+    }
+    
+    setup_names = {
+        'L': 'Local',
+        'X': 'External'
+    }
+    
+    # Count distributions
+    execution_counts = {}
+    consensus_counts = {}
+    setup_counts = {}
+    combination_counts = {}
+    
+    for operator, data in operator_proposals.items():
+        exec_client = data['execution_client']
+        cons_client = data['consensus_client']
+        setup_type = data['setup_type']
+        
+        # Count individual client types
+        exec_name = execution_names.get(exec_client, exec_client)
+        cons_name = consensus_names.get(cons_client, cons_client)
+        setup_name = setup_names.get(setup_type, setup_type)
+        
+        execution_counts[exec_name] = execution_counts.get(exec_name, 0) + 1
+        consensus_counts[cons_name] = consensus_counts.get(cons_name, 0) + 1
+        setup_counts[setup_name] = setup_counts.get(setup_name, 0) + 1
+        
+        # Count execution + consensus combinations (ignore setup type)
+        combination = f"{exec_name} + {cons_name}"
+        combination_counts[combination] = combination_counts.get(combination, 0) + 1
+    
+    # Calculate statistics
+    total_operators = len(operator_validators) if operator_validators else 0
+    operators_with_proposals = len(operator_proposals)
+    
+    return {
+        'total_operators': total_operators,
+        'operators_with_proposals': operators_with_proposals,
+        'execution_counts': execution_counts,
+        'consensus_counts': consensus_counts,
+        'setup_counts': setup_counts,
+        'combination_counts': combination_counts,
+        'operator_details': operator_proposals
+    }

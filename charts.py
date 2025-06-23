@@ -289,3 +289,163 @@ def create_operator_gas_strategy_chart(gas_data):
     )
     
     return fig
+
+def create_client_diversity_pie_charts(client_data):
+    """Create 3 pie charts for execution, consensus, and setup type"""
+    if not client_data:
+        return None, None, None
+    
+    execution_counts = client_data.get('execution_counts', {})
+    consensus_counts = client_data.get('consensus_counts', {})
+    setup_counts = client_data.get('setup_counts', {})
+    
+    # Execution Clients Pie Chart
+    if execution_counts:
+        exec_labels = list(execution_counts.keys())
+        exec_values = list(execution_counts.values())
+        
+        # Color scheme for execution clients
+        exec_colors = {
+            'Geth': '#1f77b4',
+            'Nethermind': '#ff7f0e', 
+            'Besu': '#2ca02c',
+            'Reth': '#d62728'
+        }
+        exec_chart_colors = [exec_colors.get(label, '#9467bd') for label in exec_labels]
+        
+        fig_execution = go.Figure(data=[go.Pie(
+            labels=exec_labels,
+            values=exec_values,
+            hole=0.4,
+            marker_colors=exec_chart_colors,
+            textinfo='label+percent+value',
+            textposition='outside'
+        )])
+        
+        fig_execution.update_layout(
+            title="⚙️ Execution Clients",
+            height=400,
+            showlegend=True,
+            font=dict(size=11)
+        )
+    else:
+        fig_execution = go.Figure()
+        fig_execution.add_annotation(text="No execution client data", x=0.5, y=0.5, showarrow=False)
+        fig_execution.update_layout(title="⚙️ Execution Clients", height=400)
+    
+    # Consensus Clients Pie Chart  
+    if consensus_counts:
+        cons_labels = list(consensus_counts.keys())
+        cons_values = list(consensus_counts.values())
+        
+        # Color scheme for consensus clients
+        cons_colors = {
+            'Lighthouse': '#1f77b4',
+            'Lodestar': '#ff7f0e',
+            'Nimbus': '#2ca02c', 
+            'Prysm': '#d62728',
+            'Teku': '#9467bd'
+        }
+        cons_chart_colors = [cons_colors.get(label, '#8c564b') for label in cons_labels]
+        
+        fig_consensus = go.Figure(data=[go.Pie(
+            labels=cons_labels,
+            values=cons_values,
+            hole=0.4,
+            marker_colors=cons_chart_colors,
+            textinfo='label+percent+value',
+            textposition='outside'
+        )])
+        
+        fig_consensus.update_layout(
+            title="🏛️ Consensus Clients",
+            height=400,
+            showlegend=True,
+            font=dict(size=11)
+        )
+    else:
+        fig_consensus = go.Figure()
+        fig_consensus.add_annotation(text="No consensus client data", x=0.5, y=0.5, showarrow=False)
+        fig_consensus.update_layout(title="🏛️ Consensus Clients", height=400)
+    
+    # Setup Type Pie Chart
+    if setup_counts:
+        setup_labels = list(setup_counts.keys())
+        setup_values = list(setup_counts.values())
+        
+        # Color scheme for setup types
+        setup_colors = {
+            'Local': '#28a745',
+            'External': '#17a2b8'
+        }
+        setup_chart_colors = [setup_colors.get(label, '#6c757d') for label in setup_labels]
+        
+        fig_setup = go.Figure(data=[go.Pie(
+            labels=setup_labels,
+            values=setup_values,
+            hole=0.4,
+            marker_colors=setup_chart_colors,
+            textinfo='label+percent+value',
+            textposition='outside'
+        )])
+        
+        fig_setup.update_layout(
+            title="🏠 Setup Type",
+            height=400,
+            showlegend=True,
+            font=dict(size=11)
+        )
+    else:
+        fig_setup = go.Figure()
+        fig_setup.add_annotation(text="No setup type data", x=0.5, y=0.5, showarrow=False)
+        fig_setup.update_layout(title="🏠 Setup Type", height=400)
+    
+    return fig_execution, fig_consensus, fig_setup
+
+def create_client_combination_bar_chart(client_data):
+    """Create bar chart of execution+consensus combinations"""
+    if not client_data:
+        return None
+    
+    combination_counts = client_data.get('combination_counts', {})
+    
+    if not combination_counts:
+        fig = go.Figure()
+        fig.add_annotation(text="No client combination data", x=0.5, y=0.5, showarrow=False)
+        fig.update_layout(title="🔧 Client Combinations", height=400)
+        return fig
+    
+    # Sort combinations by count (highest to lowest)
+    sorted_combinations = sorted(combination_counts.items(), key=lambda x: x[1], reverse=True)
+    
+    labels = [combo for combo, _ in sorted_combinations]
+    values = [count for _, count in sorted_combinations]
+    
+    # Create a gradient color scheme based on popularity
+    max_count = max(values) if values else 1
+    colors = []
+    for value in values:
+        # Color intensity based on usage (darker = more popular)
+        intensity = value / max_count
+        # Use a blue gradient
+        color = f'rgba(103, 126, 234, {0.3 + 0.7 * intensity})'
+        colors.append(color)
+    
+    fig = go.Figure(data=[go.Bar(
+        x=labels,
+        y=values,
+        marker_color=colors,
+        text=values,
+        textposition='auto'
+    )])
+    
+    fig.update_layout(
+        title="🔧 Client Combinations (Execution + Consensus)",
+        xaxis_title="Client Combination",
+        yaxis_title="Number of Operators",
+        height=500,
+        showlegend=False,
+        xaxis=dict(tickangle=45)
+    )
+    
+    return fig

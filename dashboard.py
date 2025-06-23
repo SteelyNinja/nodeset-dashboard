@@ -9,9 +9,10 @@ from collections import Counter
 # Import our modules
 from config import apply_page_config, apply_custom_css
 from data_loader import load_validator_data, load_proposals_data, load_mev_analysis_data, load_sync_committee_data, display_logo
-from analysis import calculate_concentration_metrics, create_performance_analysis, analyze_gas_limits_by_operator
+from analysis import calculate_concentration_metrics, create_performance_analysis, analyze_gas_limits_by_operator, analyze_client_diversity
 from charts import (create_performance_charts, create_concentration_pie, create_distribution_histogram, 
-                   create_concentration_curve, create_gas_limit_distribution_chart, create_operator_gas_strategy_chart)
+                   create_concentration_curve, create_gas_limit_distribution_chart, create_operator_gas_strategy_chart,
+                   create_client_diversity_pie_charts, create_client_combination_bar_chart)
 from tables import (create_top_operators_table, create_performance_table, create_largest_proposals_table,
                    create_latest_proposals_table, create_proposals_operators_table,
                    create_sync_committee_operators_table, create_sync_committee_periods_table, create_sync_committee_detailed_table)
@@ -254,7 +255,7 @@ def create_dashboard_tabs(cache, operator_validators, operator_exited, operator_
     
     st.markdown("---")
 
-    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11 = st.tabs([
         "📈 Distribution",
         "🎯 Concentration", 
         "🏆 Top Operators",
@@ -263,6 +264,7 @@ def create_dashboard_tabs(cache, operator_validators, operator_exited, operator_
         "📡 Sync Committee",
         "🚪 Exit Analysis",
         "💰 Costs",
+        "🔧 Client Diversity",
         "🔥 Pump the Gas!",
         "📋 Raw Data"
     ])
@@ -292,10 +294,135 @@ def create_dashboard_tabs(cache, operator_validators, operator_exited, operator_
         create_costs_tab(cache, operator_validators, operator_exited, ens_names)
 
     with tab9:
-        create_gas_analysis_tab(ens_names)
+        create_client_diversity_tab(ens_names)
 
     with tab10:
+        create_gas_analysis_tab(ens_names)
+
+    with tab11:
         create_raw_data_tab(cache, operator_validators, operator_exited, ens_names)
+
+def create_client_diversity_tab(ens_names):
+    """Create the client diversity analysis tab"""
+    st.subheader("🔧 Client Diversity Analysis")
+    st.markdown("*Analysis of execution client, consensus client, and setup configurations from proposal graffiti data*")
+    
+    # Load proposals data
+    proposals_cache = load_proposals_data()
+    if proposals_cache[0] is None:
+        st.error("⚠️ **Proposals data file not found!**")
+        st.markdown("""
+        **Setup Instructions:**
+        1. Ensure `proposals.json` exists in your directory
+        2. Place the file alongside this dashboard script
+        
+        **Expected file locations:**
+        - `./proposals.json`
+        - `./data/proposals.json`
+        """)
+        return
+    
+    proposals_data, proposals_file = proposals_cache
+    
+    # Load cache data for validator-operator mapping
+    cache_data = load_validator_data()
+    if cache_data[0] is None:
+        st.error("⚠️ **Cache data not available for operator mapping!**")
+        return
+    
+    cache, cache_file = cache_data
+    
+    # Analyze client diversity
+    client_diversity_data = analyze_client_diversity(proposals_data, cache, ens_names)
+    
+    if not client_diversity_data:
+        st.info("📊 No client diversity data available. This requires operators to have made proposals with valid graffiti data.")
+        return
+    
+    # Display summary statistics
+    total_operators = client_diversity_data['total_operators']
+    operators_with_proposals = client_diversity_data['operators_with_proposals']
+    
+    col1, col2, col3 = st.columns(3)
+    
+    with col1:
+        st.metric("Total Operators", f"{total_operators:,}")
+    
+    with col2:
+        st.metric("Operators with Proposals", f"{operators_with_proposals:,}")
+    
+    with col3:
+        if total_operators > 0:
+            coverage_pct = (operators_with_proposals / total_operators) * 100
+            st.metric("Graffiti Coverage", f"{coverage_pct:.1f}%")
+        else:
+            st.metric("Graffiti Coverage", "0%")
+    
+    # Context text
+    st.markdown(f"**📊 {operators_with_proposals} of {total_operators} operators have active proposals with graffiti data**")
+    st.markdown("*Showing latest proposal configuration for each operator*")
+    
+    st.markdown("---")
+    
+    # Create the three pie charts
+    fig_execution, fig_consensus, fig_setup = create_client_diversity_pie_charts(client_diversity_data)
+    
+    if fig_execution and fig_consensus and fig_setup:
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            st.plotly_chart(fig_execution, use_container_width=True)
+        
+        with col2:
+            st.plotly_chart(fig_consensus, use_container_width=True)
+        
+        with col3:
+            st.plotly_chart(fig_setup, use_container_width=True)
+    
+    st.markdown("---")
+    
+    # Create the combination bar chart
+    fig_combinations = create_client_combination_bar_chart(client_diversity_data)
+    if fig_combinations:
+        st.plotly_chart(fig_combinations, use_container_width=True)
+    
+    # Download functionality
+    st.markdown("---")
+    col1, col2 = st.columns([3, 1])
+    with col2:
+        # Prepare export data
+        export_data = []
+        operator_details = client_diversity_data.get('operator_details', {})
+        
+        for operator_addr, data in operator_details.items():
+            ens_name = ens_names.get(operator_addr, "")
+            
+            # Get client names
+            exec_names = {'G': 'Geth', 'N': 'Nethermind', 'B': 'Besu', 'R': 'Reth'}
+            cons_names = {'L': 'Lighthouse', 'S': 'Lodestar', 'N': 'Nimbus', 'P': 'Prysm', 'T': 'Teku'}
+            setup_names = {'L': 'Local', 'X': 'External'}
+            
+            export_data.append({
+                'operator_address': operator_addr,
+                'ens_name': ens_name,
+                'execution_client': exec_names.get(data['execution_client'], data['execution_client']),
+                'consensus_client': cons_names.get(data['consensus_client'], data['consensus_client']),
+                'setup_type': setup_names.get(data['setup_type'], data['setup_type']),
+                'graffiti_text': data['graffiti_text'],
+                'timestamp': data['timestamp']
+            })
+        
+        if export_data:
+            export_df = pd.DataFrame(export_data)
+            export_csv = export_df.to_csv(index=False)
+            
+            st.download_button(
+                label="📥 Download Client Diversity Data",
+                data=export_csv,
+                file_name=f"client_diversity_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv",
+                use_container_width=True
+            )
 
 def create_distribution_tab(active_validators):
     """Create the distribution analysis tab"""
