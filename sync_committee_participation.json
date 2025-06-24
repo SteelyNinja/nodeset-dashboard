@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "last_updated": "2025-06-24T22:48:18.140734",
+    "last_updated": "2025-06-24T23:00:56.373219",
     "total_periods_tracked": 20,
     "total_validators_in_committees": 30,
-    "total_attestations_tracked": 242920,
-    "total_successful_attestations": 234277,
+    "total_attestations_tracked": 242983,
+    "total_successful_attestations": 234340,
     "total_missed_attestations": 8643,
     "total_api_failures": 0,
     "overall_participation_rate": 96.44
@@ -164,10 +164,10 @@
     },
     "1464": {
       "our_validators_count": 1,
-      "total_slots": 5352,
-      "total_successful": 5001,
+      "total_slots": 5415,
+      "total_successful": 5064,
       "total_missed": 351,
-      "participation_rate": 93.44170403587444,
+      "participation_rate": 93.5180055401662,
       "api_failures": 0
     }
   },
@@ -382,10 +382,10 @@
     },
     "0x4bc2e9d0Db4DC87415fCfdd55Fd357F7fc722640": {
       "total_periods": 1,
-      "total_slots": 5352,
-      "total_successful": 5001,
+      "total_slots": 5415,
+      "total_successful": 5064,
       "total_missed": 351,
-      "participation_rate": 93.44170403587444,
+      "participation_rate": 93.5180055401662,
       "api_failures": 0
     }
   },
@@ -1009,16 +1009,16 @@
       "validator_pubkey": "0x9318531fd5ef83315d156b23e1f1be0740d1cffcb9a8cb45633cb6405f85dac505f0ffb6a4b47bc6bdce824f26fa8597",
       "operator": "0x4bc2e9d0Db4DC87415fCfdd55Fd357F7fc722640",
       "operator_name": "0x4bc2e9...722640",
-      "total_slots": 5352,
-      "successful_attestations": 5001,
+      "total_slots": 5415,
+      "successful_attestations": 5064,
       "missed_attestations": 351,
-      "participation_rate": 93.44,
+      "participation_rate": 93.52,
       "is_partial_period": true,
       "actual_start_slot": 11993088,
-      "actual_end_slot": 11998439,
+      "actual_end_slot": 11998502,
       "api_failures": 0,
       "scan_start_slot": 11993088,
-      "scan_end_slot": 11998439
+      "scan_end_slot": 11998502
     }
   ]
 }
