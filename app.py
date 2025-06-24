@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 NodeSet Validator Dashboard
-Main application entry point with sync committee functionality
+Main application entry point.
 """
 
 if __name__ == "__main__":
