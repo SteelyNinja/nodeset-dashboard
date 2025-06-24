@@ -1,6 +1,7 @@
 import pandas as pd
 from datetime import datetime
 from utils import get_performance_category
+from collections import Counter
 
 def create_top_operators_table(operator_validators, operator_exited, ens_names):
     """Create table of top operators by validator count"""
@@ -67,6 +68,25 @@ def create_performance_table(operator_performance, operator_validators, operator
 
     return df
 
+def format_relay_name(relay_tag):
+    """Format relay tag for display"""
+    if not relay_tag:
+        return "Locally Built"
+    
+    # Clean up common relay names for better display
+    relay_display_map = {
+        'bloxroute-max-profit-relay': 'BloxRoute Max Profit',
+        'bloxroute-regulated-relay': 'BloxRoute Regulated', 
+        'flashbots-relay': 'Flashbots',
+        'eden-relay': 'Eden Network',
+        'manifold-relay': 'Manifold',
+        'ultra-sound-relay': 'Ultra Sound',
+        'agnostic-relay': 'Agnostic Relay',
+        'bloxml-relay': 'BloXML'
+    }
+    
+    return relay_display_map.get(relay_tag, relay_tag.replace('-', ' ').title())
+
 def create_largest_proposals_table(proposals_data, ens_names, limit=3):
     """Create a table showing the largest proposals by ETH value"""
     if not proposals_data:
@@ -92,9 +112,9 @@ def create_largest_proposals_table(proposals_data, ens_names, limit=3):
         else:
             operator_display = f"{operator_address[:8]}...{operator_address[-6:]}"
         
-        # MEV boost indicator
-        is_mev_boost = proposal.get('is_mev_boost_block', False)
-        mev_indicator = "✓" if is_mev_boost else "✗"
+        # Get MEV relay information
+        relay_tag = proposal.get('relay_tag', '')
+        mev_relay = format_relay_name(relay_tag)
         
         table_data.append({
             'Date': proposal['date'],
@@ -105,7 +125,7 @@ def create_largest_proposals_table(proposals_data, ens_names, limit=3):
             'Execution Rewards': f"{proposal.get('execution_fees_eth', 0):.4f}",
             'Consensus Rewards': f"{proposal.get('consensus_reward_eth', 0):.4f}",
             'MEV Rewards': f"{proposal.get('mev_breakdown_eth', 0):.4f}",
-            'MEV Block': mev_indicator,
+            'MEV Relay': mev_relay,
             'Slot': proposal['slot'],
             'Gas Used': f"{proposal['gas_used']:,}",
             'Gas Utilization': f"{proposal['gas_utilization']:.1f}%",
@@ -139,9 +159,9 @@ def create_latest_proposals_table(proposals_data, ens_names, limit=5):
         else:
             operator_display = f"{operator_address[:8]}...{operator_address[-6:]}"
         
-        # MEV boost indicator
-        is_mev_boost = proposal.get('is_mev_boost_block', False)
-        mev_indicator = "✓" if is_mev_boost else "✗"
+        # Get MEV relay information
+        relay_tag = proposal.get('relay_tag', '')
+        mev_relay = format_relay_name(relay_tag)
         
         table_data.append({
             'Date': proposal['date'],
@@ -152,7 +172,7 @@ def create_latest_proposals_table(proposals_data, ens_names, limit=5):
             'Execution Rewards': f"{proposal.get('execution_fees_eth', 0):.4f}",
             'Consensus Rewards': f"{proposal.get('consensus_reward_eth', 0):.4f}",
             'MEV Rewards': f"{proposal.get('mev_breakdown_eth', 0):.4f}",
-            'MEV Block': mev_indicator,
+            'MEV Relay': mev_relay,
             'Slot': proposal['slot'],
             'Gas Used': f"{proposal['gas_used']:,}",
             'Gas Utilization': f"{proposal['gas_utilization']:.1f}%",
@@ -160,6 +180,132 @@ def create_latest_proposals_table(proposals_data, ens_names, limit=5):
         })
     
     return pd.DataFrame(table_data)
+
+def create_mev_relay_breakdown_table(proposals_data):
+    """Create a table showing MEV relay usage breakdown"""
+    if not proposals_data:
+        return pd.DataFrame()
+    
+    proposals = proposals_data.get('proposals', [])
+    
+    if not proposals:
+        return pd.DataFrame()
+    
+    # Count relay usage
+    relay_counts = Counter()
+    for proposal in proposals:
+        relay_tag = proposal.get('relay_tag', '')
+        if not relay_tag:
+            relay_counts['Locally Built'] += 1
+        else:
+            relay_counts[format_relay_name(relay_tag)] += 1
+    
+    # Convert to table data
+    total_proposals = len(proposals)
+    table_data = []
+    
+    for relay_name, count in relay_counts.most_common():
+        percentage = (count / total_proposals) * 100
+        table_data.append({
+            'MEV Relay': relay_name,
+            'Proposals': count,
+            'Percentage': f"{percentage:.1f}%"
+        })
+    
+    return pd.DataFrame(table_data)
+
+def create_missed_proposals_table(missed_proposals_data, cache_data, proposals_data, ens_names):
+    """Create a table showing missed proposals with operator statistics"""
+    if not missed_proposals_data or not cache_data:
+        return pd.DataFrame(), {}
+    
+    missed_proposals = missed_proposals_data.get('missed_proposals', [])
+    
+    if not missed_proposals:
+        return pd.DataFrame(), {}
+    
+    # Count missed proposals by operator
+    operator_missed_counts = Counter()
+    operator_details = {}
+    
+    for missed in missed_proposals:
+        operator = missed['operator']
+        operator_missed_counts[operator] += 1
+        
+        if operator not in operator_details:
+            operator_details[operator] = {
+                'first_missed': missed['date'],
+                'last_missed': missed['date'],
+                'missed_slots': []
+            }
+        
+        operator_details[operator]['missed_slots'].append({
+            'slot': missed['slot'],
+            'date': missed['date']
+        })
+        
+        # Update date range
+        if missed['date'] < operator_details[operator]['first_missed']:
+            operator_details[operator]['first_missed'] = missed['date']
+        if missed['date'] > operator_details[operator]['last_missed']:
+            operator_details[operator]['last_missed'] = missed['date']
+    
+    # Count successful proposals by operator from proposals_data
+    operator_successful_counts = Counter()
+    if proposals_data and 'proposals' in proposals_data:
+        for proposal in proposals_data['proposals']:
+            operator = proposal.get('operator')
+            if operator:
+                operator_successful_counts[operator] += 1
+    
+    # Create table data
+    table_data = []
+    
+    for missed in missed_proposals:
+        operator = missed['operator']
+        ens_name = ens_names.get(operator, "")
+        
+        # Format operator display
+        if ens_name:
+            operator_display = f"{ens_name}"
+        else:
+            operator_display = f"{operator[:8]}...{operator[-6:]}"
+        
+        # Calculate stats for this operator
+        total_missed = operator_missed_counts[operator]
+        total_successful = operator_successful_counts.get(operator, 0)
+        
+        # Calculate missed percentage
+        total_attempts = total_missed + total_successful
+        if total_attempts > 0:
+            missed_percentage = f"{(total_missed / total_attempts * 100):.1f}%"
+        else:
+            missed_percentage = "N/A"
+        
+        table_data.append({
+            'Date & Time': missed['date'],
+            'Slot Number': missed['slot'],
+            'Operator Name': operator_display,
+            'Operator Address': operator,
+            'Total Missed': total_missed if total_missed > 1 else 1,
+            'Total Successful': total_successful,
+            'Missed %': missed_percentage
+        })
+    
+    # Sort by date (most recent first)
+    table_data.sort(key=lambda x: x['Date & Time'], reverse=True)
+    
+    # Calculate summary statistics
+    total_missed = len(missed_proposals)
+    unique_operators = len(operator_missed_counts)
+    
+    summary_stats = {
+        'total_missed': total_missed,
+        'unique_operators': unique_operators,
+        'operator_breakdown': dict(operator_missed_counts)
+    }
+    
+    return pd.DataFrame(table_data), summary_stats
 
 def create_proposals_operators_table(proposals_data, ens_names):
     """Create summary table of proposals by operator"""
@@ -180,6 +326,13 @@ def create_proposals_operators_table(proposals_data, ens_names):
             avg_txs = sum(p['tx_count'] for p in operator_proposals) / len(operator_proposals)
             highest_value = max(p['total_value_eth'] for p in operator_proposals)
             
+            # Update proposals to include formatted relay names
+            formatted_proposals = []
+            for p in operator_proposals:
+                formatted_p = p.copy()
+                formatted_p['mev_relay'] = format_relay_name(p.get('relay_tag', ''))
+                formatted_proposals.append(formatted_p)
+            
             table_data.append({
                 'operator': addr,
                 'ens_name': ens_names.get(addr, ''),
@@ -192,7 +345,7 @@ def create_proposals_operators_table(proposals_data, ens_names):
                 'avg_tx_count': avg_txs,
                 'first_proposal': min(dates),
                 'last_proposal': max(dates),
-                'proposals': operator_proposals
+                'proposals': formatted_proposals
             })
     
     return sorted(table_data, key=lambda x: x['proposal_count'], reverse=True)
@@ -224,7 +377,7 @@ def create_sync_committee_operators_table(sync_data, ens_names):
         return pd.DataFrame()
     
     df = pd.DataFrame(data)
-    # CHANGE 1: Sort by Total Periods (highest first), then by Participation Rate for ties
+    # Sort by Total Periods (highest first), then by Participation Rate for ties
     df = df.sort_values(['Total Periods', 'Participation_Raw'], ascending=[False, False]).reset_index(drop=True)
     df['Rank'] = range(1, len(df) + 1)
     
@@ -269,7 +422,7 @@ def create_sync_committee_detailed_table(sync_data, ens_names):
         ens_name = ens_names.get(entry['operator'], "")
         operator_display = ens_name if ens_name else f"{entry['operator'][:8]}...{entry['operator'][-6:]}"
         
-        # CHANGE 2: Calculate successful and missed percentages
+        # Calculate successful and missed percentages
         total_slots = entry['total_slots']
         successful_count = entry['successful_attestations']
         missed_count = entry['missed_attestations']
@@ -288,8 +441,8 @@ def create_sync_committee_detailed_table(sync_data, ens_names):
             'Total Slots': f"{entry['total_slots']:,}",
             'Successful': f"{entry['successful_attestations']:,}",
             'Missed': f"{entry['missed_attestations']:,}",
-            'Successful %': f"{successful_percentage:.2f}%",  # NEW COLUMN
-            'Missed %': f"{missed_percentage:.2f}%",  # NEW COLUMN
+            'Successful %': f"{successful_percentage:.2f}%",
+            'Missed %': f"{missed_percentage:.2f}%",
             'Start Epoch': entry['start_epoch'],
             'End Epoch': entry['end_epoch'],
             'Partial Period': "Yes" if entry.get('is_partial_period', False) else "No"

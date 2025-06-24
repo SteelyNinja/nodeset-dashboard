@@ -34,6 +34,26 @@ def load_proposals_data():
     return None, None
 
 @st.cache_data(ttl=300)
+def load_missed_proposals_data():
+    """Load missed proposals data from JSON file"""
+    possible_paths = [
+        './missed_proposals_cache.json',
+        './data/missed_proposals_cache.json'
+    ]
+    
+    for path in possible_paths:
+        try:
+            if os.path.exists(path):
+                with open(path, 'r') as f:
+                    data = json.load(f)
+                return data, path
+        except Exception as e:
+            print(f"Error loading missed proposals data from {path}: {e}")
+            continue
+    
+    return None, None
+
+@st.cache_data(ttl=300)
 def load_mev_analysis_data():
     """Load MEV relay analysis data for gas limit analysis"""
     for mev_file in MEV_FILES:

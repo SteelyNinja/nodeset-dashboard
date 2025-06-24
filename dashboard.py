@@ -8,14 +8,15 @@ from collections import Counter
 
 # Import our modules
 from config import apply_page_config, apply_custom_css
-from data_loader import load_validator_data, load_proposals_data, load_mev_analysis_data, load_sync_committee_data, display_logo
+from data_loader import load_validator_data, load_proposals_data, load_mev_analysis_data, load_sync_committee_data, load_missed_proposals_data, display_logo
 from analysis import calculate_concentration_metrics, create_performance_analysis, analyze_gas_limits_by_operator, analyze_client_diversity
 from charts import (create_performance_charts, create_concentration_pie, create_distribution_histogram, 
                    create_concentration_curve, create_gas_limit_distribution_chart, create_operator_gas_strategy_chart,
                    create_client_diversity_pie_charts, create_client_combination_bar_chart)
 from tables import (create_top_operators_table, create_performance_table, create_largest_proposals_table,
-                   create_latest_proposals_table, create_proposals_operators_table,
-                   create_sync_committee_operators_table, create_sync_committee_periods_table, create_sync_committee_detailed_table)
+                   create_latest_proposals_table, create_proposals_operators_table, create_mev_relay_breakdown_table,
+                   create_missed_proposals_table, create_sync_committee_operators_table, 
+                   create_sync_committee_periods_table, create_sync_committee_detailed_table)
 from components import (display_health_status, display_performance_health, display_ens_status,
                        display_network_overview, display_cache_info, show_refresh_button)
 from utils import format_operator_display_plain, get_performance_category
@@ -668,7 +669,7 @@ def create_proposals_tab(ens_names):
                     "Execution Rewards": st.column_config.TextColumn("Exec Rewards", width="small"),
                     "Consensus Rewards": st.column_config.TextColumn("Cons Rewards", width="small"),
                     "MEV Rewards": st.column_config.TextColumn("MEV Rewards", width="small"),
-                    "MEV Block": st.column_config.TextColumn("MEV", width="small"),
+                    "MEV Relay": st.column_config.TextColumn("MEV Relay", width="medium"),
                     "Slot": st.column_config.TextColumn("Slot", width="small"),
                     "Gas Used": st.column_config.TextColumn("Gas Used", width="small"),
                     "Gas Utilization": st.column_config.TextColumn("Gas %", width="small"),
@@ -708,7 +709,7 @@ def create_proposals_tab(ens_names):
                     "Execution Rewards": st.column_config.TextColumn("Exec Rewards", width="small"),
                     "Consensus Rewards": st.column_config.TextColumn("Cons Rewards", width="small"),
                     "MEV Rewards": st.column_config.TextColumn("MEV Rewards", width="small"),
-                    "MEV Block": st.column_config.TextColumn("MEV", width="small"),
+                    "MEV Relay": st.column_config.TextColumn("MEV Relay", width="medium"),
                     "Slot": st.column_config.TextColumn("Slot", width="small"),
                     "Gas Used": st.column_config.TextColumn("Gas Used", width="small"),
                     "Gas Utilization": st.column_config.TextColumn("Gas %", width="small"),
@@ -728,7 +729,104 @@ def create_proposals_tab(ens_names):
         
         st.markdown("---")
         
-        # Add detailed operator proposals section
+        # Add MEV Relay Breakdown Table
+        st.subheader("🔗 MEV Relay Usage Breakdown")
+        st.caption("Breakdown of MEV relays used in proposals, sorted by usage count")
+        
+        mev_relay_df = create_mev_relay_breakdown_table(proposals_data)
+        
+        if not mev_relay_df.empty:
+            st.dataframe(
+                mev_relay_df,
+                use_container_width=True,
+                hide_index=True,
+                column_config={
+                    "MEV Relay": st.column_config.TextColumn("MEV Relay", width="large"),
+                    "Proposals": st.column_config.NumberColumn("Proposals", width="small"),
+                    "Percentage": st.column_config.TextColumn("Percentage", width="small")
+                }
+            )
+            
+            relay_csv = mev_relay_df.to_csv(index=False)
+            st.download_button(
+                label="📥 Download MEV Relay Data",
+                data=relay_csv,
+                file_name=f"mev_relay_breakdown_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                mime="text/csv"
+            )
+        else:
+            st.info("No MEV relay data available.")
+        
+        st.markdown("---")
+        
+        # Add Missed Proposals Section
+        st.subheader("❌ Missed Proposals Analysis")
+        
+        # Load missed proposals data
+        missed_cache = load_missed_proposals_data()
+        cache_data = load_validator_data()
+        
+        if missed_cache[0] is None:
+            st.info("📊 No missed proposals data available.")
+            st.markdown("""
+            **To enable missed proposals tracking:**
+            1. Ensure `missed_proposals_cache.json` exists in your directory
+            2. This file should be generated by your proposals tracking system
+            
+            **Expected file locations:**
+            - `./missed_proposals_cache.json`
+            - `./data/missed_proposals_cache.json`
+            """)
+        else:
+            missed_data, missed_file = missed_cache
+            cache, cache_file = cache_data if cache_data[0] is not None else (None, None)
+            
+            # Create missed proposals table and get summary stats
+            missed_df, summary_stats = create_missed_proposals_table(missed_data, cache, proposals_data, ens_names)
+            
+            if not missed_df.empty and summary_stats:
+                # Calculate successful proposals from proposals data
+                total_successful = metadata.get('total_proposals', 0)
+                total_missed = summary_stats['total_missed']
+                total_all_proposals = total_successful + total_missed
+                missed_percentage = (total_missed / total_all_proposals * 100) if total_all_proposals > 0 else 0
+                
+                # Display summary statistics in header
+                st.markdown(f"""
+                **Summary:** {total_successful:,} successful proposals • {total_missed:,} missed proposals • {missed_percentage:.1f}% missed rate
+                """)
+                
+                st.caption(f"Showing {len(missed_df)} missed proposal records • 📄 {missed_file.split('/')[-1]}")
+                
+                # Display missed proposals table
+                display_missed_df = missed_df.drop(['Operator Address'], axis=1)
+                st.dataframe(
+                    display_missed_df,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "Date & Time": st.column_config.TextColumn("Date & Time", width="medium"),
+                        "Slot Number": st.column_config.NumberColumn("Slot Number", width="small"),
+                        "Operator Name": st.column_config.TextColumn("Operator Name", width="medium"),
+                        "Total Missed": st.column_config.NumberColumn("Total Missed", width="small"),
+                        "Total Successful": st.column_config.NumberColumn("Total Successful", width="small"),
+                        "Missed %": st.column_config.TextColumn("Missed %", width="small")
+                    }
+                )
+                
+                missed_csv = missed_df.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Missed Proposals",
+                    data=missed_csv,
+                    file_name=f"missed_proposals_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
+            else:
+                st.info("🎉 No missed proposals found!")
+        
+        st.markdown("---")
+        
+        # Add detailed operator proposals section (existing code continues...)
         proposals_operators = create_proposals_operators_table(proposals_data, ens_names)
         
         if proposals_operators:
@@ -819,12 +917,9 @@ def create_proposals_tab(ens_names):
                     if proposals_list:
                         df = pd.DataFrame(proposals_list)
                         
-                        # Handle missing MEV block data gracefully
-                        if 'is_mev_boost_block' not in df.columns:
-                            df['is_mev_boost_block'] = False
-                        
-                        display_df = df[['date', 'slot', 'total_value_eth', 'gas_used', 'gas_utilization', 'tx_count', 'base_fee', 'is_mev_boost_block', 'validator_pubkey']].copy()
-                        display_df.columns = ['Date', 'Slot', 'ETH Value', 'Gas Used', 'Gas %', 'TXs', 'Base Fee', 'MEV Block', 'Validator Pubkey']
+                        # Use the formatted MEV relay information
+                        display_df = df[['date', 'slot', 'total_value_eth', 'gas_used', 'gas_utilization', 'tx_count', 'base_fee', 'mev_relay', 'validator_pubkey']].copy()
+                        display_df.columns = ['Date', 'Slot', 'ETH Value', 'Gas Used', 'Gas %', 'TXs', 'Base Fee', 'MEV Relay', 'Validator Pubkey']
                         
                         display_df['ETH Value'] = display_df['ETH Value'].apply(lambda x: f"{x:.4f}")
                         display_df['Gas Used'] = display_df['Gas Used'].astype(str)
@@ -832,7 +927,6 @@ def create_proposals_tab(ens_names):
                         display_df['TXs'] = display_df['TXs'].astype(str)
                         display_df['Base Fee'] = display_df['Base Fee'].astype(str)
                         display_df['Slot'] = display_df['Slot'].astype(str)
-                        display_df['MEV Block'] = display_df['MEV Block'].apply(lambda x: "✓" if x else "✗")
                         
                         display_df = display_df.sort_values('Date', ascending=False)
                         
@@ -848,7 +942,7 @@ def create_proposals_tab(ens_names):
                                 "Gas %": st.column_config.TextColumn("Gas %", width="small"),
                                 "TXs": st.column_config.TextColumn("TXs", width="small"),
                                 "Base Fee": st.column_config.TextColumn("Base Fee", width="small"),
-                                "MEV Block": st.column_config.TextColumn("MEV Block", width="small"),
+                                "MEV Relay": st.column_config.TextColumn("MEV Relay", width="medium"),
                                 "Validator Pubkey": st.column_config.TextColumn("Validator Pubkey", width="large")
                             }
                         )
@@ -1659,7 +1753,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
         st.json(cache_summary)
 
     with col2:
-        if st.button("🔄 Show Full Cache"):
+        if st.button("📄 Show Full Cache"):
             st.json(cache)
 
     # Rest of the ENS names section continues as before...

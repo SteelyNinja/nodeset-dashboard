@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from utils import format_operator_display_plain, get_performance_category
+from collections import Counter
 
 def calculate_concentration_metrics(operator_validators):
     """Calculate concentration metrics including Gini coefficient"""
@@ -251,4 +252,36 @@ def analyze_client_diversity(proposals_data, cache_data, ens_names):
         'setup_counts': setup_counts,
         'combination_counts': combination_counts,
         'operator_details': operator_proposals
+    }
+
+def analyze_missed_proposals_stats(missed_proposals_data, proposals_data):
+    """Analyze missed proposals statistics"""
+    if not missed_proposals_data:
+        return {}
+    
+    missed_proposals = missed_proposals_data.get('missed_proposals', [])
+    if not missed_proposals:
+        return {}
+    
+    # Count missed proposals by operator
+    operator_missed_counts = Counter()
+    for missed in missed_proposals:
+        operator_missed_counts[missed['operator']] += 1
+    
+    # Get successful proposals count
+    successful_proposals = proposals_data.get('metadata', {}).get('total_proposals', 0) if proposals_data else 0
+    total_missed = len(missed_proposals)
+    
+    # Calculate overall statistics
+    total_all_proposals = successful_proposals + total_missed
+    overall_missed_rate = (total_missed / total_all_proposals * 100) if total_all_proposals > 0 else 0
+    
+    return {
+        'total_missed': total_missed,
+        'total_successful': successful_proposals,
+        'total_all_proposals': total_all_proposals,
+        'overall_missed_rate': overall_missed_rate,
+        'unique_operators_with_misses': len(operator_missed_counts),
+        'operator_missed_counts': dict(operator_missed_counts),
+        'avg_missed_per_operator': total_missed / len(operator_missed_counts) if operator_missed_counts else 0
     }
