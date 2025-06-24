@@ -109,8 +109,19 @@
       "operator": "0x85a0a2b62f2E3A3397caa4bF7062cB27a9004165",
       "operator_name": "0x85a0a2...004165",
       "reason": "missed_proposal"
+    },
+    {
+      "slot": 11993791,
+      "epoch": 374805,
+      "timestamp": 1750749515,
+      "date": "2025-06-24 07:18:35",
+      "validator_index": 1938695,
+      "validator_pubkey": "0xa7e9622e93842c2e8a48c60011a8413b7934f2468b57821ed974faf919546fa23ead40a48906527d72c1842204e9831b",
+      "operator": "0x4bA44E38330b79D89C62ad75a43A26d00451e90d",
+      "operator_name": "0x4bA44E...51e90d",
+      "reason": "missed_proposal"
     }
   ],
-  "last_checked_epoch": 374803,
-  "last_updated": 1750748447
+  "last_checked_epoch": 374805,
+  "last_updated": 1750749481
 }
