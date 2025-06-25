@@ -100,8 +100,8 @@
       "reason": "missed_proposal"
     }
   ],
-  "last_checked_epoch": 374998,
-  "last_updated": 1750824048,
+  "last_checked_epoch": 375000,
+  "last_updated": 1750824948,
   "last_revalidation": 1750799746,
   "last_revalidation_date": "2025-06-24T21:15:46.240638"
 }
