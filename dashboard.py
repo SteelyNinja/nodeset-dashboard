@@ -1655,31 +1655,12 @@ def create_gas_analysis_tab(ens_names):
                             'min_gas_limit': op['min_gas_limit'],
                             'gas_category': op['gas_category'],
                             'strategy': op['strategy'],
-                            'consistency_score': op['consistency_score'],
-                            'unique_gas_limits': len(op['unique_limits'])
-                        })
-                    
-                    export_df = pd.DataFrame(export_data)
-                    export_csv = export_df.to_csv(index=False)
-                    
-                    st.download_button(
-                        label="📥 Download Gas Analysis",
-                        data=export_csv,
-                        file_name=f"gas_limit_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
-                        mime="text/csv",
-                        use_container_width=True
-                    )
-            else:
-                st.info("No operator gas limit data available for analysis.")
-        else:
-            st.info("No gas limit distribution data available.")
-
-def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
-    """Create the raw data tab with memory usage indicator"""
-    st.subheader("📋 Raw Cache Data")
+                            'consistency_score': op['consistency_score'],def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
+    """Create the raw data tab with memory usage indicator and all data files"""
+    st.subheader("?? Raw Cache Data")
     
     # Memory Usage Section
-    st.markdown("### 💾 Memory Usage")
+    st.markdown("### ?? Memory Usage")
     
     try:
         memory_mb, memory_percentage = get_memory_usage()
@@ -1697,13 +1678,13 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             # Color code based on usage percentage
             if memory_percentage < 70:
                 color_class = "status-good"
-                status_emoji = "🟢"
+                status_emoji = "??"
             elif memory_percentage < 85:
                 color_class = "status-warning" 
-                status_emoji = "🟡"
+                status_emoji = "??"
             else:
                 color_class = "status-danger"
-                status_emoji = "🔴"
+                status_emoji = "??"
             
             st.metric(
                 "Streamlit Limit Usage",
@@ -1722,43 +1703,374 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             )
     
     except ImportError:
-        st.warning("⚠️ Install 'psutil' package to see memory usage: `pip install psutil`")
+        st.warning("?? Install 'psutil' package to see memory usage: `pip install psutil`")
     except Exception as e:
-        st.error(f"⚠️ Could not retrieve memory usage: {str(e)}")
+        st.error(f"?? Could not retrieve memory usage: {str(e)}")
     
     st.markdown("---")
     
-    # Rest of the existing raw data tab code continues below...
-    col1, col2 = st.columns(2)
-
-    with col1:
-        cache_summary = {
-            "total_validators": cache.get('total_validators', 0),
-            "total_exited": cache.get('total_exited', 0),
-            "last_block": cache.get('last_block', 0),
-            "last_epoch_checked": cache.get('last_epoch_checked', 0),
-            "total_operators": len(cache.get('operator_validators', {})),
-            "pending_pubkeys": len(cache.get('pending_pubkeys', [])),
-            "processed_transactions": len(cache.get('processed_transactions', [])),
-            "performance_metrics": len(cache.get('operator_performance', {})),
-            "cost_metrics": len(cache.get('operator_costs', {})),
-            "transaction_records": len(cache.get('operator_transactions', {})),
-            "ens_names_resolved": len(cache.get('ens_names', {})),
-            "ens_last_updated": cache.get('ens_last_updated', 0),
-            "ens_update_failures": len(cache.get('ens_update_failures', {})),
-            "validator_indices": len(cache.get('validator_indices', {})),
-            "validators_in_queue": len(cache.get('pending_pubkeys', []))
+    # Data Files Overview Section
+    st.markdown("### ?? Data Files Overview")
+    
+    # Load all data files and get their information
+    data_files_info = []
+    
+    # 1. Main validator cache
+    cache_data = load_validator_data()
+    if cache_data[0] is not None:
+        cache_content, cache_file = cache_data
+        try:
+            import os
+            file_size = os.path.getsize(cache_file)
+            file_size_mb = file_size / (1024 * 1024)
+            last_modified = datetime.fromtimestamp(os.path.getmtime(cache_file))
+            
+            data_files_info.append({
+                'File': 'nodeset_validator_tracker_cache.json',
+                'Description': 'Main validator data, performance, costs, ENS names',
+                'Size (MB)': f"{file_size_mb:.2f}",
+                'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
+                'Status': '? Loaded',
+                'Records': f"{len(cache_content.get('operator_validators', {}))} operators"
+            })
+        except Exception as e:
+            data_files_info.append({
+                'File': 'nodeset_validator_tracker_cache.json',
+                'Description': 'Main validator data, performance, costs, ENS names',
+                'Size (MB)': 'Unknown',
+                'Last Modified': 'Unknown',
+                'Status': '? Loaded',
+                'Records': f"{len(cache.get('operator_validators', {}))} operators"
+            })
+    else:
+        data_files_info.append({
+            'File': 'nodeset_validator_tracker_cache.json',
+            'Description': 'Main validator data, performance, costs, ENS names',
+            'Size (MB)': 'N/A',
+            'Last Modified': 'N/A',
+            'Status': '? Missing',
+            'Records': 'N/A'
+        })
+    
+    # 2. Proposals data
+    proposals_cache = load_proposals_data()
+    if proposals_cache[0] is not None:
+        proposals_content, proposals_file = proposals_cache
+        try:
+            import os
+            file_size = os.path.getsize(proposals_file)
+            file_size_mb = file_size / (1024 * 1024)
+            last_modified = datetime.fromtimestamp(os.path.getmtime(proposals_file))
+            
+            metadata = proposals_content.get('metadata', {})
+            data_files_info.append({
+                'File': 'proposals.json',
+                'Description': 'Block proposals, MEV data, validator performance',
+                'Size (MB)': f"{file_size_mb:.2f}",
+                'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
+                'Status': '? Loaded',
+                'Records': f"{metadata.get('total_proposals', 0)} proposals"
+            })
+        except Exception as e:
+            data_files_info.append({
+                'File': 'proposals.json',
+                'Description': 'Block proposals, MEV data, validator performance',
+                'Size (MB)': 'Unknown',
+                'Last Modified': 'Unknown',
+                'Status': '? Loaded',
+                'Records': f"{proposals_content.get('metadata', {}).get('total_proposals', 0)} proposals"
+            })
+    else:
+        data_files_info.append({
+            'File': 'proposals.json',
+            'Description': 'Block proposals, MEV data, validator performance',
+            'Size (MB)': 'N/A',
+            'Last Modified': 'N/A',
+            'Status': '? Missing',
+            'Records': 'N/A'
+        })
+    
+    # 3. MEV analysis data
+    mev_cache = load_mev_analysis_data()
+    if mev_cache[0] is not None:
+        mev_content, mev_file = mev_cache
+        try:
+            import os
+            file_size = os.path.getsize(mev_file)
+            file_size_mb = file_size / (1024 * 1024)
+            last_modified = datetime.fromtimestamp(os.path.getmtime(mev_file))
+            
+            gas_analysis = mev_content.get('gas_limit_analysis', {})
+            distribution = gas_analysis.get('distribution', {})
+            total_validators = sum(distribution.values()) if distribution else 0
+            
+            data_files_info.append({
+                'File': 'mev_analysis_results.json',
+                'Description': 'Gas limit analysis, MEV relay usage',
+                'Size (MB)': f"{file_size_mb:.2f}",
+                'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
+                'Status': '? Loaded',
+                'Records': f"{total_validators} validators analyzed"
+            })
+        except Exception as e:
+            data_files_info.append({
+                'File': 'mev_analysis_results.json',
+                'Description': 'Gas limit analysis, MEV relay usage',
+                'Size (MB)': 'Unknown',
+                'Last Modified': 'Unknown',
+                'Status': '? Loaded',
+                'Records': 'Unknown'
+            })
+    else:
+        data_files_info.append({
+            'File': 'mev_analysis_results.json',
+            'Description': 'Gas limit analysis, MEV relay usage',
+            'Size (MB)': 'N/A',
+            'Last Modified': 'N/A',
+            'Status': '? Missing',
+            'Records': 'N/A'
+        })
+    
+    # 4. Sync committee data
+    sync_cache = load_sync_committee_data()
+    if sync_cache[0] is not None:
+        sync_content, sync_file = sync_cache
+        try:
+            import os
+            file_size = os.path.getsize(sync_file)
+            file_size_mb = file_size / (1024 * 1024)
+            last_modified = datetime.fromtimestamp(os.path.getmtime(sync_file))
+            
+            metadata = sync_content.get('metadata', {})
+            data_files_info.append({
+                'File': 'sync_committee_participation.json',
+                'Description': 'Sync committee participation tracking',
+                'Size (MB)': f"{file_size_mb:.2f}",
+                'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
+                'Status': '? Loaded',
+                'Records': f"{metadata.get('total_periods_tracked', 0)} periods"
+            })
+        except Exception as e:
+            data_files_info.append({
+                'File': 'sync_committee_participation.json',
+                'Description': 'Sync committee participation tracking',
+                'Size (MB)': 'Unknown',
+                'Last Modified': 'Unknown',
+                'Status': '? Loaded',
+                'Records': f"{sync_content.get('metadata', {}).get('total_periods_tracked', 0)} periods"
+            })
+    else:
+        data_files_info.append({
+            'File': 'sync_committee_participation.json',
+            'Description': 'Sync committee participation tracking',
+            'Size (MB)': 'N/A',
+            'Last Modified': 'N/A',
+            'Status': '? Missing',
+            'Records': 'N/A'
+        })
+    
+    # 5. Missed proposals data
+    missed_cache = load_missed_proposals_data()
+    if missed_cache[0] is not None:
+        missed_content, missed_file = missed_cache
+        try:
+            import os
+            file_size = os.path.getsize(missed_file)
+            file_size_mb = file_size / (1024 * 1024)
+            last_modified = datetime.fromtimestamp(os.path.getmtime(missed_file))
+            
+            missed_proposals = missed_content.get('missed_proposals', [])
+            data_files_info.append({
+                'File': 'missed_proposals_cache.json',
+                'Description': 'Missed block proposals tracking',
+                'Size (MB)': f"{file_size_mb:.2f}",
+                'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
+                'Status': '? Loaded',
+                'Records': f"{len(missed_proposals)} missed proposals"
+            })
+        except Exception as e:
+            data_files_info.append({
+                'File': 'missed_proposals_cache.json',
+                'Description': 'Missed block proposals tracking',
+                'Size (MB)': 'Unknown',
+                'Last Modified': 'Unknown',
+                'Status': '? Loaded',
+                'Records': f"{len(missed_content.get('missed_proposals', []))} missed proposals"
+            })
+    else:
+        data_files_info.append({
+            'File': 'missed_proposals_cache.json',
+            'Description': 'Missed block proposals tracking',
+            'Size (MB)': 'N/A',
+            'Last Modified': 'N/A',
+            'Status': '? Missing',
+            'Records': 'N/A'
+        })
+    
+    # Display files overview table
+    files_df = pd.DataFrame(data_files_info)
+    st.dataframe(
+        files_df,
+        use_container_width=True,
+        hide_index=True,
+        column_config={
+            "File": st.column_config.TextColumn("File", width="medium"),
+            "Description": st.column_config.TextColumn("Description", width="large"),
+            "Size (MB)": st.column_config.TextColumn("Size (MB)", width="small"),
+            "Last Modified": st.column_config.TextColumn("Last Modified", width="medium"),
+            "Status": st.column_config.TextColumn("Status", width="small"),
+            "Records": st.column_config.TextColumn("Records", width="medium")
         }
-        
-        st.json(cache_summary)
-
+    )
+    
+    # Calculate total size
+    total_size = 0
+    loaded_files = 0
+    for file_info in data_files_info:
+        if file_info['Status'] == '? Loaded' and file_info['Size (MB)'] != 'N/A' and file_info['Size (MB)'] != 'Unknown':
+            try:
+                total_size += float(file_info['Size (MB)'])
+                loaded_files += 1
+            except:
+                pass
+    
+    col1, col2, col3 = st.columns(3)
+    with col1:
+        st.metric("Total Data Size", f"{total_size:.2f} MB")
     with col2:
-        if st.button("📄 Show Full Cache"):
-            st.json(cache)
+        st.metric("Files Loaded", f"{loaded_files}/5")
+    with col3:
+        missing_files = 5 - loaded_files
+        if missing_files == 0:
+            st.metric("Status", "?? All files loaded")
+        else:
+            st.metric("Status", f"?? {missing_files} files missing")
+    
+    st.markdown("---")
+    
+    # Detailed Cache Data Section
+    st.markdown("### ?? Detailed Cache Data")
+    
+    # Create tabs for each data file
+    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+        "?? Main Cache", 
+        "?? Proposals", 
+        "? MEV Analysis", 
+        "?? Sync Committee", 
+        "? Missed Proposals"
+    ])
+    
+    with tab1:
+        st.markdown("**Main Validator Cache Summary**")
+        col1, col2 = st.columns(2)
 
-    # Rest of the ENS names section continues as before...
+        with col1:
+            cache_summary = {
+                "total_validators": cache.get('total_validators', 0),
+                "total_exited": cache.get('total_exited', 0),
+                "last_block": cache.get('last_block', 0),
+                "last_epoch_checked": cache.get('last_epoch_checked', 0),
+                "total_operators": len(cache.get('operator_validators', {})),
+                "pending_pubkeys": len(cache.get('pending_pubkeys', [])),
+                "processed_transactions": len(cache.get('processed_transactions', [])),
+                "performance_metrics": len(cache.get('operator_performance', {})),
+                "cost_metrics": len(cache.get('operator_costs', {})),
+                "transaction_records": len(cache.get('operator_transactions', {})),
+                "ens_names_resolved": len(cache.get('ens_names', {})),
+                "ens_last_updated": cache.get('ens_last_updated', 0),
+                "ens_update_failures": len(cache.get('ens_update_failures', {})),
+                "validator_indices": len(cache.get('validator_indices', {})),
+                "validators_in_queue": len(cache.get('pending_pubkeys', []))
+            }
+            
+            st.json(cache_summary)
+
+        with col2:
+            if st.button("?? Show Full Main Cache", key="show_main_cache"):
+                st.json(cache)
+    
+    with tab2:
+        if proposals_cache[0] is not None:
+            proposals_content, _ = proposals_cache
+            st.markdown("**Proposals Data Summary**")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                metadata = proposals_content.get('metadata', {})
+                st.json(metadata)
+            
+            with col2:
+                if st.button("?? Show Full Proposals Data", key="show_proposals_data"):
+                    st.json(proposals_content)
+        else:
+            st.info("? Proposals data not loaded")
+    
+    with tab3:
+        if mev_cache[0] is not None:
+            mev_content, _ = mev_cache
+            st.markdown("**MEV Analysis Data Summary**")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                gas_analysis = mev_content.get('gas_limit_analysis', {})
+                summary = {
+                    "distribution": gas_analysis.get('distribution', {}),
+                    "consistency_stats": gas_analysis.get('consistency_stats', {}),
+                    "operator_count": len(mev_content.get('operator_data', {}))
+                }
+                st.json(summary)
+            
+            with col2:
+                if st.button("?? Show Full MEV Data", key="show_mev_data"):
+                    st.json(mev_content)
+        else:
+            st.info("? MEV analysis data not loaded")
+    
+    with tab4:
+        if sync_cache[0] is not None:
+            sync_content, _ = sync_cache
+            st.markdown("**Sync Committee Data Summary**")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                metadata = sync_content.get('metadata', {})
+                summary = {
+                    "metadata": metadata,
+                    "operators_count": len(sync_content.get('operator_participation', {})),
+                    "periods_count": len(sync_content.get('period_summaries', {}))
+                }
+                st.json(summary)
+            
+            with col2:
+                if st.button("?? Show Full Sync Committee Data", key="show_sync_data"):
+                    st.json(sync_content)
+        else:
+            st.info("? Sync committee data not loaded")
+    
+    with tab5:
+        if missed_cache[0] is not None:
+            missed_content, _ = missed_cache
+            st.markdown("**Missed Proposals Data Summary**")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                summary = {
+                    "missed_proposals_count": len(missed_content.get('missed_proposals', [])),
+                    "last_updated": missed_content.get('last_updated', 'Unknown'),
+                    "operators_with_misses": len(set(mp.get('operator_address', '') for mp in missed_content.get('missed_proposals', [])))
+                }
+                st.json(summary)
+            
+            with col2:
+                if st.button("?? Show Full Missed Proposals Data", key="show_missed_data"):
+                    st.json(missed_content)
+        else:
+            st.info("? Missed proposals data not loaded")
+
+    # ENS names section (existing code)
+    st.markdown("---")
     if ens_names:
-        st.subheader("🏷️ Resolved ENS Names")
+        st.subheader("??? Resolved ENS Names")
 
         ens_data = []
         for addr, ens_name in ens_names.items():
@@ -1793,8 +2105,26 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
 
             ens_csv = ens_df.to_csv(index=False)
             st.download_button(
-                label="📥 Download ENS Data",
+                label="?? Download ENS Data",
                 data=ens_csv,
                 file_name=f"nodeset_ens_names_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                 mime="text/csv"
             )
+                            'unique_gas_limits': len(op['unique_limits'])
+                        })
+                    
+                    export_df = pd.DataFrame(export_data)
+                    export_csv = export_df.to_csv(index=False)
+                    
+                    st.download_button(
+                        label="📥 Download Gas Analysis",
+                        data=export_csv,
+                        file_name=f"gas_limit_analysis_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                        mime="text/csv",
+                        use_container_width=True
+                    )
+            else:
+                st.info("No operator gas limit data available for analysis.")
+        else:
+            st.info("No gas limit distribution data available.")
+
