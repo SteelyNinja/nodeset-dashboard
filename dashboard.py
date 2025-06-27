@@ -591,7 +591,7 @@ def create_performance_tab(operator_performance, operator_validators, operator_e
                     column_config={
                         "Rank": st.column_config.NumberColumn("Rank", width="small"),
                         "Address": st.column_config.TextColumn("Address", width="large"),
-                        "ENS Name": st.column_config.TextColumn("ENS Name", width="small"),
+                        "ENS \ Discord Name": st.column_config.TextColumn("ENS Name", width="small"),
                         "Performance": st.column_config.TextColumn("Performance", width="small"),
                         "Category": st.column_config.TextColumn("Category", width="small"),
                         "Active": st.column_config.TextColumn("Active", width="small"),
@@ -1049,7 +1049,7 @@ def create_sync_committee_tab(ens_names):
                 column_config={
                     "Rank": st.column_config.NumberColumn("Rank", width="small"),
                     "Address": st.column_config.TextColumn("Address", width="large"),
-                    "ENS Name": st.column_config.TextColumn("ENS Name", width="medium"),
+                    "ENS \ Discord Name": st.column_config.TextColumn("ENS Name", width="medium"),
                     "Participation Rate": st.column_config.TextColumn("Participation Rate", width="small"),
                     "Total Periods": st.column_config.NumberColumn("Periods", width="small"),
                     "Total Slots": st.column_config.TextColumn("Total Slots", width="small"),

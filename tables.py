@@ -19,7 +19,7 @@ def create_top_operators_table(operator_validators, operator_exited, ens_names):
         data.append({
             'Rank': 0,
             'Address': addr,
-            'ENS Name': ens_name,
+            'ENS / Discord Name': ens_name,
             'Active': active_count,
             'Total': total_count,
             'Exited': exited_count,
@@ -50,7 +50,7 @@ def create_performance_table(operator_performance, operator_validators, operator
             data.append({
                 'Rank': 0,
                 'Address': addr,
-                'ENS Name': ens_name,
+                'ENS / Discord Name': ens_name,
                 'Performance': f"{performance:.2f}%",
                 'Performance_Raw': performance,
                 'Category': get_performance_category(performance),
@@ -364,7 +364,7 @@ def create_sync_committee_operators_table(sync_data, ens_names):
         data.append({
             'Rank': 0,
             'Address': addr,
-            'ENS Name': ens_name,
+            'ENS \ Discord Name': ens_name,
             'Participation Rate': f"{stats['participation_rate']:.2f}%",
             'Participation_Raw': stats['participation_rate'],
             'Total Periods': stats['total_periods'],
