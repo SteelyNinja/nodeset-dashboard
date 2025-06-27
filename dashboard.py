@@ -2115,7 +2115,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
                 use_container_width=True,
                 hide_index=True,
                 column_config={
-                    "ENS Name": st.column_config.TextColumn("ENS Name", width="small"),
+                    "ENS / Discord Name": st.column_config.TextColumn("ENS / Discord Name", width="small"),
                     "Address": st.column_config.TextColumn("Address", width="large"),
                     "Active Validators": st.column_config.TextColumn("Active Validators", width="small"),
                     "Total Validators": st.column_config.TextColumn("Total Validators", width="small")
