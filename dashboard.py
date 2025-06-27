@@ -2097,7 +2097,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             active_count = validator_count - operator_exited.get(addr, 0)
 
             ens_data.append({
-                'ENS Name': ens_name,
+                'ENS / Discord Name': ens_name,
                 'Address': addr,
                 'Active Validators': active_count,
                 'Total Validators': validator_count
