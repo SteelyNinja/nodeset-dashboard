@@ -364,7 +364,7 @@ def create_sync_committee_operators_table(sync_data, ens_names):
         data.append({
             'Rank': 0,
             'Address': addr,
-            'ENS \ Discord Name': ens_name,
+            'ENS / Discord Name': ens_name,
             'Participation Rate': f"{stats['participation_rate']:.2f}%",
             'Participation_Raw': stats['participation_rate'],
             'Total Periods': stats['total_periods'],
