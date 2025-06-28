@@ -184,49 +184,66 @@ def display_network_overview(cache, operator_validators, operator_exited):
         if active_count > 0:
             active_validators[operator] = active_count
 
-    col1, col2, col3, col4, col5, col6 = st.columns(6)
+    # Create glass-morphism cards for network overview
+    exit_rate = (total_exited / total_validators * 100) if total_validators > 0 else 0
+    
+    st.markdown("""
+        <div class="glass-cards-grid">
+            <div class="glass-card">
+                <div class="glass-card-title">Total Deposited Validators</div>
+                <div class="glass-card-value">{:,}</div>
+                <div class="glass-card-caption">All validators deposited</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Activated Validators</div>
+                <div class="glass-card-value">{:,}</div>
+                <div class="glass-card-caption">Participating in consensus</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Validators in Queue</div>
+                <div class="glass-card-value">{:,}</div>
+                <div class="glass-card-caption">Waiting for activation</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Active Operators</div>
+                <div class="glass-card-value">{:,}</div>
+                <div class="glass-card-caption">Operating validators</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Exited Validators</div>
+                <div class="glass-card-value">{:,}</div>
+                <div class="glass-card-caption">No longer active</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Exit Rate</div>
+                <div class="glass-card-value">{:.1f}%</div>
+                <div class="glass-card-caption">Percentage exited</div>
+            </div>
+        </div>
+    """.format(total_activated + total_queued, total_activated, total_queued, 
+              len(active_validators), total_exited, exit_rate), unsafe_allow_html=True)
 
-    with col1:
-        st.metric("Total Deposited Validators", f"{total_activated + total_queued:,}",
-                  help="All validators that have been deposited (includes activated and queued)")
-
-    with col2:
-        st.metric("Activated Validators", f"{total_activated:,}",
-                  help="Validators with assigned index numbers (participating in consensus)")
-
-    with col3:
-        st.metric("Validators in Queue", f"{total_queued:,}",
-                  help="Validators deposited but waiting for activation")
-
-    with col4:
-        st.metric("Active Operators", len(active_validators))
-
-    with col5:
-        st.metric("Exited Validators", f"{total_exited:,}")
-
-    with col6:
-        exit_rate = (total_exited / total_validators * 100) if total_validators > 0 else 0
-        st.metric("Exit Rate", f"{exit_rate:.1f}%")
-
-    # Add activation/queue rate percentage display with color coding
+    # Add activation/queue rate percentage display with glass cards
     if total_activated + total_queued > 0:
         activation_rate = (total_activated / (total_activated + total_queued) * 100)
         queue_rate = (total_queued / (total_activated + total_queued) * 100)
 
         st.markdown("---")
-        act_col1, act_col2 = st.columns(2)
-
-        with act_col1:
-            color = "status-good" if activation_rate >= 95 else "status-warning" if activation_rate >= 85 else "status-danger"
-            st.markdown(f"**Activation Rate:** <span class='{color}'>{activation_rate:.1f}%</span>",
-                       unsafe_allow_html=True)
-            st.caption(f"{total_activated:,} of {total_activated + total_queued:,} validators activated")
-
-        with act_col2:
-            color = "status-good" if queue_rate <= 5 else "status-warning" if queue_rate <= 15 else "status-danger"
-            st.markdown(f"**Queue Rate:** <span class='{color}'>{queue_rate:.1f}%</span>",
-                       unsafe_allow_html=True)
-            st.caption(f"{total_queued:,} validators waiting for activation")
+        st.markdown("""
+            <div class="glass-cards-grid">
+                <div class="glass-card">
+                    <div class="glass-card-title">Activation Rate</div>
+                    <div class="glass-card-value">{:.1f}%</div>
+                    <div class="glass-card-caption">{:,} of {:,} validators activated</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Queue Rate</div>
+                    <div class="glass-card-value">{:.1f}%</div>
+                    <div class="glass-card-caption">{:,} validators waiting for activation</div>
+                </div>
+            </div>
+        """.format(activation_rate, total_activated, total_activated + total_queued,
+                  queue_rate, total_queued), unsafe_allow_html=True)
 
     return total_activated, total_queued, active_validators
 
