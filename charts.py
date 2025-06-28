@@ -3,6 +3,7 @@ import plotly.graph_objects as go
 import numpy as np
 from utils import format_operator_display_plain, get_performance_category
 
+
 def create_performance_charts(operator_performance, operator_validators, ens_names):
     """Create performance scatter and histogram charts"""
     if not operator_performance:
@@ -52,7 +53,9 @@ def create_performance_charts(operator_performance, operator_validators, ens_nam
         },
         category_orders={'performance_category': ['Excellent', 'Good', 'Average', 'Poor']}
     )
-    fig_scatter.update_layout(height=500)
+    fig_scatter.update_layout(
+        height=500
+    )
 
     fig_hist = px.histogram(
         df,
@@ -62,7 +65,9 @@ def create_performance_charts(operator_performance, operator_validators, ens_nam
         labels={'x': 'Performance (%)', 'y': 'Number of Operators'},
         color_discrete_sequence=['#667eea']
     )
-    fig_hist.update_layout(height=400)
+    fig_hist.update_layout(
+        height=400
+    )
 
     return fig_scatter, fig_hist
 
@@ -78,7 +83,7 @@ def create_concentration_pie(operator_validators, ens_names, title="Validator Di
     labels = []
     values = []
 
-    for i, (addr, count) in enumerate(sorted_ops[:8]):
+    for addr, count in sorted_ops[:8]:
         display_name = format_operator_display_plain(addr, ens_names)
         labels.append(f"{display_name} ({count})")
         values.append(count)
@@ -326,12 +331,16 @@ def create_client_diversity_pie_charts(client_data):
             title="⚙️ Execution Clients",
             height=400,
             showlegend=True,
-            font=dict(size=11)
+            font=dict(size=11, color='rgba(255,255,255,0.9)')
         )
     else:
         fig_execution = go.Figure()
         fig_execution.add_annotation(text="No execution client data", x=0.5, y=0.5, showarrow=False)
-        fig_execution.update_layout(title="⚙️ Execution Clients", height=400)
+        fig_execution.update_layout(
+            title="⚙️ Execution Clients", 
+            height=400,
+            font=dict(color='rgba(255,255,255,0.9)')
+        )
     
     # Consensus Clients Pie Chart  
     if consensus_counts:
@@ -361,12 +370,16 @@ def create_client_diversity_pie_charts(client_data):
             title="🏛️ Consensus Clients",
             height=400,
             showlegend=True,
-            font=dict(size=11)
+            font=dict(size=11, color='rgba(255,255,255,0.9)')
         )
     else:
         fig_consensus = go.Figure()
         fig_consensus.add_annotation(text="No consensus client data", x=0.5, y=0.5, showarrow=False)
-        fig_consensus.update_layout(title="🏛️ Consensus Clients", height=400)
+        fig_consensus.update_layout(
+            title="🏛️ Consensus Clients", 
+            height=400,
+            font=dict(color='rgba(255,255,255,0.9)')
+        )
     
     # Setup Type Pie Chart
     if setup_counts:
@@ -393,12 +406,16 @@ def create_client_diversity_pie_charts(client_data):
             title="🏠 Setup Type",
             height=400,
             showlegend=True,
-            font=dict(size=11)
+            font=dict(size=11, color='rgba(255,255,255,0.9)')
         )
     else:
         fig_setup = go.Figure()
         fig_setup.add_annotation(text="No setup type data", x=0.5, y=0.5, showarrow=False)
-        fig_setup.update_layout(title="🏠 Setup Type", height=400)
+        fig_setup.update_layout(
+            title="🏠 Setup Type", 
+            height=400,
+            font=dict(color='rgba(255,255,255,0.9)')
+        )
     
     return fig_execution, fig_consensus, fig_setup
 
@@ -412,7 +429,11 @@ def create_client_combination_bar_chart(client_data):
     if not combination_counts:
         fig = go.Figure()
         fig.add_annotation(text="No client combination data", x=0.5, y=0.5, showarrow=False)
-        fig.update_layout(title="🔧 Client Combinations", height=400)
+        fig.update_layout(
+            title="🔧 Client Combinations", 
+            height=400,
+            font=dict(color='rgba(255,255,255,0.9)')
+        )
         return fig
     
     # Sort combinations by count (highest to lowest)

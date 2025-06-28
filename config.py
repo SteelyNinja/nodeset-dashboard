@@ -190,33 +190,125 @@ CUSTOM_CSS = """
         background: transparent !important;
     }
 
-    /* Dark mode for charts and tables */
+    /* Dark mode for charts and tables - Fixed text visibility */
     @media (prefers-color-scheme: dark) {
+        /* Main dataframe container only */
         div[data-testid="stDataFrame"],
         div[data-testid="stTable"] {
-            background: rgba(15, 23, 42, 0.8) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2)) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border-radius: 12px !important;
+        }
+
+        /* Table content - no blur, solid background for text readability */
+        div[data-testid="stDataFrame"] *,
+        div[data-testid="stTable"] *,
+        .stDataFrame,
+        .stDataFrame *,
+        .dataframe,
+        .dataframe * {
+            background: rgba(59, 130, 246, 0.08) !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            color: rgba(255, 255, 255, 0.95) !important;
+            border-color: rgba(255, 255, 255, 0.1) !important;
+        }
+
+        /* Table cells and text elements */
+        div[data-testid="stDataFrame"] div,
+        div[data-testid="stDataFrame"] span,
+        div[data-testid="stDataFrame"] td,
+        div[data-testid="stDataFrame"] th,
+        div[data-testid="stDataFrame"] iframe,
+        div[data-testid="stDataFrame"] iframe html,
+        div[data-testid="stDataFrame"] iframe body,
+        div[data-testid="stDataFrame"] iframe table,
+        div[data-testid="stDataFrame"] iframe tr,
+        div[data-testid="stDataFrame"] iframe td,
+        div[data-testid="stDataFrame"] iframe th {
+            background: transparent !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            color: rgba(255, 255, 255, 0.95) !important;
         }
 
         div[data-testid="stPlotlyChart"] {
-            background: rgba(15, 23, 42, 0.8) !important;
-            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15)) !important;
+            backdrop-filter: blur(15px) !important;
+            -webkit-backdrop-filter: blur(15px) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
         }
     }
 
-    /* Streamlit dark theme support */
+    /* Streamlit dark theme support - Fixed text visibility */
     [data-theme="dark"] div[data-testid="stDataFrame"],
     [data-theme="dark"] div[data-testid="stTable"],
     .stApp[data-theme="dark"] div[data-testid="stDataFrame"],
     .stApp[data-theme="dark"] div[data-testid="stTable"] {
-        background: rgba(15, 23, 42, 0.8) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2)) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border-radius: 12px !important;
+    }
+
+    /* Table content - no blur for text readability */
+    [data-theme="dark"] div[data-testid="stDataFrame"] *,
+    [data-theme="dark"] div[data-testid="stTable"] *,
+    [data-theme="dark"] .stDataFrame,
+    [data-theme="dark"] .stDataFrame *,
+    [data-theme="dark"] .dataframe,
+    [data-theme="dark"] .dataframe *,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] *,
+    .stApp[data-theme="dark"] div[data-testid="stTable"] *,
+    .stApp[data-theme="dark"] .stDataFrame,
+    .stApp[data-theme="dark"] .stDataFrame *,
+    .stApp[data-theme="dark"] .dataframe,
+    .stApp[data-theme="dark"] .dataframe * {
+        background: rgba(59, 130, 246, 0.08) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    /* Text elements with transparent background */
+    [data-theme="dark"] div[data-testid="stDataFrame"] div,
+    [data-theme="dark"] div[data-testid="stDataFrame"] span,
+    [data-theme="dark"] div[data-testid="stDataFrame"] td,
+    [data-theme="dark"] div[data-testid="stDataFrame"] th,
+    [data-theme="dark"] div[data-testid="stDataFrame"] iframe,
+    [data-theme="dark"] div[data-testid="stDataFrame"] iframe html,
+    [data-theme="dark"] div[data-testid="stDataFrame"] iframe body,
+    [data-theme="dark"] div[data-testid="stDataFrame"] iframe table,
+    [data-theme="dark"] div[data-testid="stDataFrame"] iframe tr,
+    [data-theme="dark"] div[data-testid="stDataFrame"] iframe td,
+    [data-theme="dark"] div[data-testid="stDataFrame"] iframe th,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] div,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] span,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] td,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] th,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] iframe,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] iframe html,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] iframe body,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] iframe table,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] iframe tr,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] iframe td,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] iframe th {
+        background: transparent !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+        color: rgba(255, 255, 255, 0.95) !important;
     }
 
     [data-theme="dark"] div[data-testid="stPlotlyChart"],
     .stApp[data-theme="dark"] div[data-testid="stPlotlyChart"] {
-        background: rgba(15, 23, 42, 0.8) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15)) !important;
+        backdrop-filter: blur(15px) !important;
+        -webkit-backdrop-filter: blur(15px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
     }
 
     @media (max-width: 768px) {
@@ -379,6 +471,176 @@ CUSTOM_CSS = """
             gap: 0.75rem;
         }
     }
+
+    /* Streamlit dataframe search/filter controls styling */
+    div[data-testid="stDataFrame"] input,
+    div[data-testid="stDataFrame"] .stSelectbox,
+    div[data-testid="stDataFrame"] .stMultiSelect,
+    div[data-testid="stDataFrame"] button,
+    .stDataFrame-toolbar,
+    .stDataFrame-toolbar input,
+    .stDataFrame-toolbar button,
+    [data-testid="stDataFrameResizeHandle"],
+    .ag-header-cell-menu-button,
+    .ag-icon,
+    .ag-menu,
+    .ag-popup,
+    .ag-filter-panel {
+        background: rgba(255, 255, 255, 0.9) !important;
+        color: #1f2937 !important;
+        border: 1px solid rgba(0, 0, 0, 0.2) !important;
+        border-radius: 6px !important;
+    }
+
+    /* Dark mode for dataframe controls */
+    @media (prefers-color-scheme: dark) {
+        div[data-testid="stDataFrame"] input,
+        div[data-testid="stDataFrame"] .stSelectbox,
+        div[data-testid="stDataFrame"] .stMultiSelect,
+        div[data-testid="stDataFrame"] button,
+        .stDataFrame-toolbar,
+        .stDataFrame-toolbar input,
+        .stDataFrame-toolbar button,
+        [data-testid="stDataFrameResizeHandle"],
+        .ag-header-cell-menu-button,
+        .ag-icon,
+        .ag-menu,
+        .ag-popup,
+        .ag-filter-panel {
+            background: rgba(255, 255, 255, 0.95) !important;
+            color: #1f2937 !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            border-radius: 6px !important;
+        }
+    }
+
+    /* Streamlit dark theme support for dataframe controls */
+    [data-theme="dark"] div[data-testid="stDataFrame"] input,
+    [data-theme="dark"] div[data-testid="stDataFrame"] .stSelectbox,
+    [data-theme="dark"] div[data-testid="stDataFrame"] .stMultiSelect,
+    [data-theme="dark"] div[data-testid="stDataFrame"] button,
+    [data-theme="dark"] .stDataFrame-toolbar,
+    [data-theme="dark"] .stDataFrame-toolbar input,
+    [data-theme="dark"] .stDataFrame-toolbar button,
+    [data-theme="dark"] [data-testid="stDataFrameResizeHandle"],
+    [data-theme="dark"] .ag-header-cell-menu-button,
+    [data-theme="dark"] .ag-icon,
+    [data-theme="dark"] .ag-menu,
+    [data-theme="dark"] .ag-popup,
+    [data-theme="dark"] .ag-filter-panel,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] input,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] .stSelectbox,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] .stMultiSelect,
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"] button,
+    .stApp[data-theme="dark"] .stDataFrame-toolbar,
+    .stApp[data-theme="dark"] .stDataFrame-toolbar input,
+    .stApp[data-theme="dark"] .stDataFrame-toolbar button,
+    .stApp[data-theme="dark"] [data-testid="stDataFrameResizeHandle"],
+    .stApp[data-theme="dark"] .ag-header-cell-menu-button,
+    .stApp[data-theme="dark"] .ag-icon,
+    .stApp[data-theme="dark"] .ag-menu,
+    .stApp[data-theme="dark"] .ag-popup,
+    .stApp[data-theme="dark"] .ag-filter-panel {
+        background: rgba(255, 255, 255, 0.95) !important;
+        color: #1f2937 !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 6px !important;
+    }
+
+    /* FORCE TABLE STYLING - Ultra high specificity to override any existing styles */
+    html body div.stApp[data-theme="dark"] div[data-testid="stDataFrame"],
+    html body div.stApp div[data-testid="stDataFrame"],
+    html body div[data-testid="stDataFrame"],
+    div[data-testid="stDataFrame"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25)) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 12px !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    /* Force all nested elements to inherit the blue theme */
+    html body div.stApp[data-theme="dark"] div[data-testid="stDataFrame"] *,
+    html body div.stApp div[data-testid="stDataFrame"] *,
+    html body div[data-testid="stDataFrame"] *,
+    div[data-testid="stDataFrame"] * {
+        background: rgba(59, 130, 246, 0.15) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        border-color: rgba(255, 255, 255, 0.2) !important;
+    }
+
+    /* Media query override for absolute certainty */
+    @media (prefers-color-scheme: dark) {
+        html body div[data-testid="stDataFrame"],
+        div[data-testid="stDataFrame"] {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25)) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        }
+        
+        html body div[data-testid="stDataFrame"] *,
+        div[data-testid="stDataFrame"] * {
+            background: rgba(59, 130, 246, 0.15) !important;
+            color: rgba(255, 255, 255, 0.95) !important;
+        }
+    }
+
+    /* Last resort universal override for all tables */
+    * [data-testid="stDataFrame"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25)) !important;
+    }
+    
+    * [data-testid="stDataFrame"] * {
+        background: rgba(59, 130, 246, 0.15) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    /* FORCE BUTTON STYLING - Ultra high specificity for Refresh button */
+    html body div.stApp[data-theme="dark"] button,
+    html body div.stApp button,
+    html body button,
+    button,
+    [data-testid="stButton"] button,
+    div[data-testid="stButton"] > button {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        border-radius: 8px !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        padding: 0.5rem 1rem !important;
+        transition: all 0.3s ease !important;
+    }
+
+    /* Button hover effects */
+    html body div.stApp[data-theme="dark"] button:hover,
+    html body div.stApp button:hover,
+    html body button:hover,
+    button:hover,
+    [data-testid="stButton"] button:hover,
+    div[data-testid="stButton"] > button:hover {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(147, 51, 234, 0.4)) !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+    }
+
+    /* Media query override for buttons */
+    @media (prefers-color-scheme: dark) {
+        html body button,
+        button,
+        [data-testid="stButton"] button,
+        div[data-testid="stButton"] > button {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
+            border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            color: rgba(255, 255, 255, 0.95) !important;
+        }
+        
+        html body button:hover,
+        button:hover,
+        [data-testid="stButton"] button:hover,
+        div[data-testid="stButton"] > button:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(147, 51, 234, 0.4)) !important;
+            border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        }
+    }
+
 </style>
 """
 
