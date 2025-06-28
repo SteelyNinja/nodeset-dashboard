@@ -8,7 +8,7 @@ from collections import Counter
 
 # Import our modules
 from config import apply_page_config, apply_custom_css
-from data_loader import load_validator_data, load_proposals_data, load_mev_analysis_data, load_sync_committee_data, load_missed_proposals_data, display_logo
+from data_loader import load_validator_data, load_proposals_data, load_mev_analysis_data, load_sync_committee_data, load_missed_proposals_data, load_exit_data, display_logo
 from analysis import calculate_concentration_metrics, create_performance_analysis, analyze_gas_limits_by_operator, analyze_client_diversity
 from charts import (create_performance_charts, create_concentration_pie, create_distribution_histogram, 
                    create_concentration_curve, create_gas_limit_distribution_chart, create_operator_gas_strategy_chart,
@@ -1342,34 +1342,55 @@ def create_sync_committee_tab(ens_names):
 
 def create_exit_analysis_tab(operator_validators, operator_exited, ens_names):
     """Create the exit analysis tab"""
-    total_exited = sum(operator_exited.values())
+    st.subheader("🚪 Exit Analysis")
     
-    if total_exited > 0:
-        st.subheader("🚪 Exit Analysis")
-
+    # Load exit data
+    exit_data, exit_file = load_exit_data()
+    
+    if exit_data:
+        # Display exit summary
+        exit_summary = exit_data.get('exit_summary', {})
+        if exit_summary:
+            col1, col2, col3, col4 = st.columns(4)
+            with col1:
+                st.metric("Total Exited", exit_summary.get('total_exited', 0))
+            with col2:
+                st.metric("Total Active", exit_summary.get('total_active', 0))
+            with col3:
+                st.metric("Exit Rate", f"{exit_summary.get('exit_rate_percent', 0):.2f}%")
+            with col4:
+                last_updated = exit_summary.get('last_updated', 0)
+                if last_updated:
+                    update_time = datetime.fromtimestamp(last_updated).strftime('%Y-%m-%d %H:%M')
+                    st.metric("Last Updated", update_time)
 
         st.subheader("Operators with Exits")
-        st.info("💡 **Note**: Exit date/time information is not currently available in the data source. This would require additional epoch tracking or blockchain event monitoring to implement.")
         
-        exited_operators_data = []
-        for addr, exit_count in operator_exited.items():
-            if exit_count > 0:
-                total_count = operator_validators.get(addr, 0)
-                active_count = total_count - exit_count
-                exit_rate = (exit_count / total_count * 100) if total_count > 0 else 0
+        operators_with_exits = exit_data.get('operators_with_exits', [])
+        if operators_with_exits:
+            exited_operators_data = []
+            for operator_data in operators_with_exits:
+                addr = operator_data.get('operator', '')
                 display_name = format_operator_display_plain(addr, ens_names, show_full_address=True)
+                
+                # Calculate days since last exit
+                latest_timestamp = operator_data.get('latest_exit_timestamp', 0)
+                days_since_exit = ""
+                if latest_timestamp:
+                    days_diff = (datetime.now().timestamp() - latest_timestamp) / (24 * 3600)
+                    days_since_exit = f"{int(days_diff)} days ago"
 
                 exited_operators_data.append({
                     'Operator': display_name,
                     'Full Address': addr,
-                    'Exits': exit_count,
-                    'Still Active': active_count,
-                    'Total Ever': total_count,
-                    'Exit Rate': f"{exit_rate:.1f}%",
-                    'Exit Date': 'Data not available'
+                    'Exits': operator_data.get('exits', 0),
+                    'Still Active': operator_data.get('still_active', 0),
+                    'Total Ever': operator_data.get('total_ever', 0),
+                    'Exit Rate': f"{operator_data.get('exit_rate', 0):.1f}%",
+                    'Latest Exit Date': operator_data.get('latest_exit_date', 'N/A'),
+                    'Days Since Exit': days_since_exit
                 })
 
-        if exited_operators_data:
             df_exited = pd.DataFrame(exited_operators_data)
             df_exited = df_exited.sort_values('Exit Rate', key=lambda x: x.str.rstrip('%').astype(float), ascending=False)
 
@@ -1388,21 +1409,96 @@ def create_exit_analysis_tab(operator_validators, operator_exited, ens_names):
                     "Still Active": st.column_config.TextColumn("Still Active", width="small"),
                     "Total Ever": st.column_config.TextColumn("Total Ever", width="small"),
                     "Exit Rate": st.column_config.TextColumn("Exit Rate", width="small"),
-                    "Exit Date": st.column_config.TextColumn("Exit Date", width="medium")
+                    "Latest Exit Date": st.column_config.TextColumn("Latest Exit Date", width="medium"),
+                    "Days Since Exit": st.column_config.TextColumn("Days Since Exit", width="medium")
                 }
             )
 
+            # Recent exits detail table
+            recent_exits = exit_data.get('recent_exits', [])
+            if recent_exits:
+                st.subheader("Recent Validator Exits")
+                st.info(f"Showing the most recent {len(recent_exits)} validator exits")
+                
+                recent_exits_data = []
+                for exit_record in recent_exits:
+                    addr = exit_record.get('operator', '')
+                    display_name = format_operator_display_plain(addr, ens_names, show_full_address=True)
+                    
+                    # Format exit date
+                    exit_timestamp = exit_record.get('exit_timestamp', 0)
+                    exit_date = ""
+                    if exit_timestamp:
+                        exit_date = datetime.fromtimestamp(exit_timestamp).strftime('%Y-%m-%d %H:%M')
+                    
+                    recent_exits_data.append({
+                        'Validator Index': exit_record.get('validator_index', 'N/A'),
+                        'Operator': display_name,
+                        'Exit Date': exit_date,
+                        'Exit Epoch': exit_record.get('exit_epoch', 'N/A')
+                    })
+                
+                df_recent_exits = pd.DataFrame(recent_exits_data)
+                st.dataframe(
+                    df_recent_exits,
+                    use_container_width=True,
+                    hide_index=True,
+                    column_config={
+                        "Validator Index": st.column_config.TextColumn("Validator Index", width="small"),
+                        "Operator": st.column_config.TextColumn("Operator", width="large"),
+                        "Exit Date": st.column_config.TextColumn("Exit Date", width="medium"),
+                        "Exit Epoch": st.column_config.TextColumn("Exit Epoch", width="small")
+                    }
+                )
+
+            # Download buttons
             exits_csv = display_exited_df.to_csv(index=False)
             st.download_button(
-                label="📥 Download Exit Data",
+                label="📥 Download Exit Summary",
                 data=exits_csv,
-                file_name=f"nodeset_exits_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                file_name=f"nodeset_exits_summary_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                 mime="text/csv"
             )
+            
+            if recent_exits:
+                recent_exits_csv = df_recent_exits.to_csv(index=False)
+                st.download_button(
+                    label="📥 Download Recent Exits",
+                    data=recent_exits_csv,
+                    file_name=f"nodeset_recent_exits_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
+                    mime="text/csv"
+                )
         else:
-            st.info("No exits detected in current data.")
+            st.info("No operators with exits found in the data.")
     else:
-        st.info("😊 Great news! No validator exits detected yet.")
+        # Fallback to old data if exit data not available
+        total_exited = sum(operator_exited.values())
+        if total_exited > 0:
+            st.warning("⚠️ Detailed exit data not available. Showing basic exit information.")
+            st.subheader("Operators with Exits")
+            
+            exited_operators_data = []
+            for addr, exit_count in operator_exited.items():
+                if exit_count > 0:
+                    total_count = operator_validators.get(addr, 0)
+                    active_count = total_count - exit_count
+                    exit_rate = (exit_count / total_count * 100) if total_count > 0 else 0
+                    display_name = format_operator_display_plain(addr, ens_names, show_full_address=True)
+
+                    exited_operators_data.append({
+                        'Operator': display_name,
+                        'Exits': exit_count,
+                        'Still Active': active_count,
+                        'Total Ever': total_count,
+                        'Exit Rate': f"{exit_rate:.1f}%"
+                    })
+
+            if exited_operators_data:
+                df_exited = pd.DataFrame(exited_operators_data)
+                df_exited = df_exited.sort_values('Exit Rate', key=lambda x: x.str.rstrip('%').astype(float), ascending=False)
+                st.dataframe(df_exited, use_container_width=True, hide_index=True)
+        else:
+            st.info("😊 Great news! No validator exits detected yet.")
 
 def create_costs_tab(cache, operator_validators, operator_exited, ens_names):
     """Create the costs analysis tab"""

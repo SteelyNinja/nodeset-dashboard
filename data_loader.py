@@ -87,6 +87,26 @@ def load_sync_committee_data():
     
     return None, None
 
+@st.cache_data(ttl=300)
+def load_exit_data():
+    """Load exit analysis data from JSON file"""
+    possible_paths = [
+        './dashboard_exit_data.json',
+        './data/dashboard_exit_data.json'
+    ]
+    
+    for path in possible_paths:
+        try:
+            if os.path.exists(path):
+                with open(path, 'r') as f:
+                    data = json.load(f)
+                return data, path
+        except Exception as e:
+            print(f"Error loading exit data from {path}: {e}")
+            continue
+    
+    return None, None
+
 def get_base64_image(image_path):
     """Convert image to base64 string for embedding in HTML"""
     try:
