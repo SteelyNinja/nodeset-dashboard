@@ -94,6 +94,131 @@ CUSTOM_CSS = """
         }
     }
 
+    /* App Background Colors */
+    .stApp {
+        background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 50%, #f0f9ff 100%);
+        min-height: 100vh;
+    }
+
+    .main .block-container {
+        background: transparent;
+    }
+
+    /* Dark mode background */
+    @media (prefers-color-scheme: dark) {
+        .stApp {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+        }
+    }
+
+    /* Streamlit dark theme support */
+    [data-theme="dark"] .stApp,
+    .stApp[data-theme="dark"] {
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
+    }
+
+    /* Plotly Charts Background - Multiple Selectors */
+    .js-plotly-plot,
+    .js-plotly-plot .plotly,
+    .js-plotly-plot .plot-container,
+    .js-plotly-plot .svg-container,
+    .plotly-graph-div,
+    div[data-testid="stPlotlyChart"] > div,
+    div[data-testid="stPlotlyChart"] .js-plotly-plot {
+        background: rgba(255, 255, 255, 0.7) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Streamlit Tables - Multiple Selectors */
+    .stDataFrame,
+    .stDataFrame > div,
+    div[data-testid="stDataFrame"],
+    div[data-testid="stDataFrame"] > div,
+    .stTable,
+    .stTable > div,
+    table,
+    .dataframe {
+        background: rgba(255, 255, 255, 0.7) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        overflow: hidden !important;
+    }
+
+    /* Table Headers */
+    th,
+    thead th,
+    .stDataFrame th,
+    .dataframe th {
+        background: rgba(59, 130, 246, 0.15) !important;
+        color: #1f2937 !important;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+    }
+
+    /* Table Rows */
+    tr:nth-child(even),
+    tbody tr:nth-child(even),
+    .stDataFrame tr:nth-child(even) {
+        background: rgba(255, 255, 255, 0.5) !important;
+    }
+
+    tr:nth-child(odd),
+    tbody tr:nth-child(odd),
+    .stDataFrame tr:nth-child(odd) {
+        background: rgba(255, 255, 255, 0.3) !important;
+    }
+
+    /* Clean approach - target specific Streamlit containers only */
+    div[data-testid="stDataFrame"],
+    div[data-testid="stTable"] {
+        background: rgba(255, 255, 255, 0.7) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        padding: 8px !important;
+    }
+
+    div[data-testid="stPlotlyChart"] {
+        background: rgba(255, 255, 255, 0.7) !important;
+        border-radius: 12px !important;
+        border: 1px solid rgba(0, 0, 0, 0.1) !important;
+        padding: 8px !important;
+    }
+
+    /* Additional Streamlit component backgrounds */
+    div[data-testid="column"] > div,
+    div[data-testid="stVerticalBlock"] > div[data-testid="element-container"] {
+        background: transparent !important;
+    }
+
+    /* Dark mode for charts and tables */
+    @media (prefers-color-scheme: dark) {
+        div[data-testid="stDataFrame"],
+        div[data-testid="stTable"] {
+            background: rgba(15, 23, 42, 0.8) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        div[data-testid="stPlotlyChart"] {
+            background: rgba(15, 23, 42, 0.8) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+    }
+
+    /* Streamlit dark theme support */
+    [data-theme="dark"] div[data-testid="stDataFrame"],
+    [data-theme="dark"] div[data-testid="stTable"],
+    .stApp[data-theme="dark"] div[data-testid="stDataFrame"],
+    .stApp[data-theme="dark"] div[data-testid="stTable"] {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    [data-theme="dark"] div[data-testid="stPlotlyChart"],
+    .stApp[data-theme="dark"] div[data-testid="stPlotlyChart"] {
+        background: rgba(15, 23, 42, 0.8) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
     @media (max-width: 768px) {
         .health-summary {
             font-size: 0.9rem;
@@ -114,17 +239,16 @@ CUSTOM_CSS = """
 
     /* 3D Glass-morphism Cards for Key Insights */
     .glass-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(147, 51, 234, 0.08));
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(255, 255, 255, 0.2);
+        border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 16px;
         padding: 1.5rem;
         margin: 0.75rem;
         box-shadow: 
             0 8px 32px rgba(0, 0, 0, 0.1),
-            0 4px 16px rgba(0, 0, 0, 0.05),
-            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            0 4px 16px rgba(0, 0, 0, 0.05);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
@@ -152,7 +276,7 @@ CUSTOM_CSS = """
     .glass-card-title {
         font-size: 0.9rem;
         font-weight: 600;
-        color: var(--text-color, rgb(74, 85, 104));
+        color: #374151;
         margin-bottom: 0.5rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -161,22 +285,22 @@ CUSTOM_CSS = """
     .glass-card-value {
         font-size: 1.8rem;
         font-weight: 700;
-        color: var(--text-color, rgb(45, 55, 72));
+        color: #1f2937;
         margin-bottom: 0.25rem;
         line-height: 1.1;
     }
 
     .glass-card-caption {
         font-size: 0.8rem;
-        color: var(--text-color, rgb(113, 128, 150));
+        color: #6b7280;
         line-height: 1.3;
-        opacity: 0.7;
+        opacity: 0.8;
     }
 
     /* Dark mode adjustments for glass cards */
     @media (prefers-color-scheme: dark) {
         .glass-card {
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(147, 51, 234, 0.12));
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
@@ -215,7 +339,7 @@ CUSTOM_CSS = """
 
     [data-theme="dark"] .glass-card,
     .stApp[data-theme="dark"] .glass-card {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)) !important;
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(147, 51, 234, 0.12)) !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 

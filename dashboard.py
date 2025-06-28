@@ -44,8 +44,95 @@ def run_dashboard():
     
     # Display logo and header
     display_logo()
-    st.markdown("*Monitoring and analysis of NodeSet protocol validators on Stakewise - data cache updated every 15 minutes hit \"Refresh Data\" button to reload. Latest cache time is reported in UTC time.*")
-    st.markdown("*** This site is independently maintained and is not affiliated with or managed by Nodeset. ***")
+    
+    # Option 2: Compact Info Bar (TEMPORARY PREVIEW)
+    st.markdown("""
+        <style>
+        .info-bar {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1), rgba(147, 51, 234, 0.1));
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 16px;
+            padding: 24px 32px;
+            margin: 1rem 0;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .info-bar-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #1f2937;
+            flex: 1;
+            min-width: 350px;
+        }
+        
+        .info-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            color: #374151;
+            border-left: 1px solid rgba(0, 0, 0, 0.15);
+            padding-left: 2rem;
+        }
+        
+        /* Dark mode styles */
+        @media (prefers-color-scheme: dark) {
+            .info-bar {
+                background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15));
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            
+            .info-bar-left {
+                color: rgba(255, 255, 255, 0.95);
+            }
+            
+            .info-bar-right {
+                color: rgba(255, 255, 255, 0.8);
+                border-left: 1px solid rgba(255, 255, 255, 0.2);
+            }
+        }
+        
+        /* Streamlit dark theme support */
+        [data-theme="dark"] .info-bar,
+        .stApp[data-theme="dark"] .info-bar {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15)) !important;
+            border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+        
+        [data-theme="dark"] .info-bar-left,
+        .stApp[data-theme="dark"] .info-bar-left {
+            color: rgba(255, 255, 255, 0.95) !important;
+        }
+        
+        [data-theme="dark"] .info-bar-right,
+        .stApp[data-theme="dark"] .info-bar-right {
+            color: rgba(255, 255, 255, 0.8) !important;
+            border-left: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+        </style>
+        
+        <div class="info-bar">
+            <div class="info-bar-left">
+                <span style="color: #3b82f6; font-size: 22px;">📊</span>
+                <div style="font-size: 1.1rem; line-height: 1.5;">
+                    <strong>Monitoring and analysis</strong> of NodeSet protocol validators on Stakewise<br>
+                    <span style="opacity: 0.8;">Data cache updated every 15 minutes • Hit "Refresh Data" to reload • Latest cache time is reported in UTC time</span>
+                </div>
+            </div>
+            <div class="info-bar-right">
+                <span style="color: #f59e0b; font-size: 20px;">⚠️</span>
+                <div style="font-size: 1rem; line-height: 1.4;">
+                    <strong>Disclaimer</strong><br>
+                    <span style="opacity: 0.8;">This site is independently maintained and is not affiliated with or managed by Nodeset.</span>
+                </div>
+            </div>
+        </div>
+    """, unsafe_allow_html=True)
 
     # Show refresh button
     show_refresh_button()
