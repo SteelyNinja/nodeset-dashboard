@@ -461,43 +461,86 @@ def create_distribution_tab(active_validators):
             operators_near_cap = sum(1 for count in validator_counts if count >= cap_level * 0.75)
             operators_near_cap_percentage = (operators_near_cap / total_operators * 100) if total_operators > 0 else 0
 
-            col1, col2, col3, col4 = st.columns(4)
-            with col1:
-                st.metric("Largest Operator", f"{max_validators} validators")
-            with col2:
-                st.metric("Average per Operator", f"{avg_validators_dist:.1f} validators")
-            with col3:
-                st.metric("Median per Operator", f"{median_validators:.1f} validators")
-            with col4:
-                st.metric("Smallest Operator", f"{min_validators} validators")
+            # Create glass-morphism cards for key insights
+            st.markdown("""
+                <div class="glass-cards-grid">
+                    <div class="glass-card">
+                        <div class="glass-card-title">Largest Operator</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Average per Operator</div>
+                        <div class="glass-card-value">{:.1f}</div>
+                        <div class="glass-card-caption">validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Median per Operator</div>
+                        <div class="glass-card-value">{:.1f}</div>
+                        <div class="glass-card-caption">validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Smallest Operator</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">validators</div>
+                    </div>
+                </div>
+            """.format(max_validators, avg_validators_dist, median_validators, min_validators), unsafe_allow_html=True)
 
-            col5, col6, col7, col8 = st.columns(4)
-            with col5:
-                st.metric("Top 3 Operators Control", f"{top_3_percentage:.1f}%")
-                st.caption(f"{top_3_validators} of {total_validators_dist} validators")
-            with col6:
-                st.metric("Top 5 Operators Control", f"{top_5_percentage:.1f}%")
-                st.caption(f"{top_5_validators} of {total_validators_dist} validators")
-            with col7:
-                st.metric("Top 10 Operators Control", f"{top_10_percentage:.1f}%")
-                st.caption(f"{top_10_validators} of {total_validators_dist} validators")
-            with col8:
-                st.metric("Below Average Operators", f"{below_avg_percentage:.1f}%")
-                st.caption(f"{below_avg_count} operators")
+            st.markdown("""
+                <div class="glass-cards-grid">
+                    <div class="glass-card">
+                        <div class="glass-card-title">Top 3 Operators Control</div>
+                        <div class="glass-card-value">{:.1f}%</div>
+                        <div class="glass-card-caption">{:,} of {:,} validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Top 5 Operators Control</div>
+                        <div class="glass-card-value">{:.1f}%</div>
+                        <div class="glass-card-caption">{:,} of {:,} validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Top 10 Operators Control</div>
+                        <div class="glass-card-value">{:.1f}%</div>
+                        <div class="glass-card-caption">{:,} of {:,} validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Below Average Operators</div>
+                        <div class="glass-card-value">{:.1f}%</div>
+                        <div class="glass-card-caption">{:,} operators</div>
+                    </div>
+                </div>
+            """.format(top_3_percentage, top_3_validators, total_validators_dist,
+                      top_5_percentage, top_5_validators, total_validators_dist,
+                      top_10_percentage, top_10_validators, total_validators_dist,
+                      below_avg_percentage, below_avg_count), unsafe_allow_html=True)
 
-            col9, col10, col11, col12 = st.columns(4)
-            with col9:
-                st.metric("Validators to Cap", f"{validators_to_cap:,}")
-                st.caption("Total needed to reach cap")
-            with col10:
-                st.metric("ETH to Cap", f"{eth_to_cap:,} ETH")
-                st.caption(f"@ 32 ETH per validator")
-            with col11:
-                st.metric("Operators at Cap", f"{operators_at_cap_percentage:.1f}%")
-                st.caption(f"{operators_at_cap} operators")
-            with col12:
-                st.metric("Operators at 75%+ of Cap", f"{operators_near_cap_percentage:.1f}%")
-                st.caption(f"{operators_near_cap} ops (≥75% of cap)")
+            st.markdown("""
+                <div class="glass-cards-grid">
+                    <div class="glass-card">
+                        <div class="glass-card-title">Validators to Cap</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">Total needed to reach cap</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">ETH to Cap</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">@ 32 ETH per validator</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Operators at Cap</div>
+                        <div class="glass-card-value">{:.1f}%</div>
+                        <div class="glass-card-caption">{:,} operators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Operators at 75%+ of Cap</div>
+                        <div class="glass-card-value">{:.1f}%</div>
+                        <div class="glass-card-caption">{:,} ops (≥75% of cap)</div>
+                    </div>
+                </div>
+            """.format(validators_to_cap, eth_to_cap, 
+                      operators_at_cap_percentage, operators_at_cap,
+                      operators_near_cap_percentage, operators_near_cap), unsafe_allow_html=True)
     else:
         st.info("No active validator data available for insights.")
 

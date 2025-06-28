@@ -111,6 +111,99 @@ CUSTOM_CSS = """
         font-family: monospace;
         font-size: 0.9em;
     }
+
+    /* 3D Glass-morphism Cards for Key Insights */
+    .glass-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+        backdrop-filter: blur(15px);
+        -webkit-backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        border-radius: 16px;
+        padding: 1.5rem;
+        margin: 0.75rem;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.1),
+            0 4px 16px rgba(0, 0, 0, 0.05),
+            inset 0 1px 0 rgba(255, 255, 255, 0.3);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .glass-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+    }
+
+    .glass-card:hover {
+        transform: translateY(-5px) scale(1.02);
+        box-shadow: 
+            0 16px 48px rgba(0, 0, 0, 0.15),
+            0 8px 24px rgba(0, 0, 0, 0.1),
+            inset 0 1px 0 rgba(255, 255, 255, 0.4);
+        border-color: rgba(255, 255, 255, 0.3);
+    }
+
+    .glass-card-title {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .glass-card-value {
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin-bottom: 0.25rem;
+        line-height: 1.1;
+    }
+
+    .glass-card-caption {
+        font-size: 0.8rem;
+        color: #718096;
+        line-height: 1.3;
+        opacity: 0.8;
+    }
+
+    /* Responsive adjustments for glass cards */
+    @media (max-width: 768px) {
+        .glass-card {
+            padding: 1rem;
+            margin: 0.5rem;
+            border-radius: 12px;
+        }
+        
+        .glass-card-value {
+            font-size: 1.5rem;
+        }
+        
+        .glass-card-title {
+            font-size: 0.8rem;
+        }
+    }
+
+    /* Grid layout for glass cards */
+    .glass-cards-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+        margin: 1rem 0;
+    }
+
+    @media (max-width: 768px) {
+        .glass-cards-grid {
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.75rem;
+        }
+    }
 </style>
 """
 
