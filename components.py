@@ -8,56 +8,56 @@ def display_health_status(concentration_metrics, total_active, total_exited):
     """Display network health status"""
     st.subheader("🏥 Network Health Status")
 
-    col1, col2, col3 = st.columns(3)
+    # Calculate metrics for glass cards
+    gini = concentration_metrics.get('gini_coefficient', 0)
+    total_validators = total_active + total_exited
+    exit_rate = (total_exited / total_validators * 100) if total_validators > 0 else 0
+    total_ops = concentration_metrics.get('total_operators', 0)
+    avg_validators = (total_active / total_ops) if total_ops > 0 else 0
 
-    with col1:
-        gini = concentration_metrics.get('gini_coefficient', 0)
-        if gini < 0.5:
-            status = "🟢 Good"
-            color = "status-good"
-        elif gini < 0.7:
-            status = "🟡 Moderate"
-            color = "status-warning"
-        else:
-            status = "🔴 Concentrated"
-            color = "status-danger"
+    # Determine status indicators
+    if gini < 0.5:
+        decentralization_status = "🟢 Good"
+    elif gini < 0.7:
+        decentralization_status = "🟡 Moderate"
+    else:
+        decentralization_status = "🔴 Concentrated"
 
-        st.markdown(f"**Decentralization:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
-        st.caption(f"Gini: {gini:.3f} (lower is better)")
+    if exit_rate < 5:
+        exit_status = "🟢 Low"
+    elif exit_rate < 15:
+        exit_status = "🟡 Moderate"
+    else:
+        exit_status = "🔴 High"
 
-    with col2:
-        total_validators = total_active + total_exited
-        exit_rate = (total_exited / total_validators * 100) if total_validators > 0 else 0
+    if avg_validators < 50:
+        operator_size_status = "🟢 Low"
+    elif avg_validators <= 100:
+        operator_size_status = "🟡 Moderate"
+    else:
+        operator_size_status = "🔴 High"
 
-        if exit_rate < 5:
-            status = "🟢 Low"
-            color = "status-good"
-        elif exit_rate < 15:
-            status = "🟡 Moderate"
-            color = "status-warning"
-        else:
-            status = "🔴 High"
-            color = "status-danger"
-
-        st.markdown(f"**Exit Rate:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
-        st.caption(f"{exit_rate:.1f}% validators exited")
-
-    with col3:
-        total_ops = concentration_metrics.get('total_operators', 0)
-        avg_validators = (total_active / total_ops) if total_ops > 0 else 0
-
-        if avg_validators < 50:
-            status = "🟢 Low"
-            color = "status-good"
-        elif avg_validators <= 100:
-            status = "🟡 Moderate"
-            color = "status-warning"
-        else:
-            status = "🔴 High"
-            color = "status-danger"
-
-        st.markdown(f"**Operator Size:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
-        st.caption(f"{avg_validators:.1f} avg validators/operator")
+    # Create glass-morphism cards for health status
+    st.markdown("""
+        <div class="glass-cards-grid">
+            <div class="glass-card">
+                <div class="glass-card-title">Decentralization</div>
+                <div class="glass-card-value">{}</div>
+                <div class="glass-card-caption">Gini: {:.3f} (lower is better)</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Exit Rate</div>
+                <div class="glass-card-value">{}</div>
+                <div class="glass-card-caption">{:.1f}% validators exited</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Operator Size</div>
+                <div class="glass-card-value">{}</div>
+                <div class="glass-card-caption">{:.1f} avg validators/operator</div>
+            </div>
+        </div>
+    """.format(decentralization_status, gini, exit_status, exit_rate, 
+              operator_size_status, avg_validators), unsafe_allow_html=True)
 
 def display_performance_health(operator_performance, operator_validators):
     """Display performance health status"""
@@ -80,55 +80,53 @@ def display_performance_health(operator_performance, operator_validators):
 
     avg_performance = total_weighted_performance / total_validators if total_validators > 0 else 0
 
-    col1, col2, col3, col4 = st.columns(4)
+    # Calculate metrics for glass cards
+    excellent_pct = (perf_categories['Excellent'] / total_validators * 100) if total_validators > 0 else 0
+    poor_pct = (perf_categories['Poor'] / total_validators * 100) if total_validators > 0 else 0
+    performances = list(operator_performance.values())
+    perf_std = np.std(performances) if performances else 0
 
-    with col1:
-        if avg_performance >= 99:
-            status = "🟢 Excellent"
-            color = "status-good"
-        elif avg_performance >= 98:
-            status = "🟡 Good"
-            color = "status-warning"
-        else:
-            status = "🔴 Needs Attention"
-            color = "status-danger"
+    # Determine status indicators
+    if avg_performance >= 99:
+        perf_status = "🟢 Excellent"
+    elif avg_performance >= 98:
+        perf_status = "🟡 Good"
+    else:
+        perf_status = "🔴 Needs Attention"
 
-        st.markdown(f"**Network Performance:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
-        st.caption(f"Weighted avg: {avg_performance:.2f}%")
+    if perf_std < 1.0:
+        consistency_status = "🟢 Consistent"
+    elif perf_std < 2.5:
+        consistency_status = "🟡 Variable"
+    else:
+        consistency_status = "🔴 Inconsistent"
 
-    with col2:
-        excellent_pct = (perf_categories['Excellent'] / total_validators * 100) if total_validators > 0 else 0
-        st.metric("Excellent Performers", f"{excellent_pct:.1f}%")
-        st.caption(f"{perf_categories['Excellent']} validators")
-
-    with col3:
-        poor_pct = (perf_categories['Poor'] / total_validators * 100) if total_validators > 0 else 0
-        if poor_pct < 5:
-            color = "status-good"
-        elif poor_pct < 15:
-            color = "status-warning"
-        else:
-            color = "status-danger"
-
-        st.markdown(f"**Poor Performers:** <span class='{color}'>{poor_pct:.1f}%</span>", unsafe_allow_html=True)
-        st.caption(f"{perf_categories['Poor']} validators")
-
-    with col4:
-        performances = list(operator_performance.values())
-        perf_std = np.std(performances) if performances else 0
-
-        if perf_std < 1.0:
-            status = "🟢 Consistent"
-            color = "status-good"
-        elif perf_std < 2.5:
-            status = "🟡 Variable"
-            color = "status-warning"
-        else:
-            status = "🔴 Inconsistent"
-            color = "status-danger"
-
-        st.markdown(f"**Consistency:** <span class='{color}'>{status}</span>", unsafe_allow_html=True)
-        st.caption(f"Std dev: {perf_std:.2f}%")
+    # Create glass-morphism cards for performance health
+    st.markdown("""
+        <div class="glass-cards-grid">
+            <div class="glass-card">
+                <div class="glass-card-title">Network Performance</div>
+                <div class="glass-card-value">{}</div>
+                <div class="glass-card-caption">Weighted avg: {:.2f}%</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Excellent Performers</div>
+                <div class="glass-card-value">{:.1f}%</div>
+                <div class="glass-card-caption">{:,} validators</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Poor Performers</div>
+                <div class="glass-card-value">{:.1f}%</div>
+                <div class="glass-card-caption">{:,} validators</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Consistency</div>
+                <div class="glass-card-value">{}</div>
+                <div class="glass-card-caption">Std dev: {:.2f}%</div>
+            </div>
+        </div>
+    """.format(perf_status, avg_performance, excellent_pct, perf_categories['Excellent'],
+              poor_pct, perf_categories['Poor'], consistency_status, perf_std), unsafe_allow_html=True)
 
 def display_ens_status(ens_names, operator_validators):
     """Display ENS name resolution status"""
@@ -141,29 +139,45 @@ def display_ens_status(ens_names, operator_validators):
     ens_resolved = len(ens_names)
     coverage_pct = (ens_resolved / total_operators * 100) if total_operators > 0 else 0
 
-    col1, col2, col3, col4 = st.columns(4)
+    # Calculate metrics for glass cards
+    validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
+    total_validators = sum(operator_validators.values())
+    validator_coverage = (validators_with_ens / total_validators * 100) if total_validators > 0 else 0
 
-    with col1:
-        st.metric("ENS Names Found", f"{ens_resolved}")
+    # Determine coverage status
+    if coverage_pct >= 50:
+        coverage_status = "🟢 Good"
+    elif coverage_pct >= 25:
+        coverage_status = "🟡 Moderate"
+    else:
+        coverage_status = "🔴 Low"
 
-    with col2:
-        st.metric("Total Operators", f"{total_operators}")
-
-    with col3:
-        if coverage_pct >= 50:
-            color = "status-good"
-        elif coverage_pct >= 25:
-            color = "status-warning"
-        else:
-            color = "status-danger"
-        st.markdown(f"**Coverage:** <span class='{color}'>{coverage_pct:.1f}%</span>", unsafe_allow_html=True)
-
-    with col4:
-        validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
-        total_validators = sum(operator_validators.values())
-        validator_coverage = (validators_with_ens / total_validators * 100) if total_validators > 0 else 0
-        st.metric("Validator Coverage", f"{validator_coverage:.1f}%")
-        st.caption(f"{validators_with_ens} of {total_validators} validators")
+    # Create glass-morphism cards for ENS status
+    st.markdown("""
+        <div class="glass-cards-grid">
+            <div class="glass-card">
+                <div class="glass-card-title">ENS Names Found</div>
+                <div class="glass-card-value">{:,}</div>
+                <div class="glass-card-caption">Resolved operator names</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Total Operators</div>
+                <div class="glass-card-value">{:,}</div>
+                <div class="glass-card-caption">All tracked operators</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Operator Coverage</div>
+                <div class="glass-card-value">{}</div>
+                <div class="glass-card-caption">{:.1f}% operators with ENS</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Validator Coverage</div>
+                <div class="glass-card-value">{:.1f}%</div>
+                <div class="glass-card-caption">{:,} of {:,} validators</div>
+            </div>
+        </div>
+    """.format(ens_resolved, total_operators, coverage_status, coverage_pct,
+              validator_coverage, validators_with_ens, total_validators), unsafe_allow_html=True)
 
 def display_network_overview(cache, operator_validators, operator_exited):
     """Display network overview metrics"""

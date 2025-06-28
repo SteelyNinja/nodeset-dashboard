@@ -344,20 +344,29 @@ def create_client_diversity_tab(ens_names):
     total_operators = client_diversity_data['total_operators']
     operators_with_proposals = client_diversity_data['operators_with_proposals']
     
-    col1, col2, col3 = st.columns(3)
+    # Calculate coverage percentage
+    coverage_pct = (operators_with_proposals / total_operators) * 100 if total_operators > 0 else 0
     
-    with col1:
-        st.metric("Total Operators", f"{total_operators:,}")
-    
-    with col2:
-        st.metric("Operators with Proposals", f"{operators_with_proposals:,}")
-    
-    with col3:
-        if total_operators > 0:
-            coverage_pct = (operators_with_proposals / total_operators) * 100
-            st.metric("Graffiti Coverage", f"{coverage_pct:.1f}%")
-        else:
-            st.metric("Graffiti Coverage", "0%")
+    # Create glass-morphism cards for client diversity summary
+    st.markdown("""
+        <div class="glass-cards-grid">
+            <div class="glass-card">
+                <div class="glass-card-title">Total Operators</div>
+                <div class="glass-card-value">{:,}</div>
+                <div class="glass-card-caption">All tracked operators</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Operators with Proposals</div>
+                <div class="glass-card-value">{:,}</div>
+                <div class="glass-card-caption">Operators submitting proposals</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Graffiti Coverage</div>
+                <div class="glass-card-value">{:.1f}%</div>
+                <div class="glass-card-caption">Operators with graffiti data</div>
+            </div>
+        </div>
+    """.format(total_operators, operators_with_proposals, coverage_pct), unsafe_allow_html=True)
     
     # Context text
     st.markdown(f"**📊 {operators_with_proposals} of {total_operators} operators have active proposals with graffiti data**")
@@ -676,18 +685,37 @@ def create_proposals_tab(ens_names):
         proposals_data, proposals_file = proposals_cache
         metadata = proposals_data.get('metadata', {})
         
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            st.metric("Total Proposals", f"{metadata.get('total_proposals', 0):,}")
-        with col2:
-            st.metric("Total ETH Value", f"{metadata.get('total_value_eth', 0):.3f} ETH")
-        with col3:
-            st.metric("Operators with Proposals", f"{metadata.get('operators_tracked', 0)}")
-        with col4:
-            total_proposals = metadata.get('total_proposals', 1)
-            total_value = metadata.get('total_value_eth', 0)
-            avg_value = total_value / max(total_proposals, 1)
-            st.metric("Avg Value/Proposal", f"{avg_value:.4f} ETH")
+        # Calculate metrics for glass cards
+        total_proposals = metadata.get('total_proposals', 1)
+        total_value = metadata.get('total_value_eth', 0)
+        avg_value = total_value / max(total_proposals, 1)
+        
+        # Create glass-morphism cards for proposals summary
+        st.markdown("""
+            <div class="glass-cards-grid">
+                <div class="glass-card">
+                    <div class="glass-card-title">Total Proposals</div>
+                    <div class="glass-card-value">{:,}</div>
+                    <div class="glass-card-caption">Block proposals tracked</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Total ETH Value</div>
+                    <div class="glass-card-value">{:.3f}</div>
+                    <div class="glass-card-caption">ETH total value</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Operators with Proposals</div>
+                    <div class="glass-card-value">{:,}</div>
+                    <div class="glass-card-caption">Active proposing operators</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Avg Value/Proposal</div>
+                    <div class="glass-card-value">{:.4f}</div>
+                    <div class="glass-card-caption">ETH average per proposal</div>
+                </div>
+            </div>
+        """.format(metadata.get('total_proposals', 0), total_value,
+                  metadata.get('operators_tracked', 0), avg_value), unsafe_allow_html=True)
         
         if metadata.get('last_updated'):
             st.caption(f"📊 Proposals: {metadata['last_updated']} • 📄 {proposals_file.split('/')[-1]}")
@@ -1061,16 +1089,35 @@ def create_sync_committee_tab(ens_names):
         metadata = sync_data.get('metadata', {})
         
         # Summary metrics
-        col1, col2, col3, col4 = st.columns(4)
-        with col1:
-            st.metric("Overall Participation", f"{metadata.get('overall_participation_rate', 0):.2f}%")
-        with col2:
-            st.metric("Total Periods Tracked", f"{metadata.get('total_periods_tracked', 0)}")
-        with col3:
-            st.metric("Total Attestations", f"{metadata.get('total_attestations_tracked', 0):,}")
-        with col4:
-            success_rate = (metadata.get('total_successful_attestations', 0) / max(metadata.get('total_attestations_tracked', 1), 1) * 100)
-            st.metric("Success Rate", f"{success_rate:.2f}%")
+        # Calculate success rate
+        success_rate = (metadata.get('total_successful_attestations', 0) / max(metadata.get('total_attestations_tracked', 1), 1) * 100)
+        
+        # Create glass-morphism cards for sync committee summary
+        st.markdown("""
+            <div class="glass-cards-grid">
+                <div class="glass-card">
+                    <div class="glass-card-title">Overall Participation</div>
+                    <div class="glass-card-value">{:.2f}%</div>
+                    <div class="glass-card-caption">Average participation rate</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Total Periods Tracked</div>
+                    <div class="glass-card-value">{:,}</div>
+                    <div class="glass-card-caption">Sync committee periods</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Total Attestations</div>
+                    <div class="glass-card-value">{:,}</div>
+                    <div class="glass-card-caption">Sync committee attestations</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Success Rate</div>
+                    <div class="glass-card-value">{:.2f}%</div>
+                    <div class="glass-card-caption">Successful attestations</div>
+                </div>
+            </div>
+        """.format(metadata.get('overall_participation_rate', 0), metadata.get('total_periods_tracked', 0),
+                  metadata.get('total_attestations_tracked', 0), success_rate), unsafe_allow_html=True)
         
         if metadata.get('last_updated'):
             st.caption(f"📊 Last Updated: {metadata['last_updated']} • 📄 {sync_file.split('/')[-1]}")
@@ -1325,42 +1372,70 @@ def create_costs_tab(cache, operator_validators, operator_exited, ens_names):
         total_failed = sum(cost['failed_txs'] for cost in operator_costs.values())
         operators_with_costs = len([c for c in operator_costs.values() if c['total_txs'] > 0])
 
-        col1, col2, col3, col4 = st.columns(4)
-
-        with col1:
-            st.metric("Total Gas Spent", f"{total_gas_spent:.6f} ETH")
-
-        with col2:
-            st.metric("Total Transactions", f"{total_transactions:,}")
-
-        with col3:
-            success_rate = (total_successful / total_transactions * 100) if total_transactions > 0 else 0
-            st.metric("Success Rate", f"{success_rate:.1f}%")
-
-        with col4:
-            avg_cost = total_gas_spent / total_transactions if total_transactions > 0 else 0
-            st.metric("Avg Cost/TX", f"{avg_cost:.6f} ETH")
-
-        col5, col6, col7, col8 = st.columns(4)
-
-        with col5:
-            st.metric("Operators Tracked", f"{operators_with_costs}")
-
-        with col6:
-            st.metric("Failed Transactions", f"{total_failed:,}")
-
-        with col7:
-            total_active_validators = sum(v - operator_exited.get(k, 0) for k, v in operator_validators.items())
-            cost_per_validator = total_gas_spent / total_active_validators if total_active_validators > 0 else 0
-            st.metric("Cost per Validator", f"{cost_per_validator:.6f} ETH")
-
-        with col8:
-            if cost_last_updated > 0:
-                last_update_dt = datetime.fromtimestamp(cost_last_updated)
-                hours_ago = (datetime.now() - last_update_dt).total_seconds() / 3600
-                st.metric("Data Age", f"{hours_ago:.1f}h ago")
-            else:
-                st.metric("Data Age", "Unknown")
+        # Calculate metrics for glass cards
+        success_rate = (total_successful / total_transactions * 100) if total_transactions > 0 else 0
+        avg_cost = total_gas_spent / total_transactions if total_transactions > 0 else 0
+        total_active_validators = sum(v - operator_exited.get(k, 0) for k, v in operator_validators.items())
+        cost_per_validator = total_gas_spent / total_active_validators if total_active_validators > 0 else 0
+        
+        # Calculate data age
+        if cost_last_updated > 0:
+            last_update_dt = datetime.fromtimestamp(cost_last_updated)
+            hours_ago = (datetime.now() - last_update_dt).total_seconds() / 3600
+            data_age = f"{hours_ago:.1f}h ago"
+        else:
+            data_age = "Unknown"
+        
+        # Create glass-morphism cards for transaction costs
+        st.markdown("""
+            <div class="glass-cards-grid">
+                <div class="glass-card">
+                    <div class="glass-card-title">Total Gas Spent</div>
+                    <div class="glass-card-value">{:.6f}</div>
+                    <div class="glass-card-caption">ETH total gas cost</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Total Transactions</div>
+                    <div class="glass-card-value">{:,}</div>
+                    <div class="glass-card-caption">All tracked transactions</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Success Rate</div>
+                    <div class="glass-card-value">{:.1f}%</div>
+                    <div class="glass-card-caption">Successful transactions</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Avg Cost/TX</div>
+                    <div class="glass-card-value">{:.6f}</div>
+                    <div class="glass-card-caption">ETH average per transaction</div>
+                </div>
+            </div>
+        """.format(total_gas_spent, total_transactions, success_rate, avg_cost), unsafe_allow_html=True)
+        
+        st.markdown("""
+            <div class="glass-cards-grid">
+                <div class="glass-card">
+                    <div class="glass-card-title">Operators Tracked</div>
+                    <div class="glass-card-value">{:,}</div>
+                    <div class="glass-card-caption">Operators with cost data</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Failed Transactions</div>
+                    <div class="glass-card-value">{:,}</div>
+                    <div class="glass-card-caption">Unsuccessful transactions</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Cost per Validator</div>
+                    <div class="glass-card-value">{:.6f}</div>
+                    <div class="glass-card-caption">ETH average per validator</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Data Age</div>
+                    <div class="glass-card-value">{}</div>
+                    <div class="glass-card-caption">Last cost update</div>
+                </div>
+            </div>
+        """.format(operators_with_costs, total_failed, cost_per_validator, data_age), unsafe_allow_html=True)
 
         st.markdown("---")
 
@@ -1574,21 +1649,37 @@ def create_gas_analysis_tab(ens_names):
             high = distribution.get('36000000', 0) 
             standard = distribution.get('30000000', 0)
             
-            with col1:
-                ultra_pct = (ultra_high / total_validators * 100) if total_validators > 0 else 0
-                st.metric("🔥🔥🔥 Ultra High Gas (60M)", f"{ultra_high:,}", f"{ultra_pct:.1f}%")
+            # Calculate percentages for glass cards
+            ultra_pct = (ultra_high / total_validators * 100) if total_validators > 0 else 0
+            high_pct = (high / total_validators * 100) if total_validators > 0 else 0
+            std_pct = (standard / total_validators * 100) if total_validators > 0 else 0
+            consistency_rate = consistency_stats.get('consistency_rate', 0)
             
-            with col2:
-                high_pct = (high / total_validators * 100) if total_validators > 0 else 0
-                st.metric("🔥🔥 High Gas (36M)", f"{high:,}", f"{high_pct:.1f}%")
-            
-            with col3:
-                std_pct = (standard / total_validators * 100) if total_validators > 0 else 0
-                st.metric("🔥 Standard Gas (30M)", f"{standard:,}", f"{std_pct:.1f}%")
-            
-            with col4:
-                consistency_rate = consistency_stats.get('consistency_rate', 0)
-                st.metric("🎯 Consistency Rate", f"{consistency_rate:.1f}%")
+            # Create glass-morphism cards for gas analysis
+            st.markdown("""
+                <div class="glass-cards-grid">
+                    <div class="glass-card">
+                        <div class="glass-card-title">🔥🔥🔥 Ultra High Gas (60M)</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">{:.1f}% of validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">🔥🔥 High Gas (36M)</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">{:.1f}% of validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">🔥 Standard Gas (30M)</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">{:.1f}% of validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">🎯 Consistency Rate</div>
+                        <div class="glass-card-value">{:.1f}%</div>
+                        <div class="glass-card-caption">Gas strategy consistency</div>
+                    </div>
+                </div>
+            """.format(ultra_high, ultra_pct, high, high_pct, standard, std_pct, consistency_rate), unsafe_allow_html=True)
             
             # Gas limit distribution chart
             fig_distribution = create_gas_limit_distribution_chart(mev_data)
@@ -1997,16 +2088,33 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
                 pass
     
     col1, col2, col3 = st.columns(3)
-    with col1:
-        st.metric("Total Data Size", f"{total_size:.2f} MB")
-    with col2:
-        st.metric("Files Loaded", f"{loaded_files}/5")
-    with col3:
-        missing_files = 5 - loaded_files
-        if missing_files == 0:
-            st.metric("Status", "🟢 All files loaded")
-        else:
-            st.metric("Status", f"🟡 {missing_files} files missing")
+    # Calculate status
+    missing_files = 5 - loaded_files
+    if missing_files == 0:
+        status = "🟢 All files loaded"
+    else:
+        status = f"🟡 {missing_files} files missing"
+    
+    # Create glass-morphism cards for raw data overview
+    st.markdown("""
+        <div class="glass-cards-grid">
+            <div class="glass-card">
+                <div class="glass-card-title">Total Data Size</div>
+                <div class="glass-card-value">{:.2f}</div>
+                <div class="glass-card-caption">MB of cached data</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Files Loaded</div>
+                <div class="glass-card-value">{}/5</div>
+                <div class="glass-card-caption">Data files available</div>
+            </div>
+            <div class="glass-card">
+                <div class="glass-card-title">Status</div>
+                <div class="glass-card-value">{}</div>
+                <div class="glass-card-caption">Data loading status</div>
+            </div>
+        </div>
+    """.format(total_size, loaded_files, status), unsafe_allow_html=True)
     
     st.markdown("---")
     
