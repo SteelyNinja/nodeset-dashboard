@@ -35,3 +35,14 @@ def get_performance_category(performance):
         return 'Average'
     else:
         return 'Poor'
+
+def get_performance_category_display(performance):
+    """Get performance category with emoji for display purposes"""
+    if performance >= 99.5:
+        return '🌟 Excellent'
+    elif performance >= 98.5:
+        return '✅ Good'
+    elif performance >= 95.0:
+        return '⚠️ Average'
+    else:
+        return '🔴 Poor'

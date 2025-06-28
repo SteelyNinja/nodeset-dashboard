@@ -1,6 +1,6 @@
 import pandas as pd
 from datetime import datetime
-from utils import get_performance_category
+from utils import get_performance_category, get_performance_category_display
 from collections import Counter
 
 def create_top_operators_table(operator_validators, operator_exited, ens_names):
@@ -53,7 +53,7 @@ def create_performance_table(operator_performance, operator_validators, operator
                 'ENS / Discord Name': ens_name,
                 'Performance': f"{performance:.2f}%",
                 'Performance_Raw': performance,
-                'Category': get_performance_category(performance),
+                'Category': get_performance_category_display(performance),
                 'Active': active_count,
                 'Total': total_count,
                 'Exited': exited_count,
