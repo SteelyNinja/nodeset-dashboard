@@ -1347,44 +1347,10 @@ def create_exit_analysis_tab(operator_validators, operator_exited, ens_names):
     if total_exited > 0:
         st.subheader("🚪 Exit Analysis")
 
-        col1, col2 = st.columns(2)
-
-        with col1:
-            exit_counts = [count for count in operator_exited.values() if count > 0]
-            if exit_counts:
-                import plotly.express as px
-                fig_exits = px.histogram(
-                    x=exit_counts,
-                    title="Distribution of Exits per Operator",
-                    labels={'x': 'Exits per Operator', 'y': 'Number of Operators'},
-                    color_discrete_sequence=['#FF6B6B']
-                )
-                st.plotly_chart(fig_exits, use_container_width=True)
-
-        with col2:
-            if operator_validators and operator_exited:
-                exit_rate_data = []
-                for addr, total_count in operator_validators.items():
-                    if total_count >= 2:
-                        exited_count = operator_exited.get(addr, 0)
-                        exit_rate = (exited_count / total_count * 100) if total_count > 0 else 0
-                        exit_rate_data.append({
-                            'Total Validators': total_count,
-                            'Exit Rate (%)': exit_rate
-                        })
-
-                if exit_rate_data:
-                    df_exits = pd.DataFrame(exit_rate_data)
-                    fig_scatter = px.scatter(
-                        df_exits,
-                        x='Total Validators',
-                        y='Exit Rate (%)',
-                        title="Exit Rate vs Operator Size",
-                        color_discrete_sequence=['#764ba2']
-                    )
-                    st.plotly_chart(fig_scatter, use_container_width=True)
 
         st.subheader("Operators with Exits")
+        st.info("💡 **Note**: Exit date/time information is not currently available in the data source. This would require additional epoch tracking or blockchain event monitoring to implement.")
+        
         exited_operators_data = []
         for addr, exit_count in operator_exited.items():
             if exit_count > 0:
@@ -1399,7 +1365,8 @@ def create_exit_analysis_tab(operator_validators, operator_exited, ens_names):
                     'Exits': exit_count,
                     'Still Active': active_count,
                     'Total Ever': total_count,
-                    'Exit Rate': f"{exit_rate:.1f}%"
+                    'Exit Rate': f"{exit_rate:.1f}%",
+                    'Exit Date': 'Data not available'
                 })
 
         if exited_operators_data:
@@ -1420,7 +1387,8 @@ def create_exit_analysis_tab(operator_validators, operator_exited, ens_names):
                     "Exits": st.column_config.TextColumn("Exits", width="small"),
                     "Still Active": st.column_config.TextColumn("Still Active", width="small"),
                     "Total Ever": st.column_config.TextColumn("Total Ever", width="small"),
-                    "Exit Rate": st.column_config.TextColumn("Exit Rate", width="small")
+                    "Exit Rate": st.column_config.TextColumn("Exit Rate", width="small"),
+                    "Exit Date": st.column_config.TextColumn("Exit Date", width="medium")
                 }
             )
 
