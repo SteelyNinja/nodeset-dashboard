@@ -866,6 +866,121 @@ CUSTOM_CSS = """
         }
     }
 
+    /* TAB STYLING - Consistent blue/dark theme for all tabs */
+    
+    /* Tab container styling */
+    div[data-baseweb="tab-list"],
+    .stTabs [data-baseweb="tab-list"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15)) !important;
+        border-radius: 12px !important;
+        padding: 4px !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+    }
+
+    /* Individual tab buttons - consistent styling */
+    button[data-baseweb="tab"],
+    .stTabs button[data-baseweb="tab"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25)) !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        border-radius: 8px !important;
+        padding: 8px 16px !important;
+        margin: 2px !important;
+        font-weight: 500 !important;
+        transition: all 0.3s ease !important;
+        backdrop-filter: blur(5px) !important;
+        -webkit-backdrop-filter: blur(5px) !important;
+    }
+
+    /* Active tab styling */
+    button[data-baseweb="tab"][aria-selected="true"],
+    .stTabs button[data-baseweb="tab"][aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(147, 51, 234, 0.6)) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
+        font-weight: 600 !important;
+        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
+        transform: translateY(-1px) !important;
+    }
+
+    /* Tab hover effects */
+    button[data-baseweb="tab"]:hover,
+    .stTabs button[data-baseweb="tab"]:hover {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(147, 51, 234, 0.4)) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
+        transform: translateY(-1px) !important;
+        box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2) !important;
+    }
+
+    /* Tab content panels */
+    div[data-baseweb="tab-panel"],
+    .stTabs div[data-baseweb="tab-panel"] {
+        background: transparent !important;
+        padding: 1rem 0 !important;
+        border: none !important;
+    }
+
+    /* Force consistent tab styling - ultra high specificity */
+    html body div.stApp div[data-baseweb="tab-list"],
+    html body div.stApp button[data-baseweb="tab"],
+    html body div[data-baseweb="tab-list"],
+    html body button[data-baseweb="tab"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25)) !important;
+        color: rgba(255, 255, 255, 0.85) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+    }
+
+    /* Active tab - ultra high specificity */
+    html body div.stApp button[data-baseweb="tab"][aria-selected="true"],
+    html body button[data-baseweb="tab"][aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(147, 51, 234, 0.6)) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    }
+
+    /* Dark mode tab styling */
+    @media (prefers-color-scheme: dark) {
+        div[data-baseweb="tab-list"],
+        .stTabs [data-baseweb="tab-list"] {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2)) !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        }
+
+        button[data-baseweb="tab"],
+        .stTabs button[data-baseweb="tab"] {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
+            color: rgba(255, 255, 255, 0.9) !important;
+            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        }
+
+        button[data-baseweb="tab"][aria-selected="true"],
+        .stTabs button[data-baseweb="tab"][aria-selected="true"] {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.7), rgba(147, 51, 234, 0.7)) !important;
+            color: rgba(255, 255, 255, 0.98) !important;
+            border: 1px solid rgba(255, 255, 255, 0.5) !important;
+        }
+    }
+
+    /* Streamlit dark theme support for tabs */
+    [data-theme="dark"] div[data-baseweb="tab-list"],
+    [data-theme="dark"] button[data-baseweb="tab"],
+    .stApp[data-theme="dark"] div[data-baseweb="tab-list"],
+    .stApp[data-theme="dark"] button[data-baseweb="tab"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
+        color: rgba(255, 255, 255, 0.9) !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+    }
+
+    [data-theme="dark"] button[data-baseweb="tab"][aria-selected="true"],
+    .stApp[data-theme="dark"] button[data-baseweb="tab"][aria-selected="true"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.7), rgba(147, 51, 234, 0.7)) !important;
+        color: rgba(255, 255, 255, 0.98) !important;
+        border: 1px solid rgba(255, 255, 255, 0.5) !important;
+    }
+
 </style>
 """
 
