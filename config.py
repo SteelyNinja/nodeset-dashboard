@@ -255,6 +255,33 @@ CUSTOM_CSS = """
         overflow: visible !important;
     }
 
+    /* Hide search overlay elements when not hovering - more aggressive approach */
+    div[data-testid="stDataFrame"]:not(:hover) div[style*="position: absolute"][style*="z-index"] {
+        opacity: 0 !important;
+        transition: opacity 0.3s ease !important;
+        pointer-events: none !important;
+    }
+
+    /* Specifically target blue search bar elements */
+    div[data-testid="stDataFrame"]:not(:hover) div[style*="background-color: rgba"][style*="position: absolute"],
+    div[data-testid="stDataFrame"]:not(:hover) div[style*="background: rgba"][style*="position: absolute"] {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        display: none !important;
+    }
+
+    /* Show search elements when hovering */
+    div[data-testid="stDataFrame"]:hover div[style*="position: absolute"][style*="z-index"],
+    div[data-testid="stDataFrame"]:hover div[style*="background-color: rgba"][style*="position: absolute"],
+    div[data-testid="stDataFrame"]:hover div[style*="background: rgba"][style*="position: absolute"] {
+        opacity: 1 !important;
+        visibility: visible !important;
+        display: block !important;
+        transition: opacity 0.3s ease !important;
+        pointer-events: auto !important;
+    }
+
+
     /* Give extra space at the top of dataframes for controls */
     div[data-testid="stDataFrame"] {
         padding-top: 15px !important;
@@ -266,7 +293,7 @@ CUSTOM_CSS = """
         border-radius: 12px !important;
         border: 1px solid rgba(0, 0, 0, 0.1) !important;
         padding: 8px !important;
-        overflow: hidden !important;
+        overflow: visible !important;
         width: 100% !important;
         max-width: 100% !important;
         box-sizing: border-box !important;
@@ -285,10 +312,17 @@ CUSTOM_CSS = """
         box-sizing: border-box !important;
     }
 
-    /* Force all Plotly elements to be contained */
-    div[data-testid="stPlotlyChart"] * {
+    /* Allow legends to extend outside chart area, but contain main plot */
+    div[data-testid="stPlotlyChart"] .plot-container,
+    div[data-testid="stPlotlyChart"] .svg-container {
         max-width: 100% !important;
-        overflow: hidden !important;
+        overflow: visible !important;
+    }
+    
+    /* Keep main plot elements contained but allow legend overflow */
+    div[data-testid="stPlotlyChart"] .main-svg {
+        max-width: 100% !important;
+        overflow: visible !important;
     }
 
     /* Specifically target Plotly's modebar and other floating elements */
@@ -315,9 +349,9 @@ CUSTOM_CSS = """
         position: relative !important;
     }
 
-    /* Only apply overflow hidden to columns with charts, not dataframes */
+    /* Allow chart columns to show legends outside boundaries */
     div[data-testid="column"]:has(div[data-testid="stPlotlyChart"]) {
-        overflow: hidden !important;
+        overflow: visible !important;
     }
 
     /* Container for chart elements - allow dataframe controls to overflow */
@@ -329,9 +363,9 @@ CUSTOM_CSS = """
         position: relative !important;
     }
 
-    /* Only apply overflow hidden to element containers with charts */
+    /* Allow chart element containers to show legends outside boundaries */
     div[data-testid="element-container"]:has(div[data-testid="stPlotlyChart"]) {
-        overflow: hidden !important;
+        overflow: visible !important;
     }
 
     /* Dark mode for charts and tables - Fixed text visibility */

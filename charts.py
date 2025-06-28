@@ -7,7 +7,7 @@ def make_chart_responsive(fig):
     """Apply responsive settings to any plotly figure"""
     fig.update_layout(
         autosize=True,
-        margin=dict(l=20, r=20, t=40, b=20)
+        margin=dict(l=50, r=50, t=60, b=80)
     )
     return fig
 
@@ -61,7 +61,16 @@ def create_performance_charts(operator_performance, operator_validators, ens_nam
         },
         category_orders={'performance_category': ['Excellent', 'Good', 'Average', 'Poor']}
     )
-    fig_scatter.update_layout(height=500)
+    fig_scatter.update_layout(
+        height=500,
+        legend=dict(
+            orientation="h",
+            yanchor="bottom",
+            y=-0.2,
+            xanchor="center",
+            x=0.5
+        )
+    )
     fig_scatter = make_chart_responsive(fig_scatter)
 
     fig_hist = px.histogram(
