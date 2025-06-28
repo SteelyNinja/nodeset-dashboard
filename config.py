@@ -78,6 +78,67 @@ CUSTOM_CSS = """
         .logo-container img {
             max-height: 120px;
         }
+
+        /* Mobile-specific dataframe improvements */
+        div[data-testid="stDataFrame"],
+        div[data-testid="stTable"] {
+            font-size: 14px !important;
+            padding: 12px !important;
+            margin: 10px 0 !important;
+            border-radius: 8px !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 2px solid rgba(0, 0, 0, 0.15) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Increase text contrast on mobile */
+        div[data-testid="stDataFrame"] *,
+        div[data-testid="stTable"] * {
+            color: #1f2937 !important;
+            font-weight: 500 !important;
+        }
+
+        /* Make headers more prominent on mobile */
+        div[data-testid="stDataFrame"] th,
+        div[data-testid="stTable"] th {
+            background: rgba(59, 130, 246, 0.2) !important;
+            color: #1f2937 !important;
+            font-weight: 700 !important;
+            font-size: 15px !important;
+            padding: 12px 8px !important;
+        }
+
+        /* Improve row spacing on mobile */
+        div[data-testid="stDataFrame"] td,
+        div[data-testid="stTable"] td {
+            padding: 10px 8px !important;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Larger controls on mobile */
+        div[data-testid="stDataFrame"] button,
+        div[data-testid="stDataFrame"] input,
+        div[data-testid="stDataFrame"] .ag-header-cell-menu-button {
+            min-height: 44px !important;
+            font-size: 16px !important;
+            padding: 8px 12px !important;
+        }
+
+        /* Mobile chart improvements */
+        div[data-testid="stPlotlyChart"] {
+            margin: 8px 0 !important;
+            padding: 8px !important;
+            border-radius: 8px !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border: 2px solid rgba(0, 0, 0, 0.1) !important;
+        }
+
+        /* Ensure charts fit mobile screens */
+        div[data-testid="stPlotlyChart"] .js-plotly-plot,
+        div[data-testid="stPlotlyChart"] .plotly-graph-div {
+            max-width: calc(100vw - 40px) !important;
+            overflow-x: auto !important;
+        }
     }
 
     @media (min-width: 769px) and (max-width: 1024px) {
@@ -175,6 +236,29 @@ CUSTOM_CSS = """
         border-radius: 12px !important;
         border: 1px solid rgba(0, 0, 0, 0.1) !important;
         padding: 8px !important;
+        overflow: visible !important;
+        position: relative !important;
+    }
+
+    /* Ensure dataframe search/filter controls are visible */
+    div[data-testid="stDataFrame"] .stDataFrame-toolbar,
+    div[data-testid="stDataFrame"] [data-testid="stDataFrameResizeHandle"],
+    div[data-testid="stDataFrame"] .ag-header-cell-menu-button,
+    div[data-testid="stDataFrame"] .ag-side-bar,
+    div[data-testid="stDataFrame"] .ag-tool-panel,
+    div[data-testid="stDataFrame"] .ag-column-drop,
+    div[data-testid="stDataFrame"] .ag-filter-panel,
+    div[data-testid="stDataFrame"] .ag-menu,
+    div[data-testid="stDataFrame"] .ag-popup {
+        z-index: 1000 !important;
+        position: relative !important;
+        overflow: visible !important;
+    }
+
+    /* Give extra space at the top of dataframes for controls */
+    div[data-testid="stDataFrame"] {
+        padding-top: 15px !important;
+        margin-top: 5px !important;
     }
 
     div[data-testid="stPlotlyChart"] {
@@ -182,12 +266,72 @@ CUSTOM_CSS = """
         border-radius: 12px !important;
         border: 1px solid rgba(0, 0, 0, 0.1) !important;
         padding: 8px !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Ensure Plotly charts respect container boundaries */
+    div[data-testid="stPlotlyChart"] .js-plotly-plot,
+    div[data-testid="stPlotlyChart"] .plotly-graph-div,
+    div[data-testid="stPlotlyChart"] .svg-container,
+    div[data-testid="stPlotlyChart"] .plot-container,
+    div[data-testid="stPlotlyChart"] svg,
+    div[data-testid="stPlotlyChart"] .main-svg {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow: hidden !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Force all Plotly elements to be contained */
+    div[data-testid="stPlotlyChart"] * {
+        max-width: 100% !important;
+        overflow: hidden !important;
+    }
+
+    /* Specifically target Plotly's modebar and other floating elements */
+    div[data-testid="stPlotlyChart"] .modebar,
+    div[data-testid="stPlotlyChart"] .modebar-container {
+        position: absolute !important;
+        right: 10px !important;
+        top: 10px !important;
+        z-index: 1000 !important;
     }
 
     /* Additional Streamlit component backgrounds */
     div[data-testid="column"] > div,
     div[data-testid="stVerticalBlock"] > div[data-testid="element-container"] {
         background: transparent !important;
+    }
+
+    /* Force Streamlit columns to contain their content - but allow dataframe controls to overflow */
+    div[data-testid="column"] {
+        overflow: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+    }
+
+    /* Only apply overflow hidden to columns with charts, not dataframes */
+    div[data-testid="column"]:has(div[data-testid="stPlotlyChart"]) {
+        overflow: hidden !important;
+    }
+
+    /* Container for chart elements - allow dataframe controls to overflow */
+    div[data-testid="element-container"] {
+        overflow: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+    }
+
+    /* Only apply overflow hidden to element containers with charts */
+    div[data-testid="element-container"]:has(div[data-testid="stPlotlyChart"]) {
+        overflow: hidden !important;
     }
 
     /* Dark mode for charts and tables - Fixed text visibility */
@@ -200,6 +344,41 @@ CUSTOM_CSS = """
             -webkit-backdrop-filter: blur(15px) !important;
             border: 1px solid rgba(255, 255, 255, 0.2) !important;
             border-radius: 12px !important;
+            overflow: visible !important;
+            position: relative !important;
+        }
+
+        /* Dark mode mobile dataframe improvements */
+        @media (max-width: 768px) {
+            div[data-testid="stDataFrame"],
+            div[data-testid="stTable"] {
+                background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
+                backdrop-filter: blur(10px) !important;
+                -webkit-backdrop-filter: blur(10px) !important;
+                border: 2px solid rgba(255, 255, 255, 0.3) !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+            }
+
+            /* Improve text contrast in dark mode mobile */
+            div[data-testid="stDataFrame"] *,
+            div[data-testid="stTable"] * {
+                color: rgba(255, 255, 255, 0.95) !important;
+                font-weight: 600 !important;
+            }
+
+            /* Dark mode mobile headers */
+            div[data-testid="stDataFrame"] th,
+            div[data-testid="stTable"] th {
+                background: rgba(255, 255, 255, 0.15) !important;
+                color: rgba(255, 255, 255, 0.95) !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
+            }
+
+            /* Dark mode mobile table cells */
+            div[data-testid="stDataFrame"] td,
+            div[data-testid="stTable"] td {
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1) !important;
+            }
         }
 
         /* Table content - no blur, solid background for text readability */
@@ -239,6 +418,10 @@ CUSTOM_CSS = """
             backdrop-filter: blur(15px) !important;
             -webkit-backdrop-filter: blur(15px) !important;
             border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            overflow: hidden !important;
+            width: 100% !important;
+            max-width: 100% !important;
+            box-sizing: border-box !important;
         }
     }
 
@@ -252,6 +435,8 @@ CUSTOM_CSS = """
         -webkit-backdrop-filter: blur(15px) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
         border-radius: 12px !important;
+        overflow: visible !important;
+        position: relative !important;
     }
 
     /* Table content - no blur for text readability */
@@ -309,6 +494,10 @@ CUSTOM_CSS = """
         backdrop-filter: blur(15px) !important;
         -webkit-backdrop-filter: blur(15px) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        overflow: hidden !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
     }
 
     @media (max-width: 768px) {
@@ -556,6 +745,8 @@ CUSTOM_CSS = """
         border: 1px solid rgba(255, 255, 255, 0.3) !important;
         border-radius: 12px !important;
         color: rgba(255, 255, 255, 0.95) !important;
+        overflow: visible !important;
+        position: relative !important;
     }
 
     /* Force all nested elements to inherit the blue theme */

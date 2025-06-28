@@ -3,6 +3,14 @@ import plotly.graph_objects as go
 import numpy as np
 from utils import format_operator_display_plain, get_performance_category
 
+def make_chart_responsive(fig):
+    """Apply responsive settings to any plotly figure"""
+    fig.update_layout(
+        autosize=True,
+        margin=dict(l=20, r=20, t=40, b=20)
+    )
+    return fig
+
 
 def create_performance_charts(operator_performance, operator_validators, ens_names):
     """Create performance scatter and histogram charts"""
@@ -53,9 +61,8 @@ def create_performance_charts(operator_performance, operator_validators, ens_nam
         },
         category_orders={'performance_category': ['Excellent', 'Good', 'Average', 'Poor']}
     )
-    fig_scatter.update_layout(
-        height=500
-    )
+    fig_scatter.update_layout(height=500)
+    fig_scatter = make_chart_responsive(fig_scatter)
 
     fig_hist = px.histogram(
         df,
@@ -65,9 +72,8 @@ def create_performance_charts(operator_performance, operator_validators, ens_nam
         labels={'x': 'Performance (%)', 'y': 'Number of Operators'},
         color_discrete_sequence=['#667eea']
     )
-    fig_hist.update_layout(
-        height=400
-    )
+    fig_hist.update_layout(height=400)
+    fig_hist = make_chart_responsive(fig_hist)
 
     return fig_scatter, fig_hist
 
@@ -108,6 +114,7 @@ def create_concentration_pie(operator_validators, ens_names, title="Validator Di
         height=500,
         font=dict(size=12)
     )
+    fig = make_chart_responsive(fig)
 
     return fig
 
@@ -146,6 +153,7 @@ def create_distribution_histogram(operator_validators):
         ),
         bargap=0.1
     )
+    fig = make_chart_responsive(fig)
 
     return fig
 
@@ -192,6 +200,7 @@ def create_concentration_curve(operator_validators):
         height=500,
         hovermode='x unified'
     )
+    fig = make_chart_responsive(fig)
 
     return fig
 
@@ -249,6 +258,7 @@ def create_gas_limit_distribution_chart(mev_data):
         height=400,
         showlegend=False
     )
+    fig = make_chart_responsive(fig)
     
     return fig
 
@@ -292,6 +302,7 @@ def create_operator_gas_strategy_chart(gas_data):
         height=600,
         showlegend=True
     )
+    fig = make_chart_responsive(fig)
     
     return fig
 
@@ -333,6 +344,7 @@ def create_client_diversity_pie_charts(client_data):
             showlegend=True,
             font=dict(size=11, color='rgba(255,255,255,0.9)')
         )
+        fig_execution = make_chart_responsive(fig_execution)
     else:
         fig_execution = go.Figure()
         fig_execution.add_annotation(text="No execution client data", x=0.5, y=0.5, showarrow=False)
@@ -341,6 +353,7 @@ def create_client_diversity_pie_charts(client_data):
             height=400,
             font=dict(color='rgba(255,255,255,0.9)')
         )
+        fig_execution = make_chart_responsive(fig_execution)
     
     # Consensus Clients Pie Chart  
     if consensus_counts:
@@ -372,6 +385,7 @@ def create_client_diversity_pie_charts(client_data):
             showlegend=True,
             font=dict(size=11, color='rgba(255,255,255,0.9)')
         )
+        fig_consensus = make_chart_responsive(fig_consensus)
     else:
         fig_consensus = go.Figure()
         fig_consensus.add_annotation(text="No consensus client data", x=0.5, y=0.5, showarrow=False)
@@ -380,6 +394,7 @@ def create_client_diversity_pie_charts(client_data):
             height=400,
             font=dict(color='rgba(255,255,255,0.9)')
         )
+        fig_consensus = make_chart_responsive(fig_consensus)
     
     # Setup Type Pie Chart
     if setup_counts:
@@ -408,6 +423,7 @@ def create_client_diversity_pie_charts(client_data):
             showlegend=True,
             font=dict(size=11, color='rgba(255,255,255,0.9)')
         )
+        fig_setup = make_chart_responsive(fig_setup)
     else:
         fig_setup = go.Figure()
         fig_setup.add_annotation(text="No setup type data", x=0.5, y=0.5, showarrow=False)
@@ -416,6 +432,7 @@ def create_client_diversity_pie_charts(client_data):
             height=400,
             font=dict(color='rgba(255,255,255,0.9)')
         )
+        fig_setup = make_chart_responsive(fig_setup)
     
     return fig_execution, fig_consensus, fig_setup
 
@@ -434,6 +451,7 @@ def create_client_combination_bar_chart(client_data):
             height=400,
             font=dict(color='rgba(255,255,255,0.9)')
         )
+        fig = make_chart_responsive(fig)
         return fig
     
     # Sort combinations by count (highest to lowest)
@@ -468,5 +486,6 @@ def create_client_combination_bar_chart(client_data):
         showlegend=False,
         xaxis=dict(tickangle=45)
     )
+    fig = make_chart_responsive(fig)
     
     return fig
