@@ -152,7 +152,7 @@ CUSTOM_CSS = """
     .glass-card-title {
         font-size: 0.9rem;
         font-weight: 600;
-        color: #4a5568;
+        color: var(--text-color, rgb(74, 85, 104));
         margin-bottom: 0.5rem;
         text-transform: uppercase;
         letter-spacing: 0.5px;
@@ -161,16 +161,67 @@ CUSTOM_CSS = """
     .glass-card-value {
         font-size: 1.8rem;
         font-weight: 700;
-        color: #2d3748;
+        color: var(--text-color, rgb(45, 55, 72));
         margin-bottom: 0.25rem;
         line-height: 1.1;
     }
 
     .glass-card-caption {
         font-size: 0.8rem;
-        color: #718096;
+        color: var(--text-color, rgb(113, 128, 150));
         line-height: 1.3;
-        opacity: 0.8;
+        opacity: 0.7;
+    }
+
+    /* Dark mode adjustments for glass cards */
+    @media (prefers-color-scheme: dark) {
+        .glass-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .glass-card:hover {
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .glass-card-title {
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .glass-card-value {
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .glass-card-caption {
+            color: rgba(255, 255, 255, 0.6);
+        }
+    }
+
+    /* Streamlit dark theme support */
+    [data-theme="dark"] .glass-card-title,
+    .stApp[data-theme="dark"] .glass-card-title {
+        color: rgba(255, 255, 255, 0.8) !important;
+    }
+
+    [data-theme="dark"] .glass-card-value,
+    .stApp[data-theme="dark"] .glass-card-value {
+        color: rgba(255, 255, 255, 0.95) !important;
+    }
+
+    [data-theme="dark"] .glass-card-caption,
+    .stApp[data-theme="dark"] .glass-card-caption {
+        color: rgba(255, 255, 255, 0.6) !important;
+    }
+
+    [data-theme="dark"] .glass-card,
+    .stApp[data-theme="dark"] .glass-card {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+    }
+
+    [data-theme="dark"] .glass-card:hover,
+    .stApp[data-theme="dark"] .glass-card:hover {
+        border-color: rgba(255, 255, 255, 0.2) !important;
     }
 
     /* Responsive adjustments for glass cards */
