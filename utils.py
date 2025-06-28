@@ -28,10 +28,10 @@ def format_operator_display_plain(address: str, ens_names: dict, show_full_addre
 def get_performance_category(performance):
     """Categorize performance based on percentage"""
     if performance >= 99.5:
-        return 'Excellent'
+        return '🌟 Excellent'
     elif performance >= 98.5:
-        return 'Good'
+        return '✅ Good'
     elif performance >= 95.0:
-        return 'Average'
+        return '⚠️ Average'
     else:
-        return 'Poor'
+        return '🔴 Poor'
