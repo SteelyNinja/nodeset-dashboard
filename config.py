@@ -370,17 +370,17 @@ CUSTOM_CSS = """
         background: transparent;
     }
 
-    /* Dark mode background */
+    /* Dark mode background - subtle blue improvement from original */
     @media (prefers-color-scheme: dark) {
         .stApp {
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            background: linear-gradient(135deg, #11182e 0%, #1f2a3f 50%, #11182e 100%);
         }
     }
 
-    /* Streamlit dark theme support */
+    /* Streamlit dark theme support - subtle blue improvement */
     [data-theme="dark"] .stApp,
     .stApp[data-theme="dark"] {
-        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%) !important;
+        background: linear-gradient(135deg, #11182e 0%, #1f2a3f 50%, #11182e 100%) !important;
     }
 
     /* Plotly Charts Background - Multiple Selectors */
@@ -578,10 +578,10 @@ CUSTOM_CSS = """
         /* Main dataframe container only */
         div[data-testid="stDataFrame"],
         div[data-testid="stTable"] {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2)) !important;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(167, 139, 250, 0.2)) !important;
             backdrop-filter: blur(15px) !important;
             -webkit-backdrop-filter: blur(15px) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
             border-radius: 12px !important;
             overflow: visible !important;
             position: relative !important;
@@ -591,11 +591,11 @@ CUSTOM_CSS = """
         @media (max-width: 768px) {
             div[data-testid="stDataFrame"],
             div[data-testid="stTable"] {
-                background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
+                background: linear-gradient(135deg, rgba(96, 165, 250, 0.3), rgba(167, 139, 250, 0.3)) !important;
                 backdrop-filter: blur(10px) !important;
                 -webkit-backdrop-filter: blur(10px) !important;
-                border: 2px solid rgba(255, 255, 255, 0.3) !important;
-                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3) !important;
+                border: 2px solid rgba(255, 255, 255, 0.35) !important;
+                box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
             }
 
             /* Improve text contrast in dark mode mobile */
@@ -653,7 +653,7 @@ CUSTOM_CSS = """
         }
 
         div[data-testid="stPlotlyChart"] {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15)) !important;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(167, 139, 250, 0.18)) !important;
             backdrop-filter: blur(15px) !important;
             -webkit-backdrop-filter: blur(15px) !important;
             border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -669,10 +669,10 @@ CUSTOM_CSS = """
     [data-theme="dark"] div[data-testid="stTable"],
     .stApp[data-theme="dark"] div[data-testid="stDataFrame"],
     .stApp[data-theme="dark"] div[data-testid="stTable"] {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2)) !important;
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.2), rgba(167, 139, 250, 0.2)) !important;
         backdrop-filter: blur(15px) !important;
         -webkit-backdrop-filter: blur(15px) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
         border-radius: 12px !important;
         overflow: visible !important;
         position: relative !important;
@@ -729,7 +729,7 @@ CUSTOM_CSS = """
 
     [data-theme="dark"] div[data-testid="stPlotlyChart"],
     .stApp[data-theme="dark"] div[data-testid="stPlotlyChart"] {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15)) !important;
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.18), rgba(167, 139, 250, 0.18)) !important;
         backdrop-filter: blur(15px) !important;
         -webkit-backdrop-filter: blur(15px) !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -822,9 +822,9 @@ CUSTOM_CSS = """
     /* ===== DARK MODE THEME ===== */
     @media (prefers-color-scheme: dark) {
         :root {
-            /* Dark mode color overrides */
-            --neutral-50: #0f172a;
-            --neutral-100: #1e293b;
+            /* Dark mode color overrides - subtle blue improvement */
+            --neutral-50: #11182e;
+            --neutral-100: #1f2a3f;
             --neutral-200: #334155;
             --neutral-300: #475569;
             --neutral-400: #64748b;
@@ -833,6 +833,11 @@ CUSTOM_CSS = """
             --neutral-700: #e2e8f0;
             --neutral-800: #f1f5f9;
             --neutral-900: #f8fafc;
+            
+            /* Lighter blue/purple theme for dark mode */
+            --primary-blue: #60a5fa;      /* Lighter from #3b82f6 */
+            --primary-purple: #a78bfa;    /* Lighter from #9333ea */
+            --primary-gradient: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
         }
         
         /* Typography in dark mode */
@@ -842,16 +847,29 @@ CUSTOM_CSS = """
         h4 { color: var(--neutral-700) !important; }
         p, .stMarkdown p { color: var(--neutral-600) !important; }
         
-        /* Glass cards in dark mode */
+        /* Glass cards in dark mode - enhanced effect */
         .glass-card {
             background: linear-gradient(135deg, 
-                rgba(var(--primary-blue-rgb, 59, 130, 246), 0.15), 
-                rgba(var(--primary-purple-rgb, 147, 51, 234), 0.15));
-            border: 1px solid var(--neutral-300);
+                rgba(96, 165, 250, 0.12), 
+                rgba(167, 139, 250, 0.12));
+            backdrop-filter: blur(20px) saturate(1.4);
+            -webkit-backdrop-filter: blur(20px) saturate(1.4);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 8px 32px rgba(0, 0, 0, 0.3),
+                0 1px 0 rgba(255, 255, 255, 0.1) inset,
+                0 -1px 0 rgba(0, 0, 0, 0.2) inset;
         }
         
         .glass-card:hover {
-            border-color: var(--neutral-400);
+            border-color: rgba(255, 255, 255, 0.25);
+            background: linear-gradient(135deg, 
+                rgba(96, 165, 250, 0.15), 
+                rgba(167, 139, 250, 0.15));
+            box-shadow: 
+                0 12px 40px rgba(0, 0, 0, 0.4),
+                0 1px 0 rgba(255, 255, 255, 0.15) inset,
+                0 -1px 0 rgba(0, 0, 0, 0.25) inset;
         }
         
         .glass-card-title {
@@ -885,13 +903,24 @@ CUSTOM_CSS = """
 
     [data-theme="dark"] .glass-card,
     .stApp[data-theme="dark"] .glass-card {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(147, 51, 234, 0.12)) !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.12), rgba(167, 139, 250, 0.12)) !important;
+        backdrop-filter: blur(20px) saturate(1.4) !important;
+        -webkit-backdrop-filter: blur(20px) saturate(1.4) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        box-shadow: 
+            0 8px 32px rgba(0, 0, 0, 0.3),
+            0 1px 0 rgba(255, 255, 255, 0.1) inset,
+            0 -1px 0 rgba(0, 0, 0, 0.2) inset !important;
     }
 
     [data-theme="dark"] .glass-card:hover,
     .stApp[data-theme="dark"] .glass-card:hover {
-        border-color: rgba(255, 255, 255, 0.2) !important;
+        border-color: rgba(255, 255, 255, 0.25) !important;
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.15), rgba(167, 139, 250, 0.15)) !important;
+        box-shadow: 
+            0 12px 40px rgba(0, 0, 0, 0.4),
+            0 1px 0 rgba(255, 255, 255, 0.15) inset,
+            0 -1px 0 rgba(0, 0, 0, 0.25) inset !important;
     }
 
     /* Responsive adjustments for glass cards */
@@ -1109,7 +1138,7 @@ CUSTOM_CSS = """
     button,
     [data-testid="stButton"] button,
     div[data-testid="stButton"] > button {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.35), rgba(167, 139, 250, 0.35)) !important;
         border: 1px solid rgba(255, 255, 255, 0.3) !important;
         border-radius: 8px !important;
         color: rgba(255, 255, 255, 0.95) !important;
@@ -1150,7 +1179,7 @@ CUSTOM_CSS = """
     button:hover,
     [data-testid="stButton"] button:hover,
     div[data-testid="stButton"] > button:hover {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(147, 51, 234, 0.4)) !important;
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.45), rgba(167, 139, 250, 0.45)) !important;
         border: 1px solid rgba(255, 255, 255, 0.4) !important;
         transform: translateY(-1px) !important;
         box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
@@ -1162,7 +1191,7 @@ CUSTOM_CSS = """
         button,
         [data-testid="stButton"] button,
         div[data-testid="stButton"] > button {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.35), rgba(167, 139, 250, 0.35)) !important;
             border: 1px solid rgba(255, 255, 255, 0.3) !important;
             color: rgba(255, 255, 255, 0.95) !important;
         }
@@ -1171,7 +1200,7 @@ CUSTOM_CSS = """
         button:hover,
         [data-testid="stButton"] button:hover,
         div[data-testid="stButton"] > button:hover {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(147, 51, 234, 0.4)) !important;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.45), rgba(167, 139, 250, 0.45)) !important;
             border: 1px solid rgba(255, 255, 255, 0.4) !important;
         }
     }
@@ -1363,7 +1392,7 @@ CUSTOM_CSS = """
     @media (prefers-color-scheme: dark) {
         div[data-baseweb="tab-list"],
         .stTabs [data-baseweb="tab-list"] {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2)) !important;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.25), rgba(167, 139, 250, 0.25)) !important;
             border: 1px solid rgba(255, 255, 255, 0.15) !important;
             justify-content: flex-start !important;
             align-items: flex-start !important;
@@ -1375,14 +1404,14 @@ CUSTOM_CSS = """
 
         button[data-baseweb="tab"],
         .stTabs button[data-baseweb="tab"] {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
-            color: rgba(255, 255, 255, 0.9) !important;
-            border: 1px solid rgba(255, 255, 255, 0.2) !important;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.35), rgba(167, 139, 250, 0.35)) !important;
+            color: rgba(255, 255, 255, 0.95) !important;
+            border: 1px solid rgba(255, 255, 255, 0.25) !important;
         }
 
         button[data-baseweb="tab"][aria-selected="true"],
         .stTabs button[data-baseweb="tab"][aria-selected="true"] {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.7), rgba(147, 51, 234, 0.7)) !important;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.7), rgba(167, 139, 250, 0.7)) !important;
             color: rgba(255, 255, 255, 0.98) !important;
             border: 1px solid rgba(255, 255, 255, 0.5) !important;
         }
@@ -1391,7 +1420,7 @@ CUSTOM_CSS = """
     /* Streamlit dark theme support for tabs */
     [data-theme="dark"] div[data-baseweb="tab-list"],
     .stApp[data-theme="dark"] div[data-baseweb="tab-list"] {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2)) !important;
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.25), rgba(167, 139, 250, 0.25)) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         justify-content: flex-start !important;
         align-items: flex-start !important;
@@ -1401,14 +1430,14 @@ CUSTOM_CSS = """
     
     [data-theme="dark"] button[data-baseweb="tab"],
     .stApp[data-theme="dark"] button[data-baseweb="tab"] {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
-        color: rgba(255, 255, 255, 0.9) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.35), rgba(167, 139, 250, 0.35)) !important;
+        color: rgba(255, 255, 255, 0.95) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
     }
 
     [data-theme="dark"] button[data-baseweb="tab"][aria-selected="true"],
     .stApp[data-theme="dark"] button[data-baseweb="tab"][aria-selected="true"] {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.7), rgba(147, 51, 234, 0.7)) !important;
+        background: linear-gradient(135deg, rgba(96, 165, 250, 0.7), rgba(167, 139, 250, 0.7)) !important;
         color: rgba(255, 255, 255, 0.98) !important;
         border: 1px solid rgba(255, 255, 255, 0.5) !important;
     }
