@@ -11,22 +11,172 @@ PAGE_CONFIG = {
 # Custom CSS for better styling and responsive design
 CUSTOM_CSS = """
 <style>
+    /* ===== CSS VARIABLES - COLOR SYSTEM ===== */
+    :root {
+        /* Primary Brand Colors */
+        --primary-blue: #3b82f6;
+        --primary-purple: #9333ea;
+        --primary-gradient: linear-gradient(135deg, var(--primary-blue), var(--primary-purple));
+        
+        /* Semantic Status Colors */
+        --success-color: #10b981;
+        --success-light: #d1fae5;
+        --success-dark: #047857;
+        
+        --warning-color: #f59e0b;
+        --warning-light: #fef3c7;
+        --warning-dark: #d97706;
+        
+        --danger-color: #ef4444;
+        --danger-light: #fee2e2;
+        --danger-dark: #dc2626;
+        
+        --info-color: #3b82f6;
+        --info-light: #dbeafe;
+        --info-dark: #1d4ed8;
+        
+        /* Neutral Colors */
+        --neutral-50: #f9fafb;
+        --neutral-100: #f3f4f6;
+        --neutral-200: #e5e7eb;
+        --neutral-300: #d1d5db;
+        --neutral-400: #9ca3af;
+        --neutral-500: #6b7280;
+        --neutral-600: #4b5563;
+        --neutral-700: #374151;
+        --neutral-800: #1f2937;
+        --neutral-900: #111827;
+        
+        /* Typography Scale */
+        --text-xs: 0.75rem;     /* 12px */
+        --text-sm: 0.875rem;    /* 14px */
+        --text-base: 1rem;      /* 16px */
+        --text-lg: 1.125rem;    /* 18px */
+        --text-xl: 1.25rem;     /* 20px */
+        --text-2xl: 1.5rem;     /* 24px */
+        --text-3xl: 1.875rem;   /* 30px */
+        --text-4xl: 2.25rem;    /* 36px */
+        --text-5xl: 3rem;       /* 48px */
+        
+        /* Spacing Scale */
+        --space-1: 0.25rem;     /* 4px */
+        --space-2: 0.5rem;      /* 8px */
+        --space-3: 0.75rem;     /* 12px */
+        --space-4: 1rem;        /* 16px */
+        --space-5: 1.25rem;     /* 20px */
+        --space-6: 1.5rem;      /* 24px */
+        --space-8: 2rem;        /* 32px */
+        --space-10: 2.5rem;     /* 40px */
+        --space-12: 3rem;       /* 48px */
+        --space-16: 4rem;       /* 64px */
+        
+        /* Border Radius */
+        --radius-sm: 0.375rem;   /* 6px */
+        --radius-md: 0.5rem;     /* 8px */
+        --radius-lg: 0.75rem;    /* 12px */
+        --radius-xl: 1rem;       /* 16px */
+        --radius-2xl: 1.5rem;    /* 24px */
+        
+        /* Shadows */
+        --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+
+    /* ===== TYPOGRAPHY HIERARCHY ===== */
+    
+    /* Main Dashboard Title */
+    h1 {
+        font-size: var(--text-4xl) !important;
+        font-weight: 800 !important;
+        color: var(--neutral-900) !important;
+        margin-bottom: var(--space-8) !important;
+        line-height: 1.1 !important;
+        letter-spacing: -0.025em !important;
+    }
+    
+    /* Section Headers */
+    h2 {
+        font-size: var(--text-2xl) !important;
+        font-weight: 700 !important;
+        color: var(--neutral-800) !important;
+        margin: var(--space-8) 0 var(--space-4) 0 !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Subsection Headers */
+    h3 {
+        font-size: var(--text-xl) !important;
+        font-weight: 600 !important;
+        color: var(--neutral-700) !important;
+        margin: var(--space-6) 0 var(--space-3) 0 !important;
+        line-height: 1.3 !important;
+    }
+    
+    /* Card/Component Titles */
+    h4 {
+        font-size: var(--text-lg) !important;
+        font-weight: 600 !important;
+        color: var(--neutral-700) !important;
+        margin: var(--space-4) 0 var(--space-2) 0 !important;
+    }
+    
+    /* Body Text */
+    p, .stMarkdown p {
+        font-size: var(--text-base) !important;
+        line-height: 1.6 !important;
+        color: var(--neutral-600) !important;
+        margin-bottom: var(--space-4) !important;
+    }
+    
+    /* Small Text */
+    .text-sm {
+        font-size: var(--text-sm) !important;
+        color: var(--neutral-500) !important;
+    }
+    
+    .text-xs {
+        font-size: var(--text-xs) !important;
+        color: var(--neutral-400) !important;
+    }
+
+    /* ===== STATUS COLORS ===== */
+    .status-success, .status-good { 
+        color: var(--success-color) !important; 
+        font-weight: 600 !important;
+    }
+    .status-warning { 
+        color: var(--warning-color) !important; 
+        font-weight: 600 !important;
+    }
+    .status-danger, .status-error { 
+        color: var(--danger-color) !important; 
+        font-weight: 600 !important;
+    }
+    .status-info { 
+        color: var(--info-color) !important; 
+        font-weight: 600 !important;
+    }
+
+    /* ===== LEGACY COMPATIBILITY ===== */
     .metric-container {
-        background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-        padding: 1rem;
-        border-radius: 10px;
+        background: var(--primary-gradient);
+        padding: var(--space-4);
+        border-radius: var(--radius-lg);
         color: white;
-        margin: 0.5rem 0;
+        margin: var(--space-2) 0;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
     }
 
     .big-font {
-        font-size: 24px !important;
-        font-weight: bold;
+        font-size: var(--text-2xl) !important;
+        font-weight: 700 !important;
     }
-
-    .status-good { color: #28a745; }
-    .status-warning { color: #ffc107; }
-    .status-danger { color: #dc3545; }
 
     div[data-testid="metric-container"] {
         background-color: #f8f9fa;
@@ -34,6 +184,21 @@ CUSTOM_CSS = """
         padding: 1rem;
         border-radius: 0.5rem;
         box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+        text-align: center !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+
+    /* Ensure all text within metric containers is centered */
+    div[data-testid="metric-container"] *,
+    div[data-testid="metric-container"] div,
+    div[data-testid="metric-container"] span,
+    div[data-testid="metric-container"] p {
+        text-align: center !important;
+        justify-content: center !important;
+        align-items: center !important;
     }
 
     .css-1d391kg {
@@ -55,28 +220,68 @@ CUSTOM_CSS = """
         margin-bottom: 1rem;
     }
 
+    /* ===== RESPONSIVE DESIGN ===== */
     @media (max-width: 768px) {
+        :root {
+            /* Smaller typography scale for mobile */
+            --text-4xl: 2rem;      /* 32px instead of 36px */
+            --text-3xl: 1.5rem;    /* 24px instead of 30px */
+            --text-2xl: 1.25rem;   /* 20px instead of 24px */
+        }
+        
         .main .block-container {
-            padding-left: 0.5rem;
-            padding-right: 0.5rem;
+            padding-left: var(--space-2);
+            padding-right: var(--space-2);
         }
 
         div[data-testid="metric-container"] {
-            padding: 0.5rem;
-            margin: 0.25rem 0;
+            padding: var(--space-2);
+            margin: var(--space-1) 0;
         }
 
         h1 {
-            font-size: 1.5rem !important;
+            font-size: var(--text-3xl) !important;
+            margin-bottom: var(--space-6) !important;
+        }
+        
+        h2 {
+            font-size: var(--text-xl) !important;
+            margin: var(--space-6) 0 var(--space-3) 0 !important;
+        }
+        
+        h3 {
+            font-size: var(--text-lg) !important;
+            margin: var(--space-4) 0 var(--space-2) 0 !important;
         }
 
         .metric-container {
-            padding: 0.5rem;
-            margin: 0.25rem 0;
+            padding: var(--space-2);
+            margin: var(--space-1) 0;
         }
 
         .logo-container img {
             max-height: 120px;
+        }
+        
+        /* Mobile glass cards */
+        .glass-card {
+            padding: var(--space-4);
+            margin: var(--space-2);
+            border-radius: var(--radius-xl);
+        }
+        
+        .glass-card-value {
+            font-size: var(--text-2xl);
+            text-align: left;
+        }
+        
+        .glass-card-title {
+            font-size: var(--text-xs);
+            text-align: left;
+        }
+        
+        .glass-card-caption {
+            text-align: left;
         }
 
         /* Mobile-specific dataframe improvements */
@@ -552,18 +757,18 @@ CUSTOM_CSS = """
         font-size: 0.9em;
     }
 
-    /* 3D Glass-morphism Cards for Key Insights */
+    /* ===== GLASS-MORPHISM CARDS ===== */
     .glass-card {
-        background: linear-gradient(135deg, rgba(59, 130, 246, 0.08), rgba(147, 51, 234, 0.08));
+        background: linear-gradient(135deg, 
+            rgba(var(--primary-blue-rgb, 59, 130, 246), 0.08), 
+            rgba(var(--primary-purple-rgb, 147, 51, 234), 0.08));
         backdrop-filter: blur(15px);
         -webkit-backdrop-filter: blur(15px);
-        border: 1px solid rgba(0, 0, 0, 0.1);
-        border-radius: 16px;
-        padding: 1.5rem;
-        margin: 0.75rem;
-        box-shadow: 
-            0 8px 32px rgba(0, 0, 0, 0.1),
-            0 4px 16px rgba(0, 0, 0, 0.05);
+        border: 1px solid var(--neutral-200);
+        border-radius: var(--radius-2xl);
+        padding: var(--space-6);
+        margin: var(--space-3);
+        box-shadow: var(--shadow-lg);
         transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         position: relative;
         overflow: hidden;
@@ -580,59 +785,85 @@ CUSTOM_CSS = """
     }
 
     .glass-card:hover {
-        transform: translateY(-5px) scale(1.02);
-        box-shadow: 
-            0 16px 48px rgba(0, 0, 0, 0.15),
-            0 8px 24px rgba(0, 0, 0, 0.1),
-            inset 0 1px 0 rgba(255, 255, 255, 0.4);
-        border-color: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px) scale(1.01);
+        box-shadow: var(--shadow-xl);
+        border-color: var(--neutral-300);
     }
 
     .glass-card-title {
-        font-size: 0.9rem;
+        font-size: var(--text-sm);
         font-weight: 600;
-        color: #374151;
-        margin-bottom: 0.5rem;
+        color: var(--neutral-700);
+        margin-bottom: var(--space-2);
         text-transform: uppercase;
-        letter-spacing: 0.5px;
+        letter-spacing: 0.05em;
+        line-height: 1.4;
+        text-align: left;
     }
 
     .glass-card-value {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 0.25rem;
+        font-size: var(--text-3xl);
+        font-weight: 800;
+        color: var(--neutral-900);
+        margin-bottom: var(--space-1);
         line-height: 1.1;
+        letter-spacing: -0.025em;
+        text-align: left;
     }
 
     .glass-card-caption {
-        font-size: 0.8rem;
-        color: #6b7280;
-        line-height: 1.3;
-        opacity: 0.8;
+        font-size: var(--text-xs);
+        color: var(--neutral-500);
+        line-height: 1.4;
+        font-weight: 500;
+        text-align: left;
     }
 
-    /* Dark mode adjustments for glass cards */
+    /* ===== DARK MODE THEME ===== */
     @media (prefers-color-scheme: dark) {
+        :root {
+            /* Dark mode color overrides */
+            --neutral-50: #0f172a;
+            --neutral-100: #1e293b;
+            --neutral-200: #334155;
+            --neutral-300: #475569;
+            --neutral-400: #64748b;
+            --neutral-500: #94a3b8;
+            --neutral-600: #cbd5e1;
+            --neutral-700: #e2e8f0;
+            --neutral-800: #f1f5f9;
+            --neutral-900: #f8fafc;
+        }
+        
+        /* Typography in dark mode */
+        h1 { color: var(--neutral-900) !important; }
+        h2 { color: var(--neutral-800) !important; }
+        h3 { color: var(--neutral-700) !important; }
+        h4 { color: var(--neutral-700) !important; }
+        p, .stMarkdown p { color: var(--neutral-600) !important; }
+        
+        /* Glass cards in dark mode */
         .glass-card {
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.12), rgba(147, 51, 234, 0.12));
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: linear-gradient(135deg, 
+                rgba(var(--primary-blue-rgb, 59, 130, 246), 0.15), 
+                rgba(var(--primary-purple-rgb, 147, 51, 234), 0.15));
+            border: 1px solid var(--neutral-300);
         }
         
         .glass-card:hover {
-            border-color: rgba(255, 255, 255, 0.2);
+            border-color: var(--neutral-400);
         }
         
         .glass-card-title {
-            color: rgba(255, 255, 255, 0.8);
+            color: var(--neutral-600);
         }
 
         .glass-card-value {
-            color: rgba(255, 255, 255, 0.95);
+            color: var(--neutral-900);
         }
 
         .glass-card-caption {
-            color: rgba(255, 255, 255, 0.6);
+            color: var(--neutral-500);
         }
     }
 
@@ -693,6 +924,59 @@ CUSTOM_CSS = """
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 0.75rem;
         }
+    }
+
+    /* ===== UNIVERSAL VERTICAL CENTERING FIXES ===== */
+    
+    /* Streamlit button text centering - most specific selectors */
+    div[data-testid="stButton"] button div,
+    div[data-testid="stButton"] button span,
+    div[data-testid="stButton"] button p {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 100% !important;
+        line-height: 1.2 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    /* Tab button text centering - most specific selectors */
+    button[data-baseweb="tab"] div,
+    button[data-baseweb="tab"] span,
+    button[data-baseweb="tab"] p,
+    .stTabs button[data-baseweb="tab"] div,
+    .stTabs button[data-baseweb="tab"] span,
+    .stTabs button[data-baseweb="tab"] p {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 100% !important;
+        line-height: 1.2 !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        font-size: inherit !important;
+    }
+
+    /* Override any potential text wrapping or positioning issues */
+    button[data-baseweb="tab"],
+    div[data-testid="stButton"] button {
+        position: relative !important;
+        overflow: hidden !important;
+    }
+
+    button[data-baseweb="tab"]::before,
+    div[data-testid="stButton"] button::before {
+        content: '' !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        pointer-events: none !important;
     }
 
     /* Streamlit dataframe search/filter controls styling */
@@ -829,8 +1113,34 @@ CUSTOM_CSS = """
         border: 1px solid rgba(255, 255, 255, 0.3) !important;
         border-radius: 8px !important;
         color: rgba(255, 255, 255, 0.95) !important;
-        padding: 0.5rem 1rem !important;
+        padding: 12px 16px !important;
         transition: all 0.3s ease !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-weight: 500 !important;
+        min-height: 48px !important;
+        height: 48px !important;
+        line-height: 1.2 !important;
+        vertical-align: middle !important;
+        box-sizing: border-box !important;
+    }
+
+    /* Force button content vertical centering */
+    html body button *,
+    button *,
+    [data-testid="stButton"] button *,
+    div[data-testid="stButton"] > button * {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 100% !important;
+        width: 100% !important;
+        line-height: 1.2 !important;
+        vertical-align: middle !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     /* Button hover effects */
@@ -868,7 +1178,7 @@ CUSTOM_CSS = """
 
     /* TAB STYLING - Consistent blue/dark theme for all tabs */
     
-    /* Tab container styling */
+    /* Tab container styling with sliding indicator */
     div[data-baseweb="tab-list"],
     .stTabs [data-baseweb="tab-list"] {
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15)) !important;
@@ -877,60 +1187,168 @@ CUSTOM_CSS = """
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         backdrop-filter: blur(10px) !important;
         -webkit-backdrop-filter: blur(10px) !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        position: relative !important;
+        overflow: hidden !important;
     }
 
-    /* Individual tab buttons - consistent styling */
+    /* Simplified indicator - removed to avoid conflicts */
+    /* Note: Sliding indicator removed to prevent Streamlit conflicts */
+
+    /* Individual tab buttons - enhanced transitions */
     button[data-baseweb="tab"],
     .stTabs button[data-baseweb="tab"] {
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25)) !important;
         color: rgba(255, 255, 255, 0.85) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         border-radius: 8px !important;
-        padding: 8px 16px !important;
+        padding: 12px 16px !important;
         margin: 2px !important;
         font-weight: 500 !important;
-        transition: all 0.3s ease !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
         backdrop-filter: blur(5px) !important;
         -webkit-backdrop-filter: blur(5px) !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        min-height: 48px !important;
+        height: 48px !important;
+        white-space: nowrap !important;
+        line-height: 1.2 !important;
+        vertical-align: middle !important;
+        box-sizing: border-box !important;
+        position: relative !important;
+        overflow: hidden !important;
+        transform: scale(1) !important;
     }
 
-    /* Active tab styling */
+    /* Active tab styling with enhanced effects */
     button[data-baseweb="tab"][aria-selected="true"],
     .stTabs button[data-baseweb="tab"][aria-selected="true"] {
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.6), rgba(147, 51, 234, 0.6)) !important;
         color: rgba(255, 255, 255, 0.95) !important;
         border: 1px solid rgba(255, 255, 255, 0.4) !important;
         font-weight: 600 !important;
-        box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3) !important;
-        transform: translateY(-1px) !important;
+        box-shadow: 
+            0 4px 12px rgba(59, 130, 246, 0.3),
+            0 2px 6px rgba(147, 51, 234, 0.2) !important;
+        transform: translateY(-1px) scale(1.02) !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
-    /* Tab hover effects */
-    button[data-baseweb="tab"]:hover,
-    .stTabs button[data-baseweb="tab"]:hover {
+    /* Active tab styling enhanced - indicator removed for stability */
+
+    /* Tab hover effects with smooth transitions */
+    button[data-baseweb="tab"]:hover:not([aria-selected="true"]),
+    .stTabs button[data-baseweb="tab"]:hover:not([aria-selected="true"]) {
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.4), rgba(147, 51, 234, 0.4)) !important;
         color: rgba(255, 255, 255, 0.95) !important;
         border: 1px solid rgba(255, 255, 255, 0.3) !important;
-        transform: translateY(-1px) !important;
+        transform: translateY(-1px) scale(1.01) !important;
         box-shadow: 0 2px 8px rgba(59, 130, 246, 0.2) !important;
+        transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
     }
 
-    /* Tab content panels */
+    /* Tab content panels - simplified without interfering animations */
     div[data-baseweb="tab-panel"],
     .stTabs div[data-baseweb="tab-panel"] {
         background: transparent !important;
         padding: 1rem 0 !important;
         border: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    /* Gentle fade-in for new content only */
+    div[data-baseweb="tab-panel"] {
+        animation: gentleFadeIn 0.2s ease-out !important;
+    }
+
+    /* Gentle fade in animation */
+    @keyframes gentleFadeIn {
+        0% {
+            opacity: 0.7;
+        }
+        100% {
+            opacity: 1;
+        }
+    }
+
+    /* Accessibility: Respect reduced motion preferences */
+    @media (prefers-reduced-motion: reduce) {
+        button[data-baseweb="tab"],
+        .stTabs button[data-baseweb="tab"],
+        div[data-baseweb="tab-panel"],
+        .stTabs div[data-baseweb="tab-panel"],
+        div[data-baseweb="tab-list"]::before,
+        .stTabs [data-baseweb="tab-list"]::before {
+            transition: none !important;
+            animation: none !important;
+            transform: none !important;
+        }
+        
+        div[data-baseweb="tab-panel"] {
+            opacity: 1 !important;
+            animation: none !important;
+        }
     }
 
     /* Force consistent tab styling - ultra high specificity */
     html body div.stApp div[data-baseweb="tab-list"],
+    html body div[data-baseweb="tab-list"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15)) !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+        position: relative !important;
+        overflow: hidden !important;
+    }
+    
     html body div.stApp button[data-baseweb="tab"],
-    html body div[data-baseweb="tab-list"],
     html body button[data-baseweb="tab"] {
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25)) !important;
         color: rgba(255, 255, 255, 0.85) !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        text-align: center !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+        transform: scale(1) !important;
+    }
+
+    /* Ensure tab text is properly centered */
+    html body div.stApp button[data-baseweb="tab"] *,
+    html body button[data-baseweb="tab"] *,
+    button[data-baseweb="tab"] *,
+    .stTabs button[data-baseweb="tab"] * {
+        text-align: center !important;
+        justify-content: center !important;
+        align-items: center !important;
+        width: 100% !important;
+        display: flex !important;
+        height: 100% !important;
+        line-height: 1.2 !important;
+        vertical-align: middle !important;
+    }
+
+    /* Force tab content vertical centering */
+    button[data-baseweb="tab"] > div,
+    .stTabs button[data-baseweb="tab"] > div,
+    button[data-baseweb="tab"] > span,
+    .stTabs button[data-baseweb="tab"] > span {
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        height: 100% !important;
+        width: 100% !important;
+        margin: 0 !important;
+        padding: 0 !important;
     }
 
     /* Active tab - ultra high specificity */
@@ -947,6 +1365,12 @@ CUSTOM_CSS = """
         .stTabs [data-baseweb="tab-list"] {
             background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2)) !important;
             border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            justify-content: flex-start !important;
+            align-items: flex-start !important;
+            display: flex !important;
+            flex-wrap: wrap !important;
+            position: relative !important;
+            overflow: hidden !important;
         }
 
         button[data-baseweb="tab"],
@@ -966,8 +1390,16 @@ CUSTOM_CSS = """
 
     /* Streamlit dark theme support for tabs */
     [data-theme="dark"] div[data-baseweb="tab-list"],
+    .stApp[data-theme="dark"] div[data-baseweb="tab-list"] {
+        background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(147, 51, 234, 0.2)) !important;
+        border: 1px solid rgba(255, 255, 255, 0.15) !important;
+        justify-content: flex-start !important;
+        align-items: flex-start !important;
+        display: flex !important;
+        flex-wrap: wrap !important;
+    }
+    
     [data-theme="dark"] button[data-baseweb="tab"],
-    .stApp[data-theme="dark"] div[data-baseweb="tab-list"],
     .stApp[data-theme="dark"] button[data-baseweb="tab"] {
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.3), rgba(147, 51, 234, 0.3)) !important;
         color: rgba(255, 255, 255, 0.9) !important;
@@ -1014,3 +1446,22 @@ def apply_page_config():
 def apply_custom_css():
     """Apply custom CSS styling"""
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+# CSS Class utilities for use in components
+def get_status_class(status_type):
+    """Get the appropriate CSS class for status indicators"""
+    status_map = {
+        'success': 'status-success',
+        'good': 'status-success', 
+        'warning': 'status-warning',
+        'moderate': 'status-warning',
+        'danger': 'status-danger',
+        'error': 'status-danger',
+        'info': 'status-info'
+    }
+    return status_map.get(status_type.lower(), 'status-info')
+
+def format_status_text(text, status_type):
+    """Format status text with appropriate CSS class"""
+    css_class = get_status_class(status_type)
+    return f'<span class="{css_class}">{text}</span>'

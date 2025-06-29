@@ -6,7 +6,7 @@ from utils import get_performance_category
 
 def display_health_status(concentration_metrics, total_active, total_exited):
     """Display network health status"""
-    st.subheader("🏥 Network Health Status")
+    st.markdown("## 🏥 Network Health Status")
 
     # Calculate metrics for glass cards
     gini = concentration_metrics.get('gini_coefficient', 0)
@@ -15,27 +15,27 @@ def display_health_status(concentration_metrics, total_active, total_exited):
     total_ops = concentration_metrics.get('total_operators', 0)
     avg_validators = (total_active / total_ops) if total_ops > 0 else 0
 
-    # Determine status indicators
+    # Determine status indicators using semantic colors
     if gini < 0.5:
-        decentralization_status = "🟢 Good"
+        decentralization_status = '<span class="status-success">🟢 Good</span>'
     elif gini < 0.7:
-        decentralization_status = "🟡 Moderate"
+        decentralization_status = '<span class="status-warning">🟡 Moderate</span>'
     else:
-        decentralization_status = "🔴 Concentrated"
+        decentralization_status = '<span class="status-danger">🔴 Concentrated</span>'
 
     if exit_rate < 5:
-        exit_status = "🟢 Low"
+        exit_status = '<span class="status-success">🟢 Low</span>'
     elif exit_rate < 15:
-        exit_status = "🟡 Moderate"
+        exit_status = '<span class="status-warning">🟡 Moderate</span>'
     else:
-        exit_status = "🔴 High"
+        exit_status = '<span class="status-danger">🔴 High</span>'
 
     if avg_validators < 50:
-        operator_size_status = "🟢 Low"
+        operator_size_status = '<span class="status-success">🟢 Low</span>'
     elif avg_validators <= 100:
-        operator_size_status = "🟡 Moderate"
+        operator_size_status = '<span class="status-warning">🟡 Moderate</span>'
     else:
-        operator_size_status = "🔴 High"
+        operator_size_status = '<span class="status-danger">🔴 High</span>'
 
     # Create glass-morphism cards for health status
     st.markdown("""
@@ -64,7 +64,7 @@ def display_performance_health(operator_performance, operator_validators):
     if not operator_performance:
         return
 
-    st.subheader("🎯 Performance Health Status")
+    st.markdown("## 🎯 Performance Health Status")
 
     total_weighted_performance = 0
     total_validators = 0
@@ -86,20 +86,20 @@ def display_performance_health(operator_performance, operator_validators):
     performances = list(operator_performance.values())
     perf_std = np.std(performances) if performances else 0
 
-    # Determine status indicators
+    # Determine status indicators using semantic colors
     if avg_performance >= 99:
-        perf_status = "🟢 Excellent"
+        perf_status = '<span class="status-success">🟢 Excellent</span>'
     elif avg_performance >= 98:
-        perf_status = "🟡 Good"
+        perf_status = '<span class="status-warning">🟡 Good</span>'
     else:
-        perf_status = "🔴 Needs Attention"
+        perf_status = '<span class="status-danger">🔴 Needs Attention</span>'
 
     if perf_std < 1.0:
-        consistency_status = "🟢 Consistent"
+        consistency_status = '<span class="status-success">🟢 Consistent</span>'
     elif perf_std < 2.5:
-        consistency_status = "🟡 Variable"
+        consistency_status = '<span class="status-warning">🟡 Variable</span>'
     else:
-        consistency_status = "🔴 Inconsistent"
+        consistency_status = '<span class="status-danger">🔴 Inconsistent</span>'
 
     # Create glass-morphism cards for performance health
     st.markdown("""
@@ -133,7 +133,7 @@ def display_ens_status(ens_names, operator_validators):
     if not ens_names:
         return
 
-    st.subheader("🏷️ ENS Name Resolution Status")
+    st.markdown("## 🏷️ ENS Name Resolution Status")
 
     total_operators = len(operator_validators)
     ens_resolved = len(ens_names)
@@ -144,13 +144,13 @@ def display_ens_status(ens_names, operator_validators):
     total_validators = sum(operator_validators.values())
     validator_coverage = (validators_with_ens / total_validators * 100) if total_validators > 0 else 0
 
-    # Determine coverage status
+    # Determine coverage status using semantic colors
     if coverage_pct >= 50:
-        coverage_status = "🟢 Good"
+        coverage_status = '<span class="status-success">🟢 Good</span>'
     elif coverage_pct >= 25:
-        coverage_status = "🟡 Moderate"
+        coverage_status = '<span class="status-warning">🟡 Moderate</span>'
     else:
-        coverage_status = "🔴 Low"
+        coverage_status = '<span class="status-danger">🔴 Low</span>'
 
     # Create glass-morphism cards for ENS status
     st.markdown("""
@@ -270,7 +270,7 @@ def display_cache_info(cache_file, last_block, ens_last_updated):
         ens_update_time = datetime.fromtimestamp(ens_last_updated)
         ens_update_str = f" • 🏷️ ENS: {ens_update_time.strftime('%H:%M:%S')}"
 
-    st.caption(f"📊 Block: {last_block:,} • 🕘 {last_update.strftime('%H:%M:%S')}{ens_update_str} • 📁 {cache_file.split('/')[-1]}")
+    st.markdown(f'<p class="text-sm">📊 Block: {last_block:,} • 🕘 {last_update.strftime("%H:%M:%S")}{ens_update_str} • 📁 {cache_file.split("/")[-1]}</p>', unsafe_allow_html=True)
 
 def show_refresh_button():
     """Show refresh button"""

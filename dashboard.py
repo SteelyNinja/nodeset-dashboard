@@ -1342,29 +1342,41 @@ def create_sync_committee_tab(ens_names):
 
 def create_exit_analysis_tab(operator_validators, operator_exited, ens_names):
     """Create the exit analysis tab"""
-    st.subheader("🚪 Exit Analysis")
+    st.markdown("## 🚪 Exit Analysis")
     
     # Load exit data
     exit_data, exit_file = load_exit_data()
     
     if exit_data:
-        # Display exit summary
+        # Display exit summary using glass cards
         exit_summary = exit_data.get('exit_summary', {})
         if exit_summary:
-            col1, col2, col3, col4 = st.columns(4)
-            with col1:
-                st.metric("Total Exited", exit_summary.get('total_exited', 0))
-            with col2:
-                st.metric("Total Active", exit_summary.get('total_active', 0))
-            with col3:
-                st.metric("Exit Rate", f"{exit_summary.get('exit_rate_percent', 0):.2f}%")
-            with col4:
-                last_updated = exit_summary.get('last_updated', 0)
-                if last_updated:
-                    update_time = datetime.fromtimestamp(last_updated).strftime('%Y-%m-%d %H:%M')
-                    st.metric("Last Updated", update_time)
+            total_exited = exit_summary.get('total_exited', 0)
+            total_active = exit_summary.get('total_active', 0)
+            exit_rate = exit_summary.get('exit_rate_percent', 0)
+            
+            # Create glass-morphism cards for exit analysis
+            st.markdown("""
+                <div class="glass-cards-grid">
+                    <div class="glass-card">
+                        <div class="glass-card-title">Total Exited</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">Validators that have exited</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Total Active</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">Currently active validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">Exit Rate</div>
+                        <div class="glass-card-value">{:.2f}%</div>
+                        <div class="glass-card-caption">Percentage of validators exited</div>
+                    </div>
+                </div>
+            """.format(total_exited, total_active, exit_rate), unsafe_allow_html=True)
 
-        st.subheader("Operators with Exits")
+        st.markdown("### Operators with Exits")
         
         operators_with_exits = exit_data.get('operators_with_exits', [])
         if operators_with_exits:
@@ -1417,7 +1429,7 @@ def create_exit_analysis_tab(operator_validators, operator_exited, ens_names):
             # Recent exits detail table
             recent_exits = exit_data.get('recent_exits', [])
             if recent_exits:
-                st.subheader("Recent Validator Exits")
+                st.markdown("### Recent Validator Exits")
                 st.info(f"Showing the most recent {len(recent_exits)} validator exits")
                 
                 recent_exits_data = []
