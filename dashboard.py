@@ -1797,12 +1797,14 @@ def create_gas_analysis_tab(ens_names):
             
             total_validators = sum(distribution.values())
             ultra_high = distribution.get('60000000', 0)
-            high = distribution.get('36000000', 0) 
+            high_45m = distribution.get('45000000', 0)
+            boosted = distribution.get('36000000', 0) 
             standard = distribution.get('30000000', 0)
             
             # Calculate percentages for glass cards
             ultra_pct = (ultra_high / total_validators * 100) if total_validators > 0 else 0
-            high_pct = (high / total_validators * 100) if total_validators > 0 else 0
+            high45_pct = (high_45m / total_validators * 100) if total_validators > 0 else 0
+            boosted_pct = (boosted / total_validators * 100) if total_validators > 0 else 0
             std_pct = (standard / total_validators * 100) if total_validators > 0 else 0
             consistency_rate = consistency_stats.get('consistency_rate', 0)
             
@@ -1810,12 +1812,17 @@ def create_gas_analysis_tab(ens_names):
             st.markdown("""
                 <div class="glass-cards-grid">
                     <div class="glass-card">
-                        <div class="glass-card-title">🔥🔥🔥 Ultra High Gas (60M)</div>
+                        <div class="glass-card-title">🔥🔥🔥 Ultra Gas (60M+)</div>
                         <div class="glass-card-value">{:,}</div>
                         <div class="glass-card-caption">{:.1f}% of validators</div>
                     </div>
                     <div class="glass-card">
-                        <div class="glass-card-title">🔥🔥 High Gas (36M)</div>
+                        <div class="glass-card-title">🔥🔥 High Gas (45M)</div>
+                        <div class="glass-card-value">{:,}</div>
+                        <div class="glass-card-caption">{:.1f}% of validators</div>
+                    </div>
+                    <div class="glass-card">
+                        <div class="glass-card-title">🔥 Boosted Gas (36M)</div>
                         <div class="glass-card-value">{:,}</div>
                         <div class="glass-card-caption">{:.1f}% of validators</div>
                     </div>
@@ -1830,7 +1837,7 @@ def create_gas_analysis_tab(ens_names):
                         <div class="glass-card-caption">Gas strategy consistency</div>
                     </div>
                 </div>
-            """.format(ultra_high, ultra_pct, high, high_pct, standard, std_pct, consistency_rate), unsafe_allow_html=True)
+            """.format(ultra_high, ultra_pct, high_45m, high45_pct, boosted, boosted_pct, standard, std_pct, consistency_rate), unsafe_allow_html=True)
             
             # Gas limit distribution chart
             fig_distribution = create_gas_limit_distribution_chart(mev_data)
