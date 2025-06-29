@@ -204,7 +204,7 @@ def display_network_overview(cache, operator_validators, operator_exited):
     st.markdown("""
         <div class="glass-cards-grid">
             <div class="glass-card">
-                <div class="glass-card-title">Total Deposited Validators</div>
+                <div class="glass-card-title">Deposited Validators</div>
                 <div class="glass-card-value">{:,}</div>
                 <div class="glass-card-caption">All validators deposited</div>
             </div>
