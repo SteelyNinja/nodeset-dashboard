@@ -373,7 +373,7 @@ def create_client_diversity_pie_charts(client_data):
                 yanchor="middle",
                 y=0.5,
                 xanchor="left",
-                x=0.78
+                x=0.80
             )
         )
         fig_execution = make_chart_responsive(fig_execution)
