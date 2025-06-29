@@ -1812,22 +1812,22 @@ def create_gas_analysis_tab(ens_names):
             st.markdown("""
                 <div class="glass-cards-grid">
                     <div class="glass-card">
-                        <div class="glass-card-title">🔥🔥🔥 Ultra Gas (60M+)</div>
+                        <div class="glass-card-title">🔥🔥🔥🔥 Ultra (60M+)</div>
                         <div class="glass-card-value">{:,}</div>
                         <div class="glass-card-caption">{:.1f}% of validators</div>
                     </div>
                     <div class="glass-card">
-                        <div class="glass-card-title">🔥🔥 High Gas (45M)</div>
+                        <div class="glass-card-title">🔥🔥🔥 High (45M)</div>
                         <div class="glass-card-value">{:,}</div>
                         <div class="glass-card-caption">{:.1f}% of validators</div>
                     </div>
                     <div class="glass-card">
-                        <div class="glass-card-title">🔥 Boosted Gas (36M)</div>
+                        <div class="glass-card-title">🔥🔥 Normal (36M)</div>
                         <div class="glass-card-value">{:,}</div>
                         <div class="glass-card-caption">{:.1f}% of validators</div>
                     </div>
                     <div class="glass-card">
-                        <div class="glass-card-title">🔥 Standard Gas (30M)</div>
+                        <div class="glass-card-title">🔥 Low (30M)</div>
                         <div class="glass-card-value">{:,}</div>
                         <div class="glass-card-caption">{:.1f}% of validators</div>
                     </div>

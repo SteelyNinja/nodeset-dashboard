@@ -236,16 +236,16 @@ def create_gas_limit_distribution_chart(mev_data):
     for gas_limit, count in distribution.items():
         gas_limit_int = int(gas_limit)
         if gas_limit_int >= 60000000:
-            label = f"Ultra Gas\n{gas_limit_int//1000000}M gas"
+            label = f"Ultra\n{gas_limit_int//1000000}M gas"
             color = '#CC0000'  # Deep Red
         elif gas_limit_int >= 45000000:
-            label = f"High Gas\n{gas_limit_int//1000000}M gas"
+            label = f"High\n{gas_limit_int//1000000}M gas"
             color = '#FF4444'  # Red
         elif gas_limit_int >= 36000000:
-            label = f"Boosted Gas\n{gas_limit_int//1000000}M gas"
+            label = f"Normal\n{gas_limit_int//1000000}M gas"
             color = '#FF8800'  # Orange
         else:
-            label = f"Standard Gas\n{gas_limit_int//1000000}M gas"
+            label = f"Low\n{gas_limit_int//1000000}M gas"
             color = '#4488FF'  # Blue
         
         gas_data.append({
@@ -300,10 +300,10 @@ def create_operator_gas_strategy_chart(gas_data):
     
     # Assign colors based on gas level
     color_map = {
-        'Ultra Gas (60M+)': '#CC0000',
-        'High Gas (45M)': '#FF4444',
-        'Boosted Gas (36M)': '#FF8800', 
-        'Standard Gas (30M)': '#4488FF',
+        'Ultra (60M+)': '#CC0000',
+        'High (45M)': '#FF4444',
+        'Normal (36M)': '#FF8800', 
+        'Low (30M)': '#4488FF',
         'Conservative': '#88FF88'
     }
     colors = [color_map.get(label, '#CCCCCC') for label in labels]

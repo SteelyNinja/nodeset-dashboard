@@ -94,16 +94,16 @@ def analyze_gas_limits_by_operator(mev_data, ens_names):
             # Categorize gas limit approach
             max_gas = max(gas_limits)
             if max_gas >= 60000000:
-                gas_category = "Ultra Gas (60M+)"
+                gas_category = "Ultra (60M+)"
                 gas_emoji = "🔥🔥🔥🔥"
             elif max_gas >= 45000000:
-                gas_category = "High Gas (45M)"
+                gas_category = "High (45M)"
                 gas_emoji = "🔥🔥🔥"
             elif max_gas >= 36000000:
-                gas_category = "Boosted Gas (36M)"
+                gas_category = "Normal (36M)"
                 gas_emoji = "🔥🔥"
             elif max_gas >= 30000000:
-                gas_category = "Standard Gas (30M)"
+                gas_category = "Low (30M)"
                 gas_emoji = "🔥"
             else:
                 gas_category = "Conservative"
