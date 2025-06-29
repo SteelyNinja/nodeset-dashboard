@@ -207,7 +207,14 @@ def create_concentration_curve(operator_validators):
         xaxis_title="Cumulative % of Operators",
         yaxis_title="Cumulative % of Validators",
         height=500,
-        hovermode='x unified'
+        hovermode='x unified',
+        legend=dict(
+            orientation="v",
+            yanchor="top",
+            y=0.95,
+            xanchor="left",
+            x=0.02
+        )
     )
     fig = make_chart_responsive(fig)
 
@@ -309,7 +316,14 @@ def create_operator_gas_strategy_chart(gas_data):
     fig.update_layout(
         title="🎯 Operator Gas Strategy Distribution",
         height=600,
-        showlegend=True
+        showlegend=True,
+        legend=dict(
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
+            x=0.80
+        )
     )
     fig = make_chart_responsive(fig)
     
@@ -343,15 +357,24 @@ def create_client_diversity_pie_charts(client_data):
             values=exec_values,
             hole=0.4,
             marker_colors=exec_chart_colors,
-            textinfo='label+percent+value',
-            textposition='outside'
+            textinfo='percent',
+            textposition='inside',
+            textfont=dict(size=12, color='white')
         )])
         
         fig_execution.update_layout(
             title="⚙️ Execution Clients",
             height=400,
             showlegend=True,
-            font=dict(size=11, color='rgba(255,255,255,0.9)')
+            font=dict(size=10, color='rgba(255,255,255,0.9)'),
+            margin=dict(l=10, r=10, t=50, b=10),
+            legend=dict(
+                orientation="v",
+                yanchor="middle",
+                y=0.5,
+                xanchor="left",
+                x=0.78
+            )
         )
         fig_execution = make_chart_responsive(fig_execution)
     else:
@@ -384,15 +407,24 @@ def create_client_diversity_pie_charts(client_data):
             values=cons_values,
             hole=0.4,
             marker_colors=cons_chart_colors,
-            textinfo='label+percent+value',
-            textposition='outside'
+            textinfo='percent',
+            textposition='inside',
+            textfont=dict(size=12, color='white')
         )])
         
         fig_consensus.update_layout(
             title="🏛️ Consensus Clients",
             height=400,
             showlegend=True,
-            font=dict(size=11, color='rgba(255,255,255,0.9)')
+            font=dict(size=10, color='rgba(255,255,255,0.9)'),
+            margin=dict(l=10, r=10, t=50, b=10),
+            legend=dict(
+                orientation="v",
+                yanchor="middle",
+                y=0.5,
+                xanchor="left",
+                x=0.80
+            )
         )
         fig_consensus = make_chart_responsive(fig_consensus)
     else:
@@ -422,15 +454,24 @@ def create_client_diversity_pie_charts(client_data):
             values=setup_values,
             hole=0.4,
             marker_colors=setup_chart_colors,
-            textinfo='label+percent+value',
-            textposition='outside'
+            textinfo='percent',
+            textposition='inside',
+            textfont=dict(size=12, color='white')
         )])
         
         fig_setup.update_layout(
             title="🏠 Setup Type",
             height=400,
             showlegend=True,
-            font=dict(size=11, color='rgba(255,255,255,0.9)')
+            font=dict(size=10, color='rgba(255,255,255,0.9)'),
+            margin=dict(l=10, r=10, t=50, b=10),
+            legend=dict(
+                orientation="v",
+                yanchor="middle",
+                y=0.5,
+                xanchor="left",
+                x=0.85
+            )
         )
         fig_setup = make_chart_responsive(fig_setup)
     else:
