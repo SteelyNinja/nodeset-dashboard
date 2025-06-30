@@ -1,3 +1,20 @@
+import psutil
+
+def get_memory_usage():
+    """Get current memory usage statistics"""
+    # Get current process memory info
+    process = psutil.Process()
+    memory_info = process.memory_info()
+    
+    # Memory usage in MB
+    memory_mb = memory_info.rss / (1024 * 1024)
+    
+    # Calculate percentage of Streamlit's 1GB limit
+    streamlit_limit_mb = 1024  # 1GB in MB
+    memory_percentage = (memory_mb / streamlit_limit_mb) * 100
+    
+    return memory_mb, memory_percentage
+
 def format_operator_display(address: str, ens_names: dict, short: bool = False) -> str:
     """Format operator display with ENS name if available"""
     ens_name = ens_names.get(address)

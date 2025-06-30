@@ -4,6 +4,47 @@ import os
 from datetime import datetime
 from utils import get_performance_category
 
+def responsive_columns(column_spec):
+    """Create responsive columns that work better at 125% zoom
+    
+    Args:
+        column_spec: Either an integer (equal columns) or list of ratios
+    
+    Returns:
+        Streamlit columns with responsive design considerations
+    """
+    # Add CSS for responsive column behavior
+    st.markdown("""
+    <style>
+    /* Responsive column fixes for 125% zoom */
+    @media (max-width: 1600px) {
+        div[data-testid="column"] {
+            min-width: 200px !important;
+        }
+    }
+    
+    @media (max-width: 1280px) {
+        div[data-testid="column"] {
+            min-width: 180px !important;
+        }
+    }
+    
+    @media (max-width: 1024px) {
+        div[data-testid="column"] {
+            min-width: 160px !important;
+            margin-bottom: 1rem !important;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Create columns with the original specification
+    # Streamlit will handle the responsive behavior with our CSS
+    if isinstance(column_spec, int):
+        return st.columns(column_spec)
+    else:
+        return st.columns(column_spec)
+
 def display_health_status(concentration_metrics, total_active, total_exited):
     """Display network health status"""
     st.markdown("## 🏥 Network Health Status")
@@ -279,3 +320,145 @@ def show_refresh_button():
         if st.button("🔄 Refresh Data", help="Reload validator data", use_container_width=True):
             st.cache_data.clear()
             st.rerun()
+
+def display_health_summary(cache, operator_validators, operator_exited, operator_performance, 
+                          ens_names, concentration_metrics, total_active, total_exited, 
+                          total_activated, total_queued):
+    """Display comprehensive health summary"""
+    
+    if concentration_metrics:
+        gini = concentration_metrics.get('gini_coefficient', 0)
+        total_ops = concentration_metrics.get('total_operators', 0)
+        avg_validators = (total_active / total_ops) if total_ops > 0 else 0
+        
+        activation_rate = (total_activated / (total_activated + total_queued) * 100) if (total_activated + total_queued) > 0 else 0
+        exit_rate = (total_exited / (total_active + total_exited) * 100) if (total_active + total_exited) > 0 else 0
+
+        health_indicators = []
+        if gini < 0.5:
+            health_indicators.append("🟢 Well Decentralized")
+        elif gini < 0.7:
+            health_indicators.append("🟡 Moderately Decentralized")
+        else:
+            health_indicators.append("🔴 Concentrated")
+
+        if exit_rate < 5:
+            health_indicators.append("🟢 Low Exit Rate")
+        elif exit_rate < 15:
+            health_indicators.append("🟡 Moderate Exits")
+        else:
+            health_indicators.append("🔴 High Exits")
+
+        if avg_validators < 50:
+            health_indicators.append("🟢 Small Operators")
+        elif avg_validators <= 100:
+            health_indicators.append("🟡 Medium Operators")
+        else:
+            health_indicators.append("🔴 Large Operators")
+
+        if activation_rate >= 95:
+            health_indicators.append("🟢 Fully Activated")
+        elif activation_rate >= 85:
+            health_indicators.append("🟡 Mostly Activated")
+        else:
+            health_indicators.append("🔴 Activation Pending")
+
+        st.markdown(f"<div class='health-summary'><strong>Network Health:</strong> {' • '.join(health_indicators)}</div>", unsafe_allow_html=True)
+
+    # Performance health summary
+    if operator_performance:
+        total_weighted_performance = 0
+        total_validators_perf = 0
+        perf_categories = {'Excellent': 0, 'Good': 0, 'Average': 0, 'Poor': 0}
+
+        for addr, performance in operator_performance.items():
+            validator_count = operator_validators.get(addr, 0)
+            if validator_count > 0:
+                total_weighted_performance += performance * validator_count
+                total_validators_perf += validator_count
+                perf_categories[get_performance_category(performance)] += validator_count
+
+        avg_performance = total_weighted_performance / total_validators_perf if total_validators_perf > 0 else 0
+        excellent_pct = (perf_categories['Excellent'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
+        poor_pct = (perf_categories['Poor'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
+
+        perf_status = []
+        if avg_performance >= 99:
+            perf_status.append("🟢 Excellent Performance")
+        elif avg_performance >= 98:
+            perf_status.append("🟡 Good Performance")
+        else:
+            perf_status.append("🔴 Performance Issues")
+
+        perf_status.append(f"{excellent_pct:.1f}% Excellent")
+        if poor_pct > 0:
+            perf_status.append(f"{poor_pct:.1f}% Poor")
+
+        st.markdown(f"<div class='health-summary'><strong>Performance Health (24 hours):</strong> {' • '.join(perf_status)}</div>", unsafe_allow_html=True)
+
+    # ENS summary
+    if ens_names:
+        ens_coverage = len(ens_names) / len(operator_validators) * 100 if operator_validators else 0
+        validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
+        validator_coverage = validators_with_ens / total_active * 100 if total_active > 0 else 0
+
+        st.markdown(f"<div class='health-summary'><strong>ENS Resolution:</strong> {len(ens_names)} names found • {ens_coverage:.1f}% operator coverage • {validator_coverage:.1f}% validator coverage</div>", unsafe_allow_html=True)
+
+    # Add the detailed health metrics expander
+    with st.expander("🔍 Detailed Metrics"):
+        if concentration_metrics:
+            detail_col1, detail_col2, detail_col3, detail_col4 = responsive_columns([1, 1, 1, 1])
+            
+            with detail_col1:
+                st.markdown("**Decentralization Metrics**")
+                st.write(f"• Gini Coefficient: {gini:.3f}")
+                st.write(f"• Top 1 Operator: {concentration_metrics['top_1_concentration']:.1f}%")
+                st.write(f"• Top 5 Operators: {concentration_metrics['top_5_concentration']:.1f}%")
+                st.write(f"• Average Validators/Operator: {avg_validators:.1f}")
+
+            with detail_col2:
+                if operator_performance:
+                    st.markdown("**Performance Metrics**")
+                    # Calculate the performance metrics here
+                    total_weighted_performance = 0
+                    total_validators_perf = 0
+                    perf_categories = {'Excellent': 0, 'Good': 0, 'Average': 0, 'Poor': 0}
+
+                    for addr, performance in operator_performance.items():
+                        validator_count = operator_validators.get(addr, 0)
+                        if validator_count > 0:
+                            total_weighted_performance += performance * validator_count
+                            total_validators_perf += validator_count
+                            perf_categories[get_performance_category(performance)] += validator_count
+
+                    avg_performance = total_weighted_performance / total_validators_perf if total_validators_perf > 0 else 0
+                    excellent_pct = (perf_categories['Excellent'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
+                    poor_pct = (perf_categories['Poor'] / total_validators_perf * 100) if total_validators_perf > 0 else 0
+                    
+                    st.write(f"• Network Average: {avg_performance:.2f}%")
+                    st.write(f"• Excellent Performers: {excellent_pct:.1f}%")
+                    st.write(f"• Poor Performers: {poor_pct:.1f}%")
+                    performances = list(operator_performance.values())
+                    st.write(f"• Performance Std Dev: {np.std(performances):.2f}%")
+
+            with detail_col3:
+                if ens_names:
+                    st.markdown("**ENS Resolution Metrics**")
+                    ens_coverage = len(ens_names) / len(operator_validators) * 100 if operator_validators else 0
+                    validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
+                    validator_coverage = validators_with_ens / total_active * 100 if total_active > 0 else 0
+                    
+                    st.write(f"• Total ENS Names: {len(ens_names)}")
+                    st.write(f"• Operator Coverage: {ens_coverage:.1f}%")
+                    st.write(f"• Validator Coverage: {validator_coverage:.1f}%")
+                    if cache.get('ens_last_updated', 0) > 0:
+                        ens_last_updated = cache.get('ens_last_updated', 0)
+                        hours_ago = (datetime.now().timestamp() - ens_last_updated) / 3600
+                        st.write(f"• Last Updated: {hours_ago:.1f}h ago")
+
+            with detail_col4:
+                st.markdown("**Activation Metrics**")
+                activation_rate = (total_activated / (total_activated + total_queued) * 100) if (total_activated + total_queued) > 0 else 0
+                st.write(f"• Activation Rate: {activation_rate:.1f}%")
+                st.write(f"• Activated Count: {total_activated:,}")
+                st.write(f"• Queue Count: {total_queued:,}")
