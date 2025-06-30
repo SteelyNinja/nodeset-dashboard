@@ -2029,42 +2029,39 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
     try:
         memory_mb, memory_percentage = get_memory_usage()
         
-        col1, col2, col3 = st.columns(3)
+        # Color code based on usage percentage
+        if memory_percentage < 70:
+            status_emoji = "🟢"
+            status_text = "Good"
+        elif memory_percentage < 85:
+            status_emoji = "🟡"
+            status_text = "Warning"
+        else:
+            status_emoji = "🔴"
+            status_text = "Critical"
         
-        with col1:
-            st.metric(
-                "Current Memory Usage", 
-                f"{memory_mb:.1f} MB",
-                help="Current memory usage of the Streamlit application"
-            )
+        remaining_mb = 1024 - memory_mb
         
-        with col2:
-            # Color code based on usage percentage
-            if memory_percentage < 70:
-                color_class = "status-good"
-                status_emoji = "🟢"
-            elif memory_percentage < 85:
-                color_class = "status-warning" 
-                status_emoji = "🟡"
-            else:
-                color_class = "status-danger"
-                status_emoji = "🔴"
-            
-            st.metric(
-                "Streamlit Limit Usage",
-                f"{memory_percentage:.1f}%",
-                help="Percentage of Streamlit's 1GB memory limit used"
-            )
-            st.markdown(f"<span class='{color_class}'>{status_emoji} {memory_percentage:.1f}% of 1GB limit</span>", 
-                       unsafe_allow_html=True)
-        
-        with col3:
-            remaining_mb = 1024 - memory_mb
-            st.metric(
-                "Memory Remaining",
-                f"{remaining_mb:.1f} MB",
-                help="Remaining memory before hitting Streamlit's 1GB limit"
-            )
+        # Create glass-morphism cards for memory usage
+        st.markdown(f"""
+            <div class="glass-cards-grid">
+                <div class="glass-card">
+                    <div class="glass-card-title">Current Usage</div>
+                    <div class="glass-card-value">{memory_mb:.1f}</div>
+                    <div class="glass-card-caption">MB currently used</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Limit Usage</div>
+                    <div class="glass-card-value">{status_emoji} {memory_percentage:.1f}%</div>
+                    <div class="glass-card-caption">{status_text} - of 1GB limit</div>
+                </div>
+                <div class="glass-card">
+                    <div class="glass-card-title">Memory Remaining</div>
+                    <div class="glass-card-value">{remaining_mb:.1f}</div>
+                    <div class="glass-card-caption">MB available</div>
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
     
     except ImportError:
         st.warning("⚠️ Install 'psutil' package to see memory usage: `pip install psutil`")
