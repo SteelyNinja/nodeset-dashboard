@@ -941,7 +941,7 @@ def create_proposals_tab(ens_names):
                 hide_index=True,
                 column_config={
                     "MEV Relay": st.column_config.TextColumn("MEV Relay", width="large"),
-                    "Proposals": st.column_config.NumberColumn("Proposals", width="small"),
+                    "Proposals": st.column_config.TextColumn("Proposals", width="small"),
                     "Percentage": st.column_config.TextColumn("Percentage", width="small")
                 }
             )
@@ -1005,10 +1005,10 @@ def create_proposals_tab(ens_names):
                     hide_index=True,
                     column_config={
                         "Date & Time": st.column_config.TextColumn("Date & Time", width="medium"),
-                        "Slot Number": st.column_config.NumberColumn("Slot Number", width="small"),
+                        "Slot Number": st.column_config.TextColumn("Slot Number", width="small"),
                         "Operator Name": st.column_config.TextColumn("Operator Name", width="medium"),
-                        "Total Missed": st.column_config.NumberColumn("Total Missed", width="small"),
-                        "Total Successful": st.column_config.NumberColumn("Total Successful", width="small"),
+                        "Total Missed": st.column_config.TextColumn("Total Missed", width="small"),
+                        "Total Successful": st.column_config.TextColumn("Total Successful", width="small"),
                         "Missed %": st.column_config.TextColumn("Missed %", width="small")
                     }
                 )
@@ -1269,7 +1269,7 @@ def create_sync_committee_tab(ens_names):
                     "Address": st.column_config.TextColumn("Address", width="large"),
                     "ENS / Discord Name": st.column_config.TextColumn("ENS / Discord Name", width="medium"),
                     "Participation Rate": st.column_config.TextColumn("Participation Rate", width="small"),
-                    "Total Periods": st.column_config.NumberColumn("Periods", width="small"),
+                    "Total Periods": st.column_config.TextColumn("Periods", width="small"),
                     "Total Slots": st.column_config.TextColumn("Total Slots", width="small"),
                     "Successful": st.column_config.TextColumn("Successful", width="small"),
                     "Missed": st.column_config.TextColumn("Missed", width="small")
@@ -1302,7 +1302,7 @@ def create_sync_committee_tab(ens_names):
                 hide_index=True,
                 column_config={
                     "Period": st.column_config.TextColumn("Period", width="small"),
-                    "Validators": st.column_config.NumberColumn("Validators", width="small"),
+                    "Validators": st.column_config.TextColumn("Validators", width="small"),
                     "Total Slots": st.column_config.TextColumn("Total Slots", width="small"),
                     "Successful": st.column_config.TextColumn("Successful", width="small"),
                     "Missed": st.column_config.TextColumn("Missed", width="small"),
@@ -1359,14 +1359,14 @@ def create_sync_committee_tab(ens_names):
                     column_config={
                         "Period": st.column_config.TextColumn("Period", width="small"),
                         "Operator": st.column_config.TextColumn("Operator", width="medium"),
-                        "Validator Index": st.column_config.NumberColumn("Val Index", width="small"),
+                        "Validator Index": st.column_config.TextColumn("Val Index", width="small"),
                         "Validator Pubkey": st.column_config.TextColumn("Validator Pubkey", width="large"),
                         "Participation Rate": st.column_config.TextColumn("Participation Rate", width="small"),
                         "Total Slots": st.column_config.TextColumn("Total Slots", width="small"),
                         "Successful": st.column_config.TextColumn("Successful", width="small"),
                         "Missed": st.column_config.TextColumn("Missed", width="small"),
-                        "Start Epoch": st.column_config.NumberColumn("Start Epoch", width="small"),
-                        "End Epoch": st.column_config.NumberColumn("End Epoch", width="small"),
+                        "Start Epoch": st.column_config.TextColumn("Start Epoch", width="small"),
+                        "End Epoch": st.column_config.TextColumn("End Epoch", width="small"),
                         "Partial Period": st.column_config.TextColumn("Partial", width="small")
                     }
                 )
