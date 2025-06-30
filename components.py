@@ -402,7 +402,7 @@ def display_health_summary(cache, operator_validators, operator_exited, operator
         validators_with_ens = sum(operator_validators.get(addr, 0) for addr in ens_names.keys())
         validator_coverage = validators_with_ens / total_active * 100 if total_active > 0 else 0
 
-        st.markdown(f"<div class='health-summary'><strong>ENS Resolution:</strong> {len(ens_names)} names found • {ens_coverage:.1f}% operator coverage • {validator_coverage:.1f}% validator coverage</div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='health-summary'><strong>ENS / Discord Name Resolution:</strong> {len(ens_names)} names found • {ens_coverage:.1f}% operator coverage • {validator_coverage:.1f}% validator coverage</div>", unsafe_allow_html=True)
 
     # Add the detailed health metrics expander
     with st.expander("🔍 Detailed Metrics"):
