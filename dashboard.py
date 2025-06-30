@@ -21,6 +21,47 @@ from components import (display_health_status, display_performance_health, displ
                        display_network_overview, display_cache_info, show_refresh_button)
 from utils import format_operator_display_plain, get_performance_category
 
+def responsive_columns(column_spec):
+    """Create responsive columns that work better at 125% zoom
+    
+    Args:
+        column_spec: Either an integer (equal columns) or list of ratios
+    
+    Returns:
+        Streamlit columns with responsive design considerations
+    """
+    # Add CSS for responsive column behavior
+    st.markdown("""
+    <style>
+    /* Responsive column fixes for 125% zoom */
+    @media (max-width: 1600px) {
+        div[data-testid="column"] {
+            min-width: 200px !important;
+        }
+    }
+    
+    @media (max-width: 1280px) {
+        div[data-testid="column"] {
+            min-width: 180px !important;
+        }
+    }
+    
+    @media (max-width: 1024px) {
+        div[data-testid="column"] {
+            min-width: 160px !important;
+            margin-bottom: 1rem !important;
+        }
+    }
+    </style>
+    """, unsafe_allow_html=True)
+    
+    # Create columns with the original specification
+    # Streamlit will handle the responsive behavior with our CSS
+    if isinstance(column_spec, int):
+        return st.columns(column_spec)
+    else:
+        return st.columns(column_spec)
+
 def get_memory_usage():
     """Get current memory usage statistics"""
     # Get current process memory info
@@ -281,7 +322,7 @@ def display_health_summary(cache, operator_validators, operator_exited, operator
     # Add the detailed health metrics expander
     with st.expander("🔍 Detailed Metrics"):
         if concentration_metrics:
-            detail_col1, detail_col2, detail_col3, detail_col4 = st.columns([1, 1, 1, 1])
+            detail_col1, detail_col2, detail_col3, detail_col4 = responsive_columns([1, 1, 1, 1])
             
             with detail_col1:
                 st.markdown("**Decentralization Metrics**")
@@ -465,7 +506,7 @@ def create_client_diversity_tab(ens_names):
     fig_execution, fig_consensus, fig_setup = create_client_diversity_pie_charts(client_diversity_data)
     
     if fig_execution and fig_consensus and fig_setup:
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = responsive_columns(3)
         
         with col1:
             st.plotly_chart(fig_execution, use_container_width=True)
@@ -1805,7 +1846,7 @@ def create_gas_analysis_tab(ens_names):
         
         if distribution:
             # Summary metrics
-            col1, col2, col3, col4 = st.columns(4)
+            col1, col2, col3, col4 = responsive_columns(4)
             
             total_validators = sum(distribution.values())
             ultra_high = distribution.get('60000000', 0)

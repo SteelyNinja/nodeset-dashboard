@@ -517,17 +517,58 @@ CUSTOM_CSS = """
         box-sizing: border-box !important;
     }
 
-    /* Allow legends to extend outside chart area, but contain main plot */
+    /* Improved chart legend positioning for 125% zoom and pie charts */
     div[data-testid="stPlotlyChart"] .plot-container,
     div[data-testid="stPlotlyChart"] .svg-container {
         max-width: 100% !important;
         overflow: visible !important;
+        position: relative !important;
     }
     
     /* Keep main plot elements contained but allow legend overflow */
     div[data-testid="stPlotlyChart"] .main-svg {
         max-width: 100% !important;
         overflow: visible !important;
+    }
+
+    /* Fix for pie chart legend collision issues at 125% zoom */
+    div[data-testid="stPlotlyChart"] .legend {
+        margin-left: 10px !important;
+        padding-left: 10px !important;
+    }
+
+    /* Plotly legend container fixes for responsive design */
+    .js-plotly-plot .legend {
+        word-wrap: break-word !important;
+        white-space: normal !important;
+        max-width: none !important;
+    }
+
+    /* Responsive chart sizing for 125% zoom */
+    @media (max-width: 1600px) {
+        div[data-testid="stPlotlyChart"] {
+            padding: 6px !important;
+        }
+        
+        div[data-testid="stPlotlyChart"] .js-plotly-plot {
+            min-height: 380px !important;
+        }
+    }
+
+    @media (max-width: 1280px) {
+        div[data-testid="stPlotlyChart"] {
+            padding: 4px !important;
+        }
+        
+        div[data-testid="stPlotlyChart"] .js-plotly-plot {
+            min-height: 360px !important;
+        }
+        
+        /* Better spacing for pie chart legends at higher zoom */
+        div[data-testid="stPlotlyChart"] .legend {
+            margin-left: 5px !important;
+            font-size: 12px !important;
+        }
     }
 
     /* Specifically target Plotly's modebar and other floating elements */
@@ -940,17 +981,33 @@ CUSTOM_CSS = """
         }
     }
 
-    /* Grid layout for glass cards */
+    /* Grid layout for glass cards - Responsive design for different zoom levels */
     .glass-cards-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
         gap: 1rem;
         margin: 1rem 0;
     }
 
-    @media (max-width: 768px) {
+    /* 125% zoom and medium screens (1280px at 125% = ~1024px effective) */
+    @media (max-width: 1280px) {
         .glass-cards-grid {
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 0.9rem;
+        }
+    }
+
+    /* 125% zoom and smaller screens (1024px at 125% = ~820px effective) */
+    @media (max-width: 1024px) {
+        .glass-cards-grid {
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 0.8rem;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .glass-cards-grid {
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
             gap: 0.75rem;
         }
     }
@@ -1207,7 +1264,7 @@ CUSTOM_CSS = """
 
     /* TAB STYLING - Consistent blue/dark theme for all tabs */
     
-    /* Tab container styling with sliding indicator */
+    /* Tab container styling with responsive design for 125% zoom */
     div[data-baseweb="tab-list"],
     .stTabs [data-baseweb="tab-list"] {
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(147, 51, 234, 0.15)) !important;
@@ -1222,12 +1279,30 @@ CUSTOM_CSS = """
         flex-wrap: wrap !important;
         position: relative !important;
         overflow: hidden !important;
+        gap: 2px !important;
+    }
+
+    /* Responsive tab spacing for different zoom levels */
+    @media (max-width: 1600px) {
+        div[data-baseweb="tab-list"],
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 1px !important;
+            padding: 3px !important;
+        }
+    }
+
+    @media (max-width: 1280px) {
+        div[data-baseweb="tab-list"],
+        .stTabs [data-baseweb="tab-list"] {
+            gap: 1px !important;
+            padding: 2px !important;
+        }
     }
 
     /* Simplified indicator - removed to avoid conflicts */
     /* Note: Sliding indicator removed to prevent Streamlit conflicts */
 
-    /* Individual tab buttons - enhanced transitions */
+    /* Individual tab buttons - responsive design for 125% zoom */
     button[data-baseweb="tab"],
     .stTabs button[data-baseweb="tab"] {
         background: linear-gradient(135deg, rgba(59, 130, 246, 0.25), rgba(147, 51, 234, 0.25)) !important;
@@ -1253,6 +1328,39 @@ CUSTOM_CSS = """
         position: relative !important;
         overflow: hidden !important;
         transform: scale(1) !important;
+        flex: 0 0 auto !important;
+        font-size: 14px !important;
+    }
+
+    /* Responsive tab sizing for 125% zoom levels */
+    @media (max-width: 1600px) {
+        button[data-baseweb="tab"],
+        .stTabs button[data-baseweb="tab"] {
+            padding: 10px 14px !important;
+            font-size: 13px !important;
+            min-height: 44px !important;
+            height: 44px !important;
+        }
+    }
+
+    @media (max-width: 1280px) {
+        button[data-baseweb="tab"],
+        .stTabs button[data-baseweb="tab"] {
+            padding: 8px 12px !important;
+            font-size: 12px !important;
+            min-height: 40px !important;
+            height: 40px !important;
+        }
+    }
+
+    @media (max-width: 1024px) {
+        button[data-baseweb="tab"],
+        .stTabs button[data-baseweb="tab"] {
+            padding: 6px 10px !important;
+            font-size: 11px !important;
+            min-height: 36px !important;
+            height: 36px !important;
+        }
     }
 
     /* Active tab styling with enhanced effects */

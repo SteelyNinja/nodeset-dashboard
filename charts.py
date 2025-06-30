@@ -4,12 +4,21 @@ import numpy as np
 from utils import format_operator_display_plain, get_performance_category
 
 def make_chart_responsive(fig):
-    """Apply responsive settings to any plotly figure"""
+    """Apply responsive settings to any plotly figure for better 125% zoom support"""
     fig.update_layout(
         autosize=True,
         margin=dict(l=50, r=50, t=60, b=80)
     )
     return fig
+
+def get_chart_config():
+    """Get responsive chart configuration for Streamlit plotly charts"""
+    return {
+        'responsive': True,
+        'displayModeBar': True,
+        'displaylogo': False,
+        'modeBarButtonsToRemove': ['pan2d', 'lasso2d', 'select2d']
+    }
 
 
 def create_performance_charts(operator_performance, operator_validators, ens_names):
@@ -121,7 +130,18 @@ def create_concentration_pie(operator_validators, ens_names, title="Validator Di
         title=title,
         showlegend=True,
         height=500,
-        font=dict(size=12)
+        font=dict(size=12),
+        legend=dict(
+            orientation="v",
+            yanchor="middle",
+            y=0.5,
+            xanchor="left",
+            x=0.85,
+            bgcolor="rgba(255,255,255,0.8)",
+            bordercolor="rgba(0,0,0,0.2)",
+            borderwidth=1
+        ),
+        margin=dict(l=10, r=150, t=60, b=10)
     )
     fig = make_chart_responsive(fig)
 
