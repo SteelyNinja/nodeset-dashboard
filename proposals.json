@@ -1,6 +1,6 @@
 {
   "metadata": {
-    "last_updated": "2025-06-30T18:15:54.374343",
+    "last_updated": "2025-06-30T18:33:02.723656",
     "total_proposals": 507,
     "total_value_eth": 41.7513647428,
     "total_consensus_eth": 23.091445186,
@@ -21,7 +21,7 @@
     "identified_proposals": 0,
     "identification_rate": 0.0,
     "client_distribution": {},
-    "analysis_timestamp": "2025-06-30T18:15:54.374339"
+    "analysis_timestamp": "2025-06-30T18:33:02.723649"
   },
   "operator_summary": {
     "0x93373F548355225C479bC7aA2380158ef868623e": {
