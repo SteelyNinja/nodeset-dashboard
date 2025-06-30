@@ -107,8 +107,20 @@
       "operator_name": "0xFc4bDa...22a058",
       "reason": "missed_proposal",
       "detection_method": "delayed_validation"
+    },
+    {
+      "slot": 12041790,
+      "epoch": 376305,
+      "timestamp": 1751325503,
+      "date": "2025-06-30 23:18:23",
+      "validator_index": 1894902,
+      "validator_pubkey": "0xb7e9c83e841ef407ac2c087edfd67ac4d0f3e7fe77820fe28da9876a4060866a1ab6a74bac93fd1c3567685dbdb01c93",
+      "operator": "0x3201F22151E7600779084CE59ca2f2854f68aeB4",
+      "operator_name": "nspv01.rocknet.eth (0x3201F2...68aeB4)",
+      "reason": "missed_proposal",
+      "detection_method": "delayed_validation"
     }
   ],
-  "last_checked_epoch": 376305,
-  "last_updated": 1751326247
+  "last_checked_epoch": 376308,
+  "last_updated": 1751327148
 }
