@@ -119,10 +119,22 @@
       "operator_name": "nspv01.rocknet.eth (0x3201F2...68aeB4)",
       "reason": "missed_proposal",
       "detection_method": "delayed_validation"
+    },
+    {
+      "slot": 12043984,
+      "epoch": 376374,
+      "timestamp": 1751351831,
+      "date": "2025-07-01 06:37:11",
+      "validator_index": 1937847,
+      "validator_pubkey": "0x8d5dfddc5406072a33bf5a129a4133741382f5f0f341bc2e1364483f1bfb8dc47c35edb2de5bf3d89a9d50d616621544",
+      "operator": "0xCcD704788d9c6B44ec8273BAdD8d0449E4B3FbD9",
+      "operator_name": "0xCcD704...B3FbD9",
+      "reason": "missed_proposal",
+      "detection_method": "delayed_validation"
     }
   ],
-  "last_checked_epoch": 376374,
-  "last_updated": 1751352500,
+  "last_checked_epoch": 376376,
+  "last_updated": 1751353251,
   "last_revalidation": 1751328204,
   "last_revalidation_date": "2025-07-01T00:03:24.927545"
 }
