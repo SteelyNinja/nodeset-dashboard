@@ -131,10 +131,22 @@
       "operator_name": "0xCcD704...B3FbD9",
       "reason": "missed_proposal",
       "detection_method": "delayed_validation"
+    },
+    {
+      "slot": 12045621,
+      "epoch": 376425,
+      "timestamp": 1751371475,
+      "date": "2025-07-01 12:04:35",
+      "validator_index": 1970591,
+      "validator_pubkey": "0x8e2d12fee745c1863a72719497cd011c336757a258805c923c170324e75806ce87d425066a6441a5ee1852e712cfc232",
+      "operator": "0xA981CEdD43E727BAD8E1B1D965fd19191351E7C6",
+      "operator_name": "0xA981CE...51E7C6",
+      "reason": "missed_proposal",
+      "detection_method": "delayed_validation"
     }
   ],
-  "last_checked_epoch": 376425,
-  "last_updated": 1751372150,
+  "last_checked_epoch": 376428,
+  "last_updated": 1751373203,
   "last_revalidation": 1751328204,
   "last_revalidation_date": "2025-07-01T00:03:24.927545"
 }
