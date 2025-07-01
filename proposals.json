@@ -1,13 +1,13 @@
 {
   "metadata": {
-    "last_updated": "2025-07-01T12:33:14.217492",
-    "total_proposals": 526,
-    "total_value_eth": 43.0894107643,
-    "total_consensus_eth": 23.879901296,
-    "total_execution_eth": 19.2095094683,
+    "last_updated": "2025-07-01T12:45:48.717756",
+    "total_proposals": 527,
+    "total_value_eth": 43.1761185035,
+    "total_consensus_eth": 23.926500818,
+    "total_execution_eth": 19.2496176855,
     "total_mev_eth": 18.9408069204,
     "mev_boost_blocks": 498,
-    "mev_boost_percentage": 94.67680608365019,
+    "mev_boost_percentage": 94.49715370018976,
     "operators_tracked": 142,
     "data_sources": [
       "local_lighthouse",
@@ -17,11 +17,11 @@
     "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti"
   },
   "client_diversity": {
-    "total_proposals": 526,
+    "total_proposals": 527,
     "identified_proposals": 0,
     "identification_rate": 0.0,
     "client_distribution": {},
-    "analysis_timestamp": "2025-07-01T12:33:14.217485"
+    "analysis_timestamp": "2025-07-01T12:45:48.717749"
   },
   "operator_summary": {
     "0x93373F548355225C479bC7aA2380158ef868623e": {
@@ -1257,14 +1257,14 @@
       "pool_signatures_percentage": 0.0
     },
     "0x273A7984f387F4C9fC623336B79664E399Ab7e84": {
-      "proposal_count": 4,
-      "total_value_eth": 0.3098594578,
-      "average_value_eth": 0.07746486445,
-      "consensus_rewards_eth": 0.18547232100000002,
-      "execution_rewards_eth": 0.1243871368,
+      "proposal_count": 5,
+      "total_value_eth": 0.396567197,
+      "average_value_eth": 0.07931343939999999,
+      "consensus_rewards_eth": 0.23207184300000003,
+      "execution_rewards_eth": 0.164495354,
       "mev_rewards_eth": 0.1243871368,
       "mev_blocks_count": 4,
-      "mev_blocks_percentage": 100.0,
+      "mev_blocks_percentage": 80.0,
       "clients_used": {},
       "primary_client": null,
       "pool_signatures_count": 0,
@@ -29382,6 +29382,58 @@
         "traditional_fees_wei": 0,
         "block_reward_wei": 54179908235296455,
         "producer_reward_wei": 35847569732177725
+      }
+    },
+    {
+      "slot": 12045824,
+      "epoch": 376432,
+      "timestamp": 1751373911,
+      "date": "2025-07-01 12:45:11",
+      "validator_index": 1905567,
+      "validator_pubkey": "0x988717436cf5fb4a8bb62a542c9f4004a4580fb92f7fb37e670d0bc8b2318ccf66e5913806a05aa388c79b4c5d4573fb",
+      "operator": "0x273A7984f387F4C9fC623336B79664E399Ab7e84",
+      "operator_name": "0x273A79...Ab7e84",
+      "total_value_wei": 8.670773921564454e+16,
+      "total_value_eth": 0.0867077392,
+      "block_number": 22824472,
+      "proposer_index": 1905567,
+      "fee_recipient": "0x95222290DD7278Aa3Ddd389Cc1E1d165CC4BAfe5",
+      "graffiti_hex": "0x4e534e4e582076312e322e320000000000000000000000000000000000000000",
+      "graffiti_text": "NSNNX v1.2.2",
+      "consensus_client": null,
+      "client_version": "1.2.2",
+      "has_pool_signature": false,
+      "consensus_reward_eth": 0.046599522,
+      "execution_fees_eth": 0.0401082172,
+      "mev_breakdown_eth": 0.0,
+      "mev_percentage": 0.0,
+      "gas_used": 17276859,
+      "gas_limit": 35964811,
+      "base_fee": 2125605806,
+      "tx_count": 220,
+      "gas_utilization": 48.04,
+      "is_mev_boost_block": false,
+      "relay_tag": "",
+      "builder_pubkey": "",
+      "total_rewards_wei": 8.670773921564454e+16,
+      "total_rewards_eth": 0.0867077392,
+      "data_sources_used": [
+        "local_beacon_api",
+        "beaconchain_api"
+      ],
+      "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti",
+      "detailed_consensus": {
+        "consensus_rewards_wei": 4.6599522e+16,
+        "attestations_gwei": 44931020,
+        "deposits_gwei": 0,
+        "sync_aggregate_gwei": 1668502
+      },
+      "detailed_execution": {
+        "execution_reward_wei": 40108217215644553,
+        "mev_breakdown_wei": 0,
+        "traditional_fees_wei": 40108217215644553,
+        "block_reward_wei": 40108217215644553,
+        "producer_reward_wei": 40108217215644553
       }
     }
   ]
