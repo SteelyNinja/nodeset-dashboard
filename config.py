@@ -981,6 +981,62 @@ CUSTOM_CSS = """
         }
     }
 
+    /* Mobile-specific enhancements using CSS custom properties */
+    .mobile-device {
+        /* Add mobile-specific styles when JavaScript detects mobile */
+    }
+    
+    .mobile-device .stTabs [data-baseweb="tab-list"] {
+        overflow-x: auto !important;
+        overflow-y: hidden !important;
+        white-space: nowrap !important;
+        scrollbar-width: thin !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    
+    .mobile-device button[data-baseweb="tab"] {
+        flex-shrink: 0 !important;
+        min-width: auto !important;
+        padding: 8px 12px !important;
+        font-size: 13px !important;
+    }
+
+    /* Mobile-first navigation improvements */
+    .mobile-device .stSelectbox {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+    
+    .mobile-device .stTextInput input {
+        font-size: 16px !important; /* Prevents zoom on iOS */
+    }
+
+    /* Touch-friendly mobile spacing */
+    .mobile-device .stButton button {
+        min-height: 48px !important;
+        padding: 12px 16px !important;
+        margin: 8px 0 !important;
+    }
+
+    /* Mobile optimized metric cards */
+    .mobile-device div[data-testid="metric-container"] {
+        min-height: 80px !important;
+        padding: 12px !important;
+        margin: 6px 0 !important;
+    }
+
+    /* Improved mobile table scrolling */
+    .mobile-device div[data-testid="stDataFrame"] {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        scrollbar-width: thin !important;
+    }
+
+    /* Mobile-specific loading states */
+    .mobile-device .stSpinner {
+        width: 32px !important;
+        height: 32px !important;
+    }
+
     /* Grid layout for glass cards - Responsive design for different zoom levels */
     .glass-cards-grid {
         display: grid;
@@ -1583,6 +1639,52 @@ def apply_page_config():
 def apply_custom_css():
     """Apply custom CSS styling"""
     st.markdown(CUSTOM_CSS, unsafe_allow_html=True)
+
+def detect_mobile_device():
+    """Detect if user is on a mobile device using JavaScript"""
+    mobile_detection_js = """
+    <script>
+    function detectMobile() {
+        const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) 
+                        || (window.innerWidth <= 768)
+                        || ('ontouchstart' in window);
+        
+        // Store mobile state for Streamlit
+        if (isMobile) {
+            document.body.classList.add('mobile-device');
+            // Set a custom property for CSS
+            document.documentElement.style.setProperty('--is-mobile', '1');
+        } else {
+            document.body.classList.add('desktop-device');
+            document.documentElement.style.setProperty('--is-mobile', '0');
+        }
+        
+        return isMobile;
+    }
+    
+    // Run detection immediately and on resize
+    const isMobile = detectMobile();
+    window.addEventListener('resize', detectMobile);
+    window.addEventListener('orientationchange', detectMobile);
+    
+    // Send result back to parent if needed
+    if (window.parent && window.parent.postMessage) {
+        window.parent.postMessage({type: 'mobile-detection', isMobile: isMobile}, '*');
+    }
+    </script>
+    """
+    
+    st.markdown(mobile_detection_js, unsafe_allow_html=True)
+    
+    # Try to detect mobile server-side using user agent (less reliable)
+    try:
+        import streamlit.web.server.websocket_headers as wsh
+        user_agent = st.session_state.get('user_agent', '')
+        mobile_keywords = ['Mobile', 'Android', 'iPhone', 'iPad', 'iPod', 'BlackBerry', 'Windows Phone']
+        is_mobile_ua = any(keyword in user_agent for keyword in mobile_keywords)
+        return is_mobile_ua
+    except:
+        return False
 
 # CSS Class utilities for use in components
 def get_status_class(status_type):

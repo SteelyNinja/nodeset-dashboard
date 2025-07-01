@@ -45,6 +45,159 @@ def responsive_columns(column_spec):
     else:
         return st.columns(column_spec)
 
+def mobile_optimized_layout(desktop_cols, mobile_cols=1):
+    """
+    Create a layout that automatically adapts based on screen size
+    
+    Args:
+        desktop_cols: Number of columns for desktop (int or list of ratios)
+        mobile_cols: Number of columns for mobile (default: 1 for single column)
+    
+    Returns:
+        Column objects for layout
+    """
+    # Add JavaScript to detect screen size and adjust layout
+    layout_script = f"""
+    <script>
+    function adjustLayout() {{
+        const isMobile = window.innerWidth <= 768;
+        const layoutInfo = {{
+            isMobile: isMobile,
+            desktopCols: {desktop_cols if isinstance(desktop_cols, int) else len(desktop_cols)},
+            mobileCols: {mobile_cols}
+        }};
+        
+        // Store in session storage for potential use
+        sessionStorage.setItem('layoutInfo', JSON.stringify(layoutInfo));
+        
+        // Add CSS class for mobile layout
+        if (isMobile) {{
+            document.body.classList.add('mobile-layout');
+            document.body.classList.remove('desktop-layout');
+        }} else {{
+            document.body.classList.add('desktop-layout');
+            document.body.classList.remove('mobile-layout');
+        }}
+    }}
+    
+    adjustLayout();
+    window.addEventListener('resize', adjustLayout);
+    </script>
+    
+    <style>
+    .mobile-layout .stColumns {{
+        flex-direction: column !important;
+    }}
+    .mobile-layout .stColumn {{
+        width: 100% !important;
+        margin-bottom: 1rem !important;
+    }}
+    </style>
+    """
+    
+    st.markdown(layout_script, unsafe_allow_html=True)
+    
+    # Return appropriate columns based on desktop configuration
+    if isinstance(desktop_cols, int):
+        return st.columns(desktop_cols)
+    else:
+        return st.columns(desktop_cols)
+
+def mobile_friendly_tabs(tab_names, selected_index=0):
+    """
+    Create mobile-friendly tabs with horizontal scrolling
+    
+    Args:
+        tab_names: List of tab names
+        selected_index: Index of initially selected tab
+    
+    Returns:
+        Selected tab name and index
+    """
+    # Add mobile tab styling
+    mobile_tab_css = """
+    <style>
+    @media (max-width: 768px) {
+        .stTabs [data-baseweb="tab-list"] {
+            overflow-x: auto;
+            overflow-y: hidden;
+            white-space: nowrap;
+            scrollbar-width: thin;
+            -webkit-overflow-scrolling: touch;
+            padding: 4px;
+        }
+        
+        .stTabs button[data-baseweb="tab"] {
+            flex-shrink: 0;
+            white-space: nowrap;
+            margin-right: 4px;
+            min-width: auto;
+            padding: 8px 12px;
+            font-size: 14px;
+        }
+    }
+    </style>
+    """
+    
+    st.markdown(mobile_tab_css, unsafe_allow_html=True)
+    
+    # Create tabs normally - CSS will handle mobile optimization
+    tabs = st.tabs(tab_names)
+    return tabs
+
+def mobile_info_card(title, value, description=None, status_color=None):
+    """
+    Create a mobile-optimized information card
+    
+    Args:
+        title: Card title
+        value: Main value to display
+        description: Optional description text
+        status_color: Optional status color for the card
+    """
+    color_map = {
+        'success': '#10b981',
+        'warning': '#f59e0b', 
+        'danger': '#ef4444',
+        'info': '#3b82f6'
+    }
+    
+    bg_color = color_map.get(status_color, '#3b82f6')
+    
+    card_html = f"""
+    <div style="
+        background: linear-gradient(135deg, {bg_color}20, {bg_color}10);
+        border: 1px solid {bg_color}30;
+        border-radius: 12px;
+        padding: 1rem;
+        margin: 0.5rem 0;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        min-height: 80px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    ">
+        <div style="
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #6b7280;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        ">{title}</div>
+        <div style="
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin-bottom: 0.25rem;
+        ">{value}</div>
+        {f'<div style="font-size: 0.75rem; color: #6b7280;">{description}</div>' if description else ''}
+    </div>
+    """
+    
+    st.markdown(card_html, unsafe_allow_html=True)
+
 def display_health_status(concentration_metrics, total_active, total_exited):
     """Display network health status"""
     st.markdown("## 🏥 Network Health Status")

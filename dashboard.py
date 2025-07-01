@@ -29,6 +29,10 @@ def run_dashboard():
     apply_page_config()
     apply_custom_css()
     
+    # Detect mobile device and apply mobile-specific optimizations
+    from config import detect_mobile_device
+    detect_mobile_device()
+    
     # Display logo and header
     display_logo()
     
