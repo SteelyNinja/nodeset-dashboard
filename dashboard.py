@@ -729,8 +729,10 @@ def create_performance_tab(operator_performance, operator_validators, operator_e
                     if len(regular_validators) == 0:  # Skip operators with no regular validators
                         continue
                         
-                    # Calculate average performance of regular validators
-                    regular_performances = [v['performance_7d'] for v in regular_validators]
+                    # Calculate average performance of regular validators (exclude zero rewards)
+                    regular_performances = [v['performance_7d'] for v in regular_validators if v['performance_7d'] > 0]
+                    if len(regular_performances) == 0:
+                        continue  # Skip operators with no validators having positive rewards
                     regular_performance = sum(regular_performances) / len(regular_performances)
                     
                     # Get ENS/Discord name
@@ -877,7 +879,10 @@ def create_performance_tab(operator_performance, operator_validators, operator_e
                     if len(regular_validators) == 0:
                         continue
                         
-                    regular_performances = [v['performance_31d'] for v in regular_validators]
+                    # Calculate average performance of regular validators (exclude zero rewards)
+                    regular_performances = [v['performance_31d'] for v in regular_validators if v['performance_31d'] > 0]
+                    if len(regular_performances) == 0:
+                        continue  # Skip operators with no validators having positive rewards
                     regular_performance = sum(regular_performances) / len(regular_performances)
                     
                     ens_name = ens_names.get(operator, "")
