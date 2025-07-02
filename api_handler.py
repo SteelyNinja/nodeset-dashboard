@@ -2,8 +2,23 @@
 API handler for serving performance data from the NodeSet dashboard
 """
 import json
+import os
 from datetime import datetime, timedelta
 from data_loader import load_validator_data, load_proposals_data, load_ens_names, load_sync_committee_data
+from config import PERFORMANCE_CACHE_FILES
+
+
+def load_performance_cache():
+    """Load performance data from validator_performance_cache.json"""
+    for cache_file in PERFORMANCE_CACHE_FILES:
+        if os.path.exists(cache_file):
+            try:
+                with open(cache_file, 'r') as f:
+                    return json.load(f)
+            except Exception as e:
+                print(f"Error loading {cache_file}: {e}")
+                continue
+    return None
 
 
 def get_validators_to_exclude(proposals_data, sync_committee_data, days_back):
@@ -49,15 +64,15 @@ def get_validators_to_exclude(proposals_data, sync_committee_data, days_back):
 def calculate_performance_data(period="7d"):
     """Calculate performance data for the specified period"""
     # Load required data
-    cache_data, _ = load_validator_data()
+    performance_cache = load_performance_cache()
     proposals_data, _ = load_proposals_data()
     sync_committee_data, _ = load_sync_committee_data()
     ens_names = load_ens_names()
     
-    if not cache_data or 'validators' not in cache_data:
-        return {"error": "No validator data available"}
+    if not performance_cache or 'validators' not in performance_cache:
+        return {"error": "No validator performance data available"}
     
-    performance_data = cache_data['validators']
+    performance_data = performance_cache['validators']
     current_time = datetime.now()
     
     # Set time windows based on period
