@@ -8,7 +8,7 @@ from collections import Counter
 
 # Import our modules
 from config import apply_page_config, apply_custom_css
-from data_loader import load_validator_data, load_proposals_data, load_mev_analysis_data, load_sync_committee_data, load_missed_proposals_data, load_exit_data, display_logo
+from data_loader import load_validator_data, load_proposals_data, load_mev_analysis_data, load_sync_committee_data, load_missed_proposals_data, load_exit_data, load_validator_performance_data, display_logo
 from analysis import calculate_concentration_metrics, create_performance_analysis, analyze_gas_limits_by_operator, analyze_client_diversity
 from charts import (create_performance_charts, create_concentration_pie, create_distribution_histogram, 
                    create_concentration_curve, create_gas_limit_distribution_chart, create_operator_gas_strategy_chart,
@@ -2424,6 +2424,45 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             'Records': 'N/A'
         })
     
+    # 6. Validator performance data
+    performance_cache = load_validator_performance_data()
+    if performance_cache[0] is not None:
+        performance_content, performance_file = performance_cache
+        try:
+            import os
+            file_size = os.path.getsize(performance_file)
+            file_size_mb = file_size / (1024 * 1024)
+            last_modified = datetime.fromtimestamp(os.path.getmtime(performance_file))
+            
+            # Count validators in performance data
+            validators = performance_content.get('validators', {})
+            data_files_info.append({
+                'File': 'validator_performance_cache.json',
+                'Description': 'Individual validator performance metrics',
+                'Size (MB)': f"{file_size_mb:.2f}",
+                'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
+                'Status': '✅ Loaded',
+                'Records': f"{len(validators)} validators"
+            })
+        except Exception as e:
+            data_files_info.append({
+                'File': 'validator_performance_cache.json',
+                'Description': 'Individual validator performance metrics',
+                'Size (MB)': 'Unknown',
+                'Last Modified': 'Unknown',
+                'Status': '✅ Loaded',
+                'Records': f"{len(performance_content.get('validators', {}))} validators"
+            })
+    else:
+        data_files_info.append({
+            'File': 'validator_performance_cache.json',
+            'Description': 'Individual validator performance metrics',
+            'Size (MB)': 'N/A',
+            'Last Modified': 'N/A',
+            'Status': '❌ Missing',
+            'Records': 'N/A'
+        })
+    
     # Display files overview table
     files_df = pd.DataFrame(data_files_info)
     st.dataframe(
@@ -2453,7 +2492,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
     
     col1, col2, col3 = st.columns(3)
     # Calculate status
-    missing_files = 5 - loaded_files
+    missing_files = 6 - loaded_files
     if missing_files == 0:
         status = "🟢 All files loaded"
     else:
@@ -2469,7 +2508,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             </div>
             <div class="glass-card">
                 <div class="glass-card-title">Files Loaded</div>
-                <div class="glass-card-value">{}/5</div>
+                <div class="glass-card-value">{}/6</div>
                 <div class="glass-card-caption">Data files available</div>
             </div>
             <div class="glass-card">
@@ -2486,12 +2525,13 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
     st.markdown("### 🔍 Detailed Cache Data")
     
     # Create tabs for each data file
-    tab1, tab2, tab3, tab4, tab5 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
         "🏠 Main Cache", 
         "🤲 Proposals", 
         "⛽ MEV Analysis", 
         "📡 Sync Committee", 
-        "❌ Missed Proposals"
+        "❌ Missed Proposals",
+        "⚡ Validator Performance"
     ])
     
     with tab1:
@@ -2600,6 +2640,27 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
                     st.json(missed_content)
         else:
             st.info("❌ Missed proposals data not loaded")
+
+    with tab6:
+        if performance_cache[0] is not None:
+            performance_content, _ = performance_cache
+            st.markdown("**Validator Performance Data Summary**")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                validators = performance_content.get('validators', {})
+                summary = {
+                    "total_validators": len(validators),
+                    "last_updated": performance_content.get('last_updated', 'Unknown'),
+                    "data_keys": list(performance_content.keys())
+                }
+                st.json(summary)
+            
+            with col2:
+                if st.button("🔄 Show Full Validator Performance Data", key="show_performance_data"):
+                    st.json(performance_content)
+        else:
+            st.info("❌ Validator performance data not loaded")
 
     # ENS names section (existing code)
     st.markdown("---")
