@@ -27,10 +27,15 @@ from api_handler import get_api_response
 
 def run_dashboard():
     """Main dashboard function"""
-    # Check for API requests first
-    if st.query_params.get("api"):
-        handle_api_request()
-        return
+    # Check for API requests first - only if explicitly set
+    try:
+        api_param = st.query_params.get("api")
+        if api_param and str(api_param).lower() in ["1", "true", "yes"]:
+            handle_api_request()
+            return
+    except Exception as e:
+        # If query params fail, continue with normal dashboard
+        pass
     
     # Apply configuration and styling
     apply_page_config()
@@ -2709,12 +2714,11 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
 
 def handle_api_request():
     """Handle API requests and return JSON data"""
-    # Hide the normal UI
+    # Apply minimal styling for API mode
     st.markdown("""
         <style>
         .stApp > header {display: none;}
-        .stApp > .main > .block-container {padding-top: 0; padding-bottom: 0;}
-        .stMarkdown, .stDataFrame, .stPlotlyChart {display: none;}
+        .stApp > .main > .block-container {padding-top: 1rem; padding-bottom: 1rem;}
         </style>
     """, unsafe_allow_html=True)
     
