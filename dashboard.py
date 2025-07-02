@@ -537,6 +537,7 @@ def create_top_operators_tab(operator_validators, operator_exited, ens_names):
 
 def create_performance_tab(operator_performance, operator_validators, operator_exited, ens_names):
     """Create the performance analysis tab"""
+    from datetime import datetime, timedelta, timezone
     st.subheader("⚡ Operator Performance Analysis (24 hours)")
     st.info("ℹ️ This is last 24 hour data only - note refreshes every 1 hour")
 
@@ -601,6 +602,340 @@ def create_performance_tab(operator_performance, operator_validators, operator_e
             st.info("Insufficient performance data for analysis.")
     else:
         st.info("No performance data available in cache file.")
+
+    # Add attestation-only performance analysis (independent of operator_performance)
+    st.markdown("---")
+    st.subheader("📊 Attestation-Only Performance Analysis")
+    st.info("Performance analysis of validators doing ONLY attestations (excluding proposals and sync committee duties)")
+    
+    # Load validator performance data from the performance cache file
+    try:
+        import json
+        import os
+        performance_cache_file = 'validator_performance_cache.json'
+        if os.path.exists(performance_cache_file):
+            with open(performance_cache_file, 'r') as f:
+                performance_cache = json.load(f)
+                
+            performance_data = performance_cache.get('validators', {})
+            if performance_data and len(performance_data) > 0:
+                # Load proposals and sync committee data
+                proposals_data, _ = load_proposals_data()
+                sync_committee_data, _ = load_sync_committee_data()
+                
+                # Calculate current time for filtering
+                current_time = datetime.now(timezone.utc)
+                seven_days_ago = current_time - timedelta(days=7)
+                seven_days_ago_timestamp = seven_days_ago.timestamp()
+                
+                # Use a longer lookback period for proposals (10 days) to ensure we catch 
+                # all proposals that could affect the 7-day performance window
+                ten_days_ago = current_time - timedelta(days=10)
+                ten_days_ago_timestamp = ten_days_ago.timestamp()
+                
+                # Get validators with proposals in the last 10 days (to be conservative)
+                validators_with_proposals = set()
+                if proposals_data and 'proposals' in proposals_data:
+                    for proposal in proposals_data['proposals']:
+                        try:
+                            proposal_timestamp = proposal.get('timestamp', 0)
+                            if proposal_timestamp >= ten_days_ago_timestamp:
+                                validator_index = proposal.get('validator_index')
+                                if validator_index:
+                                    validators_with_proposals.add(validator_index)
+                        except:
+                            continue
+                
+                # Get validators with sync committee duties in the last 10 days (to be conservative)
+                validators_with_sync_duties = set()
+                if sync_committee_data and 'detailed_stats' in sync_committee_data:
+                    # Ethereum beacon chain genesis time: December 1, 2020, 12:00:23 UTC
+                    GENESIS_TIME = 1606824023
+                    
+                    for sync_entry in sync_committee_data['detailed_stats']:
+                        try:
+                            # Check if the sync committee period overlaps with last 10 days
+                            start_slot = sync_entry.get('start_slot', 0)
+                            end_slot = sync_entry.get('end_slot', 0)
+                            
+                            # Proper slot to timestamp conversion using beacon chain genesis
+                            end_timestamp = GENESIS_TIME + (end_slot * 12)
+                            
+                            # If the sync committee period overlaps with the last 10 days
+                            if end_timestamp >= ten_days_ago_timestamp:
+                                validator_index = sync_entry.get('validator_index')
+                                if validator_index:
+                                    validators_with_sync_duties.add(validator_index)
+                        except:
+                            continue
+                
+                # Combine all validators to exclude (proposals + sync committee)
+                validators_to_exclude = validators_with_proposals.union(validators_with_sync_duties)
+                
+                # Process data for operators with validators active > 7 days - 7-day analysis
+                operator_data = {}
+                processed_validators = 0
+                
+                for validator_pubkey, validator_info in performance_data.items():
+                    processed_validators += 1
+                    try:
+                        operator = validator_info.get('operator')
+                        if not operator:
+                            continue
+                            
+                        # Check if validator has been active for more than 7 days
+                        activation_data = validator_info.get('activation_data', {})
+                        activation_timestamp = activation_data.get('activation_timestamp', 0)
+                        if activation_timestamp == 0 or activation_timestamp > seven_days_ago_timestamp:
+                            continue
+                        
+                        # Get performance data
+                        performance_metrics = validator_info.get('performance_metrics', {})
+                        performance_7d = performance_metrics.get('performance_7d', 0)
+                        validator_index = validator_info.get('validator_index')
+                        
+                        # Skip if validator index is missing
+                        if validator_index is None:
+                            continue
+                        
+                        # Initialize operator data if not exists
+                        if operator not in operator_data:
+                            operator_data[operator] = {
+                                'validator_count': 0,
+                                'total_performance': 0,
+                                'regular_validators': []  # Validators without proposals/sync duties
+                            }
+                        
+                        # Add to operator data
+                        operator_data[operator]['validator_count'] += 1
+                        operator_data[operator]['total_performance'] += performance_7d
+                        
+                        # Check if this validator should be excluded from regular performance
+                        if validator_index not in validators_to_exclude:
+                            operator_data[operator]['regular_validators'].append({
+                                'validator_index': validator_index,
+                                'performance_7d': performance_7d
+                            })
+                            
+                    except Exception as e:
+                        continue
+                
+                # Create 7-day attestation table
+                st.markdown("#### 📅 7-Day Attestation Performance")
+                regular_performance_data = []
+                for operator, data in operator_data.items():
+                    regular_validators = data['regular_validators']
+                    
+                    if len(regular_validators) == 0:  # Skip operators with no regular validators
+                        continue
+                        
+                    # Calculate average performance of regular validators
+                    regular_performances = [v['performance_7d'] for v in regular_validators]
+                    regular_performance = sum(regular_performances) / len(regular_performances)
+                    
+                    # Get ENS/Discord name
+                    ens_name = ens_names.get(operator, "")
+                    
+                    # Count excluded validators
+                    excluded_count = data['validator_count'] - len(regular_validators)
+                    
+                    regular_performance_data.append({
+                        'Rank': 0,  # Will be set after sorting
+                        'Address': operator,
+                        'ENS/Discord Name': ens_name,
+                        'Regular Performance (gwei)': f"{regular_performance:,.0f}",
+                        'Attestation Validators': len(regular_validators),
+                        'Excluded (Proposals/Sync)': excluded_count,
+                        'Total Validators': data['validator_count']
+                    })
+                
+                # Sort by regular performance and assign ranks
+                regular_performance_data.sort(key=lambda x: float(x['Regular Performance (gwei)'].replace(',', '')), reverse=True)
+                
+                # Calculate relative scores (top performer = 100%)
+                if regular_performance_data:
+                    top_performance = float(regular_performance_data[0]['Regular Performance (gwei)'].replace(',', ''))
+                    
+                    for i, item in enumerate(regular_performance_data, 1):
+                        item['Rank'] = i
+                        current_performance = float(item['Regular Performance (gwei)'].replace(',', ''))
+                        relative_score = (current_performance / top_performance) * 100
+                        item['Relative Score'] = f"{relative_score:.1f}%"
+                
+                regular_df = pd.DataFrame(regular_performance_data)
+                
+                if not regular_df.empty:
+                    st.dataframe(
+                        regular_df,
+                        use_container_width=True,
+                        hide_index=True,
+                        column_config={
+                            "Rank": st.column_config.NumberColumn("Rank", width="small"),
+                            "Address": st.column_config.TextColumn("Address", width="large"),
+                            "ENS/Discord Name": st.column_config.TextColumn("ENS/Discord Name", width="medium"),
+                            "Regular Performance (gwei)": st.column_config.TextColumn("Regular Performance", width="medium"),
+                            "Attestation Validators": st.column_config.NumberColumn("Attestation Only", width="small"),
+                            "Excluded (Proposals/Sync)": st.column_config.NumberColumn("Excluded", width="small"),
+                            "Total Validators": st.column_config.NumberColumn("Total", width="small"),
+                            "Relative Score": st.column_config.TextColumn("Relative Score", width="small")
+                        }
+                    )
+                else:
+                    st.warning("No 7-day regular performance data available (all validators have proposals or sync committee duties)")
+                
+                # Now create 31-day analysis
+                st.markdown("#### 📅 31-Day Attestation Performance")
+                # Calculate 31-day time windows
+                thirty_two_days_ago = current_time - timedelta(days=32)
+                thirty_four_days_ago = current_time - timedelta(days=34)
+                thirty_four_days_ago_timestamp = thirty_four_days_ago.timestamp()
+                
+                # Get validators with proposals in the last 34 days
+                validators_with_proposals_31d = set()
+                if proposals_data and 'proposals' in proposals_data:
+                    for proposal in proposals_data['proposals']:
+                        try:
+                            proposal_timestamp = proposal.get('timestamp', 0)
+                            if proposal_timestamp >= thirty_four_days_ago_timestamp:
+                                validator_index = proposal.get('validator_index')
+                                if validator_index:
+                                    validators_with_proposals_31d.add(validator_index)
+                        except:
+                            continue
+                
+                # Get validators with sync committee duties in the last 34 days
+                validators_with_sync_duties_31d = set()
+                if sync_committee_data and 'detailed_stats' in sync_committee_data:
+                    GENESIS_TIME = 1606824023
+                    
+                    for sync_entry in sync_committee_data['detailed_stats']:
+                        try:
+                            end_slot = sync_entry.get('end_slot', 0)
+                            end_timestamp = GENESIS_TIME + (end_slot * 12)
+                            
+                            if end_timestamp >= thirty_four_days_ago_timestamp:
+                                validator_index = sync_entry.get('validator_index')
+                                if validator_index:
+                                    validators_with_sync_duties_31d.add(validator_index)
+                        except:
+                            continue
+                
+                # Combine all validators to exclude for 31-day analysis
+                validators_to_exclude_31d = validators_with_proposals_31d.union(validators_with_sync_duties_31d)
+                
+                # Process data for 31-day analysis (validators active >32 days)
+                operator_data_31d = {}
+                
+                for validator_pubkey, validator_info in performance_data.items():
+                    try:
+                        operator = validator_info.get('operator')
+                        if not operator:
+                            continue
+                            
+                        # Check if validator has been active for more than 32 days
+                        activation_data = validator_info.get('activation_data', {})
+                        activation_timestamp = activation_data.get('activation_timestamp', 0)
+                        if activation_timestamp == 0 or activation_timestamp > thirty_two_days_ago.timestamp():
+                            continue
+                        
+                        # Get performance data
+                        performance_metrics = validator_info.get('performance_metrics', {})
+                        performance_31d = performance_metrics.get('performance_31d', 0)
+                        validator_index = validator_info.get('validator_index')
+                        
+                        # Skip if validator index is missing
+                        if validator_index is None:
+                            continue
+                        
+                        # Initialize operator data if not exists
+                        if operator not in operator_data_31d:
+                            operator_data_31d[operator] = {
+                                'validator_count': 0,
+                                'total_performance': 0,
+                                'regular_validators': []
+                            }
+                        
+                        # Add to operator data
+                        operator_data_31d[operator]['validator_count'] += 1
+                        operator_data_31d[operator]['total_performance'] += performance_31d
+                        
+                        # Check if this validator should be excluded from regular performance
+                        if validator_index not in validators_to_exclude_31d:
+                            operator_data_31d[operator]['regular_validators'].append({
+                                'validator_index': validator_index,
+                                'performance_31d': performance_31d
+                            })
+                            
+                    except Exception as e:
+                        continue
+                
+                # Create 31-day attestation table
+                regular_performance_data_31d = []
+                for operator, data in operator_data_31d.items():
+                    regular_validators = data['regular_validators']
+                    
+                    if len(regular_validators) == 0:
+                        continue
+                        
+                    regular_performances = [v['performance_31d'] for v in regular_validators]
+                    regular_performance = sum(regular_performances) / len(regular_performances)
+                    
+                    ens_name = ens_names.get(operator, "")
+                    excluded_count = data['validator_count'] - len(regular_validators)
+                    
+                    regular_performance_data_31d.append({
+                        'Rank': 0,
+                        'Address': operator,
+                        'ENS/Discord Name': ens_name,
+                        'Regular Performance (gwei)': f"{regular_performance:,.0f}",
+                        'Attestation Validators': len(regular_validators),
+                        'Excluded (Proposals/Sync)': excluded_count,
+                        'Total Validators': data['validator_count']
+                    })
+                
+                # Sort by regular performance and assign ranks with relative scores
+                regular_performance_data_31d.sort(key=lambda x: float(x['Regular Performance (gwei)'].replace(',', '')), reverse=True)
+                
+                if regular_performance_data_31d:
+                    top_performance_31d = float(regular_performance_data_31d[0]['Regular Performance (gwei)'].replace(',', ''))
+                    
+                    for i, item in enumerate(regular_performance_data_31d, 1):
+                        item['Rank'] = i
+                        current_performance = float(item['Regular Performance (gwei)'].replace(',', ''))
+                        relative_score = (current_performance / top_performance_31d) * 100
+                        item['Relative Score'] = f"{relative_score:.1f}%"
+                
+                regular_df_31d = pd.DataFrame(regular_performance_data_31d)
+                
+                if not regular_df_31d.empty:
+                    st.dataframe(
+                        regular_df_31d,
+                        use_container_width=True,
+                        hide_index=True,
+                        column_config={
+                            "Rank": st.column_config.NumberColumn("Rank", width="small"),
+                            "Address": st.column_config.TextColumn("Address", width="large"),
+                            "ENS/Discord Name": st.column_config.TextColumn("ENS/Discord Name", width="medium"),
+                            "Regular Performance (gwei)": st.column_config.TextColumn("Regular Performance", width="medium"),
+                            "Attestation Validators": st.column_config.NumberColumn("Attestation Only", width="small"),
+                            "Excluded (Proposals/Sync)": st.column_config.NumberColumn("Excluded", width="small"),
+                            "Total Validators": st.column_config.NumberColumn("Total", width="small"),
+                            "Relative Score": st.column_config.TextColumn("Relative Score", width="small")
+                        }
+                    )
+                else:
+                    st.warning("No 31-day regular performance data available")
+                    
+            else:
+                st.info("No validator performance data found in cache file.")
+        else:
+            st.info("Validator performance cache file not found. Attestation analysis unavailable.")
+            
+    except Exception as e:
+        st.error(f"Error loading attestation performance data: {str(e)}")
+        import traceback
+        st.error(f"Full error: {traceback.format_exc()}")
+
 
 def create_proposals_tab(ens_names):
     """Create the proposals analysis tab"""
