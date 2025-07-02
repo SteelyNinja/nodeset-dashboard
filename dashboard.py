@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import plotly.express as px
+import json
 from datetime import datetime
 from collections import Counter
 
@@ -20,11 +21,17 @@ from components import (display_health_status, display_performance_health, displ
                        display_network_overview, display_cache_info, show_refresh_button,
                        responsive_columns, display_health_summary)
 from utils import format_operator_display_plain, get_performance_category, get_memory_usage
+from api_handler import get_api_response
 
 
 
 def run_dashboard():
     """Main dashboard function"""
+    # Check for API requests first
+    if st.query_params.get("api"):
+        handle_api_request()
+        return
+    
     # Apply configuration and styling
     apply_page_config()
     apply_custom_css()
@@ -2637,6 +2644,59 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
                 file_name=f"nodeset_ens_names_{datetime.now().strftime('%Y%m%d_%H%M%S')}.csv",
                 mime="text/csv"
             )
+
+
+def handle_api_request():
+    """Handle API requests and return JSON data"""
+    # Hide the normal UI
+    st.markdown("""
+        <style>
+        .stApp > header {display: none;}
+        .stApp > .main > .block-container {padding-top: 0; padding-bottom: 0;}
+        .stMarkdown, .stDataFrame, .stPlotlyChart {display: none;}
+        </style>
+    """, unsafe_allow_html=True)
+    
+    # Get API parameters
+    endpoint = st.query_params.get("endpoint", "performance")
+    period = st.query_params.get("period", "7d")
+    format_type = st.query_params.get("format", "json")
+    action = st.query_params.get("action", "view")  # "view" or "download"
+    
+    # Get API response
+    try:
+        response_data = get_api_response(endpoint, period, format_type)
+        
+        if action == "download":
+            # Provide download button
+            filename = f"nodeset_performance_{period}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+            
+            st.download_button(
+                label=f"📥 Download {period} Performance Data",
+                data=json.dumps(response_data, indent=2),
+                file_name=filename,
+                mime="application/json",
+                use_container_width=True
+            )
+            
+            # Also show some basic info
+            if 'total_operators' in response_data:
+                st.write(f"**Ready to download:** {response_data['total_operators']} operators for {period} period")
+            
+        else:
+            # Default view mode - show raw JSON
+            st.json(response_data)
+        
+    except Exception as e:
+        error_response = {
+            "error": "API request failed",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }
+        if action == "download":
+            st.error(f"API Error: {str(e)}")
+        else:
+            st.json(error_response)
 
 
 if __name__ == "__main__":

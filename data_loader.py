@@ -107,6 +107,26 @@ def load_exit_data():
     
     return None, None
 
+@st.cache_data(ttl=300)
+def load_ens_names():
+    """Load ENS names mapping from JSON file"""
+    possible_paths = [
+        './manual_ens_names.json',
+        './data/manual_ens_names.json'
+    ]
+    
+    for path in possible_paths:
+        try:
+            if os.path.exists(path):
+                with open(path, 'r') as f:
+                    data = json.load(f)
+                return data
+        except Exception as e:
+            print(f"Error loading ENS names from {path}: {e}")
+            continue
+    
+    return {}
+
 def get_base64_image(image_path):
     """Convert image to base64 string for embedding in HTML"""
     try:

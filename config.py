@@ -1611,8 +1611,11 @@ CUSTOM_CSS = """
 
 # File paths for data loading
 CACHE_FILES = [
+    'validator_performance_cache.json',
     'nodeset_validator_tracker_cache.json',
+    './data/validator_performance_cache.json',
     './data/nodeset_validator_tracker_cache.json',
+    '../validator_performance_cache.json',
     '../nodeset_validator_tracker_cache.json'
 ]
 
