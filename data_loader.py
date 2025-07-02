@@ -108,6 +108,26 @@ def load_exit_data():
     return None, None
 
 @st.cache_data(ttl=300)
+def load_validator_performance_data():
+    """Load validator performance cache data from JSON file"""
+    possible_paths = [
+        './validator_performance_cache.json',
+        './data/validator_performance_cache.json'
+    ]
+    
+    for path in possible_paths:
+        try:
+            if os.path.exists(path):
+                with open(path, 'r') as f:
+                    data = json.load(f)
+                return data, path
+        except Exception as e:
+            print(f"Error loading validator performance data from {path}: {e}")
+            continue
+    
+    return None, None
+
+@st.cache_data(ttl=300)
 def load_ens_names():
     """Load ENS names mapping from JSON file"""
     possible_paths = [
