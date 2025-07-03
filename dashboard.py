@@ -371,24 +371,21 @@ def create_client_diversity_tab(ens_names):
     
     st.markdown("---")
     
-    # Create the three pie charts with lazy loading
-    if st.button("📊 Show Client Diversity Charts", key="show_client_charts"):
-        with st.spinner("Loading client diversity analysis..."):
-            fig_execution, fig_consensus, fig_setup = create_client_diversity_pie_charts(client_diversity_data)
+    # Create the three pie charts
+    with st.spinner("Loading client diversity analysis..."):
+        fig_execution, fig_consensus, fig_setup = create_client_diversity_pie_charts(client_diversity_data)
+        
+        if fig_execution and fig_consensus and fig_setup:
+            col1, col2, col3 = responsive_columns(3)
             
-            if fig_execution and fig_consensus and fig_setup:
-                col1, col2, col3 = responsive_columns(3)
-                
-                with col1:
-                    st.plotly_chart(fig_execution, use_container_width=True)
-                
-                with col2:
-                    st.plotly_chart(fig_consensus, use_container_width=True)
-                
-                with col3:
-                    st.plotly_chart(fig_setup, use_container_width=True)
-    else:
-        st.info("💡 Click the button above to load detailed client diversity charts")
+            with col1:
+                st.plotly_chart(fig_execution, use_container_width=True)
+            
+            with col2:
+                st.plotly_chart(fig_consensus, use_container_width=True)
+            
+            with col3:
+                st.plotly_chart(fig_setup, use_container_width=True)
     
     st.markdown("---")
     
