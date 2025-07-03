@@ -15,6 +15,16 @@ def get_memory_usage():
     
     return memory_mb, memory_percentage
 
+def is_memory_high():
+    """Check if memory usage is approaching limits"""
+    memory_mb, memory_percentage = get_memory_usage()
+    return memory_percentage > 75  # Alert at 75% of 1GB limit
+
+def should_clear_cache():
+    """Determine if cache should be cleared based on memory usage"""
+    memory_mb, memory_percentage = get_memory_usage()
+    return memory_percentage > 85  # Clear cache at 85% of 1GB limit
+
 def format_operator_display(address: str, ens_names: dict, short: bool = False) -> str:
     """Format operator display with ENS name if available"""
     ens_name = ens_names.get(address)

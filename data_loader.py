@@ -5,7 +5,7 @@ import base64
 from datetime import datetime
 from config import CACHE_FILES, PROPOSALS_FILES, MEV_FILES, DARK_LOGO_PATH, LIGHT_LOGO_PATH
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=900)  # 15 minutes - matches backend update frequency
 def load_validator_data():
     """Load validator data from cache file"""
     for cache_file in CACHE_FILES:
@@ -19,7 +19,7 @@ def load_validator_data():
     
     return None, None
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=900)  # 15 minutes - matches backend update frequency
 def load_proposals_data():
     """Load proposals data from JSON file"""
     for proposals_file in PROPOSALS_FILES:
@@ -33,7 +33,7 @@ def load_proposals_data():
     
     return None, None
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=900)  # 15 minutes
 def load_missed_proposals_data():
     """Load missed proposals data from JSON file"""
     possible_paths = [
@@ -53,7 +53,7 @@ def load_missed_proposals_data():
     
     return None, None
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=900)  # 15 minutes
 def load_mev_analysis_data():
     """Load MEV relay analysis data for gas limit analysis"""
     for mev_file in MEV_FILES:
@@ -67,7 +67,7 @@ def load_mev_analysis_data():
     
     return None, None
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=900)  # 15 minutes
 def load_sync_committee_data():
     """Load sync committee participation data from JSON file"""
     possible_paths = [
@@ -87,7 +87,7 @@ def load_sync_committee_data():
     
     return None, None
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=1800)  # 30 minutes - exit data changes less frequently
 def load_exit_data():
     """Load exit analysis data from JSON file"""
     possible_paths = [
@@ -107,7 +107,7 @@ def load_exit_data():
     
     return None, None
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=1800)  # 30 minutes - performance data changes slowly
 def load_validator_performance_data():
     """Load validator performance cache data from JSON file"""
     possible_paths = [
@@ -127,7 +127,7 @@ def load_validator_performance_data():
     
     return None, None
 
-@st.cache_data(ttl=300)
+@st.cache_data(ttl=3600)  # 1 hour - ENS names rarely change
 def load_ens_names():
     """Load ENS names mapping from JSON file"""
     possible_paths = [
