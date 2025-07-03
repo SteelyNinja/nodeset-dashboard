@@ -373,13 +373,20 @@ def show_statistics_page():
             # Special handling for pie chart
             fig_browsers.update_layout(
                 height=400,
-                margin=dict(l=50, r=50, t=60, b=50),
+                margin=dict(l=50, r=150, t=60, b=50),
                 plot_bgcolor='white',
                 paper_bgcolor='white',
                 font_color='#1f2937',
                 title_font_color='#1f2937',
                 title_font_size=16,
-                font_size=12
+                font_size=12,
+                legend=dict(
+                    orientation="v",
+                    yanchor="middle",
+                    y=0.5,
+                    xanchor="left",
+                    x=1.05
+                )
             )
             display_chart(fig_browsers)
     
