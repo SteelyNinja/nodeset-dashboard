@@ -176,11 +176,13 @@ def display_logo():
                     display: block;
                     height: 90px;
                     width: auto;
+                    cursor: pointer;
                 }}
                 .logo-light {{
                     display: none;
                     height: 90px;
                     width: auto;
+                    cursor: pointer;
                 }}
                 @media (prefers-color-scheme: light) {{
                     .logo-dark {{
@@ -191,23 +193,27 @@ def display_logo():
                     }}
                 }}
                 </style>
-                <img src="data:image/png;base64,{dark_b64}" class="logo-dark" alt="NodeSet Dark Logo">
-                <img src="data:image/png;base64,{light_b64}" class="logo-light" alt="NodeSet Light Logo">
+                <a href="https://nodeset.io" target="_blank">
+                    <img src="data:image/png;base64,{dark_b64}" class="logo-dark" alt="NodeSet Dark Logo">
+                    <img src="data:image/png;base64,{light_b64}" class="logo-light" alt="NodeSet Light Logo">
+                </a>
             </div>
             """
             st.markdown(logo_html, unsafe_allow_html=True)
         else:
             # Fallback if base64 conversion fails
+            st.markdown('<a href="https://nodeset.io" target="_blank">', unsafe_allow_html=True)
             st.image(DARK_LOGO_PATH, width=306)
+            st.markdown('</a>', unsafe_allow_html=True)
             
     elif dark_exists:
-        st.markdown('<div class="logo-container">', unsafe_allow_html=True)
+        st.markdown('<div class="logo-container"><a href="https://nodeset.io" target="_blank">', unsafe_allow_html=True)
         st.image(DARK_LOGO_PATH, width=204)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('</a></div>', unsafe_allow_html=True)
     elif light_exists:
-        st.markdown('<div class="logo-container">', unsafe_allow_html=True)
+        st.markdown('<div class="logo-container"><a href="https://nodeset.io" target="_blank">', unsafe_allow_html=True)
         st.image(LIGHT_LOGO_PATH, width=306)
-        st.markdown('</div>', unsafe_allow_html=True)
+        st.markdown('</a></div>', unsafe_allow_html=True)
     else:
         st.error("Logo files not found: Nodeset_dark_mode.png and Nodeset_light_mode.png")
         st.title("🔗 NodeSet Validator Monitor")

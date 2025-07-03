@@ -157,10 +157,9 @@ def run_dashboard():
                 </div>
             </div>
             <div class="info-bar-right">
-                <span style="color: #f59e0b; font-size: 20px;">⚠️</span>
                 <div style="font-size: 1rem; line-height: 1.4;">
                     <strong>Disclaimer</strong><br>
-                    <span style="opacity: 0.8;">This site is independently maintained and is not affiliated with or managed by Nodeset.</span>
+                    <span style="opacity: 0.8;">This site is independently maintained through an open source project. If you see any discrepancies or wish to contribute, please make an issue <a href="https://github.com/SteelyNinja/nodeset-dashboard" target="_blank" style="color: #3b82f6; text-decoration: underline;">here</a>.</span>
                 </div>
             </div>
         </div>
