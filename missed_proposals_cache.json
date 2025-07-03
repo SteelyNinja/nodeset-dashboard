@@ -143,10 +143,22 @@
       "operator_name": "0xA981CE...51E7C6",
       "reason": "missed_proposal",
       "detection_method": "delayed_validation"
+    },
+    {
+      "slot": 12061415,
+      "epoch": 376919,
+      "timestamp": 1751561003,
+      "date": "2025-07-03 16:43:23",
+      "validator_index": 1940571,
+      "validator_pubkey": "0xa9b4bb938276d3b312e1b68be7f6b94397a6f1ef354f43bb89bade974d1b67686aae187357e1b8287f815d4d7c8fdfd3",
+      "operator": "0xA94C708871Ab146BE41C47c351C078B4E6d83C1e",
+      "operator_name": "nodeset.haloooloolo.eth (0xA94C70...d83C1e)",
+      "reason": "missed_proposal",
+      "detection_method": "delayed_validation"
     }
   ],
-  "last_checked_epoch": 376917,
-  "last_updated": 1751561147,
+  "last_checked_epoch": 376920,
+  "last_updated": 1751562204,
   "last_revalidation": 1751415349,
   "last_revalidation_date": "2025-07-02T00:15:49.192634"
 }
