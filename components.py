@@ -471,6 +471,13 @@ def show_refresh_button():
     refresh_col1, refresh_col2 = st.columns([3, 1])
     with refresh_col2:
         if st.button("🔄 Refresh Data", help="Reload validator data", use_container_width=True):
+            # Track refresh usage
+            try:
+                from usage_tracker import usage_tracker
+                usage_tracker.track_refresh()
+            except Exception:
+                pass  # Continue if tracking fails
+            
             st.cache_data.clear()
             st.rerun()
 

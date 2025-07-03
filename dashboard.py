@@ -22,6 +22,9 @@ from components import (display_health_status, display_performance_health, displ
                        responsive_columns, display_health_summary)
 from utils import format_operator_display_plain, get_performance_category, get_memory_usage
 from api_handler import get_api_response
+from usage_tracker import usage_tracker
+from stats_page import show_statistics_page, show_usage_api
+from usage_tracking_js import inject_usage_tracking_js, track_data_loading_operation
 
 
 
@@ -30,9 +33,16 @@ def run_dashboard():
     # Check for API requests first - only if explicitly set
     try:
         api_param = st.query_params.get("api")
+        stats_param = st.query_params.get("stats")
+        
         if api_param and str(api_param).lower() in ["1", "true", "yes"]:
             handle_api_request()
             return
+        
+        if stats_param and str(stats_param).lower() in ["1", "true", "yes"]:
+            handle_stats_request()
+            return
+            
     except Exception as e:
         # If query params fail, continue with normal dashboard
         pass
@@ -47,6 +57,25 @@ def run_dashboard():
     
     # Display logo and header
     display_logo()
+    
+    # Track dashboard visit and inject comprehensive tracking
+    try:
+        user_agent = st.context.headers.get("User-Agent", "Unknown") if hasattr(st.context, 'headers') else "Unknown"
+        
+        # Only track as visit for new sessions, not every page load
+        session_id = usage_tracker._get_session_id()
+        if session_id not in usage_tracker.stats['session_data']:
+            usage_tracker.track_visit(user_agent=user_agent)
+        
+        # Store current time for tracking
+        st.session_state['current_time'] = datetime.now().isoformat()
+        
+        # Inject JavaScript for comprehensive usage tracking
+        inject_usage_tracking_js()
+        
+    except Exception as e:
+        # If tracking fails, continue with normal operation
+        pass
     
     # Option 2: Compact Info Bar (TEMPORARY PREVIEW)
     st.markdown("""
@@ -140,23 +169,31 @@ def run_dashboard():
     # Show refresh button
     show_refresh_button()
 
-    # Load data
-    cache_data = load_validator_data()
-    if cache_data[0] is None:
-        st.error("⚠️ **Cache file not found!**")
-        st.markdown("""
-        **Setup Instructions:**
-        1. Run your NodeSet validator tracker script first
-        2. Ensure `nodeset_validator_tracker_cache.json` exists
-        3. Place the cache file in the same directory as this dashboard
+    # Load data with tracking
+    try:
+        cache_data = load_validator_data()
+        if cache_data[0] is None:
+            track_data_loading_operation("validator_data", success=False, error_msg="Cache file not found")
+            st.error("⚠️ **Cache file not found!**")
+            st.markdown("""
+            **Setup Instructions:**
+            1. Run your NodeSet validator tracker script first
+            2. Ensure `nodeset_validator_tracker_cache.json` exists
+            3. Place the cache file in the same directory as this dashboard
 
-        **Expected file locations:**
-        - `./nodeset_validator_tracker_cache.json`
-        - `./data/nodeset_validator_tracker_cache.json`
-        """)
+            **Expected file locations:**
+            - `./nodeset_validator_tracker_cache.json`
+            - `./data/nodeset_validator_tracker_cache.json`
+            """)
+            return
+        else:
+            track_data_loading_operation("validator_data", success=True)
+
+        cache, cache_file = cache_data
+    except Exception as e:
+        track_data_loading_operation("validator_data", success=False, error_msg=str(e))
+        st.error(f"Error loading validator data: {e}")
         return
-
-    cache, cache_file = cache_data
 
     # Extract data from cache
     operator_validators = cache.get('operator_validators', {})
@@ -205,6 +242,7 @@ def create_dashboard_tabs(cache, operator_validators, operator_exited, operator_
     
     st.markdown("---")
 
+    # Create tabs without server-side tracking (back to original beautiful design)
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11 = st.tabs([
         "📈 Distribution",
         "🎯 Concentration", 
@@ -218,37 +256,39 @@ def create_dashboard_tabs(cache, operator_validators, operator_exited, operator_
         "🔥 Pump the Gas!",
         "📋 Raw Data"
     ])
-
+    
+    # No tab tracking needed - simplified approach
+    
     with tab1:
         create_distribution_tab(active_validators)
-
+    
     with tab2:
         create_concentration_tab(active_validators, concentration_metrics)
-
+    
     with tab3:
         create_top_operators_tab(operator_validators, operator_exited, ens_names)
-
+    
     with tab4:
         create_performance_tab(operator_performance, operator_validators, operator_exited, ens_names)
-
+    
     with tab5:
         create_proposals_tab(ens_names)
-
+    
     with tab6:
         create_sync_committee_tab(ens_names)
-
+    
     with tab7:
         create_exit_analysis_tab(operator_validators, operator_exited, ens_names)
-
+    
     with tab8:
         create_costs_tab(cache, operator_validators, operator_exited, ens_names)
-
+    
     with tab9:
         create_client_diversity_tab(ens_names)
-
+    
     with tab10:
         create_gas_analysis_tab(ens_names)
-
+    
     with tab11:
         create_raw_data_tab(cache, operator_validators, operator_exited, ens_names)
 
@@ -258,18 +298,26 @@ def create_client_diversity_tab(ens_names):
     st.markdown("*Analysis of execution client, consensus client, and setup configurations from proposal graffiti data*")
     
     # Load proposals data
-    proposals_cache = load_proposals_data()
-    if proposals_cache[0] is None:
-        st.error("⚠️ **Proposals data file not found!**")
-        st.markdown("""
-        **Setup Instructions:**
-        1. Ensure `proposals.json` exists in your directory
-        2. Place the file alongside this dashboard script
-        
-        **Expected file locations:**
-        - `./proposals.json`
-        - `./data/proposals.json`
-        """)
+    try:
+        proposals_cache = load_proposals_data()
+        if proposals_cache[0] is None:
+            track_data_loading_operation("proposals_data", success=False, error_msg="Proposals file not found")
+            st.error("⚠️ **Proposals data file not found!**")
+            st.markdown("""
+            **Setup Instructions:**
+            1. Ensure `proposals.json` exists in your directory
+            2. Place the file alongside this dashboard script
+            
+            **Expected file locations:**
+            - `./proposals.json`
+            - `./data/proposals.json`
+            """)
+            return
+        else:
+            track_data_loading_operation("proposals_data", success=True)
+    except Exception as e:
+        track_data_loading_operation("proposals_data", success=False, error_msg=str(e))
+        st.error(f"Error loading proposals data: {e}")
         return
     
     proposals_data, proposals_file = proposals_cache
@@ -2762,6 +2810,56 @@ def handle_api_request():
             st.error(f"API Error: {str(e)}")
         else:
             st.json(error_response)
+
+
+def handle_stats_request():
+    """Handle statistics page requests"""
+    # Apply minimal styling for stats mode
+    apply_page_config()
+    apply_custom_css()
+    
+    # Get stats parameters
+    format_param = st.query_params.get("format", "page")
+    action = st.query_params.get("action", "view")
+    
+    try:
+        if format_param == "json":
+            # Return JSON API response
+            response_data = show_usage_api()
+            
+            if action == "download":
+                # Provide download button
+                filename = f"dashboard_usage_stats_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
+                
+                st.download_button(
+                    label="📥 Download Usage Statistics",
+                    data=json.dumps(response_data, indent=2),
+                    file_name=filename,
+                    mime="application/json",
+                    use_container_width=True
+                )
+                
+                st.write(f"**Ready to download:** Usage statistics as of {response_data['timestamp']}")
+                
+            else:
+                # Show raw JSON
+                st.json(response_data)
+        else:
+            # Default: Show full statistics page
+            show_statistics_page()
+            
+    except Exception as e:
+        usage_tracker.track_error("stats_page_error")
+        error_response = {
+            "error": "Statistics request failed",
+            "message": str(e),
+            "timestamp": datetime.now().isoformat()
+        }
+        
+        if format_param == "json":
+            st.json(error_response)
+        else:
+            st.error(f"Statistics Error: {str(e)}")
 
 
 if __name__ == "__main__":
