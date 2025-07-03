@@ -99,8 +99,8 @@ def run_dashboard():
             align-items: center;
             gap: 16px;
             color: #1f2937;
-            flex: 1;
-            min-width: 350px;
+            flex: 2;
+            min-width: 400px;
         }
         
         .info-bar-right {
@@ -109,7 +109,9 @@ def run_dashboard():
             gap: 16px;
             color: #374151;
             border-left: 1px solid rgba(0, 0, 0, 0.15);
-            padding-left: 2rem;
+            padding-left: 1.5rem;
+            flex: 1;
+            max-width: 350px;
         }
         
         /* Dark mode styles */
