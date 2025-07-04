@@ -600,8 +600,8 @@ def create_top_operators_tab(operator_validators, operator_exited, ens_names):
 def create_performance_tab(operator_performance, operator_validators, operator_exited, ens_names):
     """Create the performance analysis tab"""
     from datetime import datetime, timedelta, timezone
-    st.subheader("⚡ Operator Performance Analysis (24 hours)")
-    st.info("ℹ️ This is last 24 hour data only - note refreshes every 1 hour")
+    st.subheader("⚡ Operator Performance Analysis 24 hours / 7 days / 31 days")
+    st.info("ℹ️ 24 hour data refreshes every hour. Scroll down for 7 / 31 day data")
 
     if operator_performance:
         fig_scatter, fig_hist = create_performance_charts(operator_performance, operator_validators, ens_names)
