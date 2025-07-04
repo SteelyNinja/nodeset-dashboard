@@ -751,6 +751,10 @@ def create_performance_tab(operator_performance, operator_validators, operator_e
                         if activation_timestamp == 0 or activation_timestamp > seven_days_ago_timestamp:
                             continue
                         
+                        # Skip exited validators
+                        if activation_data.get('status') == 'exited':
+                            continue
+                        
                         # Get performance data
                         performance_metrics = validator_info.get('performance_metrics', {})
                         performance_7d = performance_metrics.get('performance_7d', 0)
@@ -900,6 +904,10 @@ def create_performance_tab(operator_performance, operator_validators, operator_e
                         activation_data = validator_info.get('activation_data', {})
                         activation_timestamp = activation_data.get('activation_timestamp', 0)
                         if activation_timestamp == 0 or activation_timestamp > thirty_two_days_ago.timestamp():
+                            continue
+                        
+                        # Skip exited validators
+                        if activation_data.get('status') == 'exited':
                             continue
                         
                         # Get performance data
