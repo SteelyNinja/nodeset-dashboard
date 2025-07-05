@@ -1,13 +1,13 @@
 {
   "metadata": {
-    "last_updated": "2025-07-05T21:15:44.885760",
-    "total_proposals": 584,
-    "total_value_eth": 47.3216385068,
-    "total_consensus_eth": 26.58462745,
-    "total_execution_eth": 20.7370110568,
+    "last_updated": "2025-07-05T21:30:45.068951",
+    "total_proposals": 585,
+    "total_value_eth": 47.3704874706,
+    "total_consensus_eth": 26.631563766,
+    "total_execution_eth": 20.7389237046,
     "total_mev_eth": 20.3940461563,
     "mev_boost_blocks": 551,
-    "mev_boost_percentage": 94.34931506849315,
+    "mev_boost_percentage": 94.18803418803418,
     "operators_tracked": 145,
     "data_sources": [
       "local_lighthouse",
@@ -17,11 +17,11 @@
     "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti"
   },
   "client_diversity": {
-    "total_proposals": 584,
+    "total_proposals": 585,
     "identified_proposals": 0,
     "identification_rate": 0.0,
     "client_distribution": {},
-    "analysis_timestamp": "2025-07-05T21:15:44.885755"
+    "analysis_timestamp": "2025-07-05T21:30:45.068947"
   },
   "operator_summary": {
     "0x93373F548355225C479bC7aA2380158ef868623e": {
@@ -935,14 +935,14 @@
       "pool_signatures_percentage": 0.0
     },
     "0x39D2efbE393DDD39B9B637b8eb160bea9B26bE20": {
-      "proposal_count": 3,
-      "total_value_eth": 0.1923155623,
-      "average_value_eth": 0.06410518743333334,
-      "consensus_rewards_eth": 0.13841644800000003,
-      "execution_rewards_eth": 0.0538991143,
+      "proposal_count": 4,
+      "total_value_eth": 0.2411645261,
+      "average_value_eth": 0.060291131525,
+      "consensus_rewards_eth": 0.18535276400000003,
+      "execution_rewards_eth": 0.0558117621,
       "mev_rewards_eth": 0.0538991143,
       "mev_blocks_count": 3,
-      "mev_blocks_percentage": 100.0,
+      "mev_blocks_percentage": 75.0,
       "clients_used": {},
       "primary_client": null,
       "pool_signatures_count": 0,
@@ -32436,6 +32436,58 @@
         "traditional_fees_wei": 0,
         "block_reward_wei": 13191205237683472,
         "producer_reward_wei": 13836268684427176
+      }
+    },
+    {
+      "slot": 12077211,
+      "epoch": 377412,
+      "timestamp": 1751750555,
+      "date": "2025-07-05 21:22:35",
+      "validator_index": 1937749,
+      "validator_pubkey": "0x93bf1f3a689911a18d3385ee8744e5caecdc54768347e906768a2a323b0843e945619ecdee8ddbfa8be006d3fe35190c",
+      "operator": "0x39D2efbE393DDD39B9B637b8eb160bea9B26bE20",
+      "operator_name": "0x39D2ef...26bE20",
+      "total_value_wei": 4.884896375606307e+16,
+      "total_value_eth": 0.0488489638,
+      "block_number": 22855664,
+      "proposer_index": 1937749,
+      "fee_recipient": "0x48319f97E5Da1233c21c48b80097c0FB7a20Ff86",
+      "graffiti_hex": "0x4e534e4e582076312e322e320000000000000000000000000000000000000000",
+      "graffiti_text": "NSNNX v1.2.2",
+      "consensus_client": null,
+      "client_version": "1.2.2",
+      "has_pool_signature": false,
+      "consensus_reward_eth": 0.046936316,
+      "execution_fees_eth": 0.0019126478,
+      "mev_breakdown_eth": 0.0,
+      "mev_percentage": 0.0,
+      "gas_used": 32032851,
+      "gas_limit": 35964811,
+      "base_fee": 229740854,
+      "tx_count": 92,
+      "gas_utilization": 89.07,
+      "is_mev_boost_block": false,
+      "relay_tag": "",
+      "builder_pubkey": "",
+      "total_rewards_wei": 4.884896375606307e+16,
+      "total_rewards_eth": 0.0488489638,
+      "data_sources_used": [
+        "local_beacon_api",
+        "beaconchain_api"
+      ],
+      "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti",
+      "detailed_consensus": {
+        "consensus_rewards_wei": 4.6936316e+16,
+        "attestations_gwei": 45261258,
+        "deposits_gwei": 0,
+        "sync_aggregate_gwei": 1675058
+      },
+      "detailed_execution": {
+        "execution_reward_wei": 1912647756063070,
+        "mev_breakdown_wei": 0,
+        "traditional_fees_wei": 1912647756063070,
+        "block_reward_wei": 1912647756063070,
+        "producer_reward_wei": 1912647756063070
       }
     }
   ]
