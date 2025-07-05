@@ -2308,7 +2308,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             data_files_info.append({
                 'File': 'nodeset_validator_tracker_cache.json',
                 'Description': 'Main validator data, performance, costs, ENS names',
-                'Size (MB)': f"{file_size_mb:.2f}",
+                'Size (MB)': f"{file_size_mb:.3f}",
                 'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
                 'Status': '✅ Loaded',
                 'Records': f"{len(cache_content.get('operator_validators', {}))} operators"
@@ -2346,7 +2346,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             data_files_info.append({
                 'File': 'proposals.json',
                 'Description': 'Block proposals, MEV data, validator performance',
-                'Size (MB)': f"{file_size_mb:.2f}",
+                'Size (MB)': f"{file_size_mb:.3f}",
                 'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
                 'Status': '✅ Loaded',
                 'Records': f"{metadata.get('total_proposals', 0)} proposals"
@@ -2387,7 +2387,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             data_files_info.append({
                 'File': 'mev_analysis_results.json',
                 'Description': 'Gas limit analysis, MEV relay usage',
-                'Size (MB)': f"{file_size_mb:.2f}",
+                'Size (MB)': f"{file_size_mb:.3f}",
                 'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
                 'Status': '✅ Loaded',
                 'Records': f"{total_validators} validators analyzed"
@@ -2425,7 +2425,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             data_files_info.append({
                 'File': 'sync_committee_participation.json',
                 'Description': 'Sync committee participation tracking',
-                'Size (MB)': f"{file_size_mb:.2f}",
+                'Size (MB)': f"{file_size_mb:.3f}",
                 'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
                 'Status': '✅ Loaded',
                 'Records': f"{metadata.get('total_periods_tracked', 0)} periods"
@@ -2463,7 +2463,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             data_files_info.append({
                 'File': 'missed_proposals_cache.json',
                 'Description': 'Missed block proposals tracking',
-                'Size (MB)': f"{file_size_mb:.2f}",
+                'Size (MB)': f"{file_size_mb:.3f}",
                 'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
                 'Status': '✅ Loaded',
                 'Records': f"{len(missed_proposals)} missed proposals"
@@ -2502,7 +2502,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             data_files_info.append({
                 'File': 'validator_performance_cache.json',
                 'Description': 'Individual validator performance metrics',
-                'Size (MB)': f"{file_size_mb:.2f}",
+                'Size (MB)': f"{file_size_mb:.3f}",
                 'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
                 'Status': '✅ Loaded',
                 'Records': f"{len(validators)} validators"
@@ -2537,14 +2537,14 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             last_modified = datetime.fromtimestamp(os.path.getmtime(exit_file))
             
             # Count exit data records
-            exit_data = exit_content.get('exit_data', {})
+            operators_with_exits = exit_content.get('operators_with_exits', [])
             data_files_info.append({
                 'File': 'dashboard_exit_data.json',
                 'Description': 'Validator exit analysis data',
-                'Size (MB)': f"{file_size_mb:.2f}",
+                'Size (MB)': f"{file_size_mb:.3f}",
                 'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
                 'Status': '✅ Loaded',
-                'Records': f"{len(exit_data)} validators"
+                'Records': f"{len(operators_with_exits)} operators"
             })
         except Exception as e:
             data_files_info.append({
@@ -2553,7 +2553,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
                 'Size (MB)': 'Unknown',
                 'Last Modified': 'Unknown',
                 'Status': '✅ Loaded',
-                'Records': f"{len(exit_content.get('exit_data', {}))} validators"
+                'Records': f"{len(exit_content.get('operators_with_exits', []))} operators"
             })
     else:
         data_files_info.append({
@@ -2772,9 +2772,13 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             
             col1, col2 = st.columns(2)
             with col1:
-                exit_data = exit_content.get('exit_data', {})
+                operators_with_exits = exit_content.get('operators_with_exits', [])
+                exit_summary = exit_content.get('exit_summary', {})
                 summary = {
-                    "total_validators": len(exit_data),
+                    "total_operators_with_exits": len(operators_with_exits),
+                    "total_exited": exit_summary.get('total_exited', 0),
+                    "total_active": exit_summary.get('total_active', 0),
+                    "exit_rate_percent": exit_summary.get('exit_rate_percent', 0),
                     "last_updated": exit_content.get('last_updated', 'Unknown'),
                     "data_keys": list(exit_content.keys())
                 }
