@@ -1,9 +1,9 @@
 {
   "exit_summary": {
-    "total_exited": 24,
-    "total_active": 2422,
-    "exit_rate_percent": 0.9811937857726901,
-    "last_updated": 1751185400
+    "total_exited": 27,
+    "total_active": 2557,
+    "exit_rate_percent": 1.044891640866873,
+    "last_updated": 1751702442
   },
   "operators_with_exits": [
     {
@@ -15,6 +15,16 @@
       "exit_rate": 100.0,
       "latest_exit_timestamp": 1748820695,
       "latest_exit_date": "2025-06-01"
+    },
+    {
+      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
+      "operator_name": "0x37F4C7...17bDEa",
+      "exits": 6,
+      "still_active": 11,
+      "total_ever": 17,
+      "exit_rate": 35.3,
+      "latest_exit_timestamp": 1751479511,
+      "latest_exit_date": "2025-07-02"
     },
     {
       "operator": "0xC051C8fbbe18a6990f3E3050ec50D33e96a792F1",
@@ -37,16 +47,6 @@
       "latest_exit_date": "2025-05-23"
     },
     {
-      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
-      "operator_name": "0x37F4C7...17bDEa",
-      "exits": 3,
-      "still_active": 14,
-      "total_ever": 17,
-      "exit_rate": 17.6,
-      "latest_exit_timestamp": 1750535639,
-      "latest_exit_date": "2025-06-21"
-    },
-    {
       "operator": "0x9909F8C62eE4F0341f3Ca7C13BA075F928f5b787",
       "operator_name": "nodeset.uberudder.eth (0x9909F8...f5b787)",
       "exits": 1,
@@ -58,6 +58,39 @@
     }
   ],
   "recent_exits": [
+    {
+      "validator_index": 1906395,
+      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
+      "operator_name": "0x37F4C7...17bDEa",
+      "exit_timestamp": 1751479511,
+      "exit_date": "2025-07-02 18:05:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "376707"
+    },
+    {
+      "validator_index": 1922661,
+      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
+      "operator_name": "0x37F4C7...17bDEa",
+      "exit_timestamp": 1751479511,
+      "exit_date": "2025-07-02 18:05:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "376707"
+    },
+    {
+      "validator_index": 1937869,
+      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
+      "operator_name": "0x37F4C7...17bDEa",
+      "exit_timestamp": 1751479511,
+      "exit_date": "2025-07-02 18:05:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "376707"
+    },
     {
       "validator_index": 1896857,
       "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
@@ -90,138 +123,6 @@
       "slashed": false,
       "balance_gwei": null,
       "exit_epoch": "374249"
-    },
-    {
-      "validator_index": 1938735,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748820695,
-      "exit_date": "2025-06-01 23:31:35",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369783"
-    },
-    {
-      "validator_index": 1938736,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748820695,
-      "exit_date": "2025-06-01 23:31:35",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369783"
-    },
-    {
-      "validator_index": 1938737,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748820695,
-      "exit_date": "2025-06-01 23:31:35",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369783"
-    },
-    {
-      "validator_index": 1938738,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748820695,
-      "exit_date": "2025-06-01 23:31:35",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369783"
-    },
-    {
-      "validator_index": 1938734,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748820311,
-      "exit_date": "2025-06-01 23:25:11",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369782"
-    },
-    {
-      "validator_index": 1937839,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748788055,
-      "exit_date": "2025-06-01 14:27:35",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369698"
-    },
-    {
-      "validator_index": 1922762,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748713943,
-      "exit_date": "2025-05-31 17:52:23",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369505"
-    },
-    {
-      "validator_index": 1922763,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748713943,
-      "exit_date": "2025-05-31 17:52:23",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369505"
-    },
-    {
-      "validator_index": 1920520,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748713559,
-      "exit_date": "2025-05-31 17:45:59",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369504"
-    },
-    {
-      "validator_index": 1906114,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748713559,
-      "exit_date": "2025-05-31 17:45:59",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369504"
-    },
-    {
-      "validator_index": 1906115,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748713559,
-      "exit_date": "2025-05-31 17:45:59",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369504"
-    },
-    {
-      "validator_index": 1905312,
-      "operator": "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae",
-      "operator_name": "0x9Db702...58F8Ae",
-      "exit_timestamp": 1748713559,
-      "exit_date": "2025-05-31 17:45:59",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "369504"
     }
   ],
   "exit_timeline": [
@@ -257,6 +158,12 @@
     },
     {
       "date": "2025-06-21",
+      "voluntary_exits": 3,
+      "slashed_exits": 0,
+      "total_exits": 3
+    },
+    {
+      "date": "2025-07-02",
       "voluntary_exits": 3,
       "slashed_exits": 0,
       "total_exits": 3
