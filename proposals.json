@@ -1,14 +1,14 @@
 {
   "metadata": {
-    "last_updated": "2025-07-05T01:45:48.395324",
-    "total_proposals": 578,
-    "total_value_eth": 46.9682797546,
-    "total_consensus_eth": 26.302444802,
-    "total_execution_eth": 20.6658349526,
+    "last_updated": "2025-07-05T02:03:16.714224",
+    "total_proposals": 579,
+    "total_value_eth": 47.0205252943,
+    "total_consensus_eth": 26.350248771,
+    "total_execution_eth": 20.6702765233,
     "total_mev_eth": 20.3273116228,
     "mev_boost_blocks": 546,
-    "mev_boost_percentage": 94.4636678200692,
-    "operators_tracked": 144,
+    "mev_boost_percentage": 94.30051813471503,
+    "operators_tracked": 145,
     "data_sources": [
       "local_lighthouse",
       "beaconchain_api",
@@ -17,11 +17,11 @@
     "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti"
   },
   "client_diversity": {
-    "total_proposals": 578,
+    "total_proposals": 579,
     "identified_proposals": 0,
     "identification_rate": 0.0,
     "client_distribution": {},
-    "analysis_timestamp": "2025-07-05T01:45:48.395319"
+    "analysis_timestamp": "2025-07-05T02:03:16.714217"
   },
   "operator_summary": {
     "0x93373F548355225C479bC7aA2380158ef868623e": {
@@ -2035,6 +2035,20 @@
       "mev_rewards_eth": 0.0202229842,
       "mev_blocks_count": 1,
       "mev_blocks_percentage": 100.0,
+      "clients_used": {},
+      "primary_client": null,
+      "pool_signatures_count": 0,
+      "pool_signatures_percentage": 0.0
+    },
+    "0xFf026C6b9Af07d86fa990D868A6293220A0dD96b": {
+      "proposal_count": 1,
+      "total_value_eth": 0.0522455397,
+      "average_value_eth": 0.0522455397,
+      "consensus_rewards_eth": 0.047803969,
+      "execution_rewards_eth": 0.0044415707,
+      "mev_rewards_eth": 0.0,
+      "mev_blocks_count": 0,
+      "mev_blocks_percentage": 0.0,
       "clients_used": {},
       "primary_client": null,
       "pool_signatures_count": 0,
@@ -32110,6 +32124,58 @@
         "execution_reward_wei": 7960757974936702,
         "mev_breakdown_wei": 0,
         "traditional_fees_wei": 7960757974936702
+      }
+    },
+    {
+      "slot": 12071339,
+      "epoch": 377229,
+      "timestamp": 1751680091,
+      "date": "2025-07-05 01:48:11",
+      "validator_index": 1980985,
+      "validator_pubkey": "0xa9ba74a705239e68435064c35de3fec55726d7f8b850f7ea69d562b1824ed7d0bc27c89a654d591f716caf67838d1f30",
+      "operator": "0xFf026C6b9Af07d86fa990D868A6293220A0dD96b",
+      "operator_name": "0xFf026C...0dD96b",
+      "total_value_wei": 5.22455396956242e+16,
+      "total_value_eth": 0.0522455397,
+      "block_number": 22849834,
+      "proposer_index": 1980985,
+      "fee_recipient": "0x48319f97E5Da1233c21c48b80097c0FB7a20Ff86",
+      "graffiti_hex": "0x4e534750582076312e322e320000000000000000000000000000000000000000",
+      "graffiti_text": "NSGPX v1.2.2",
+      "consensus_client": null,
+      "client_version": "1.2.2",
+      "has_pool_signature": false,
+      "consensus_reward_eth": 0.047803969,
+      "execution_fees_eth": 0.0044415707,
+      "mev_breakdown_eth": 0.0,
+      "mev_percentage": 0.0,
+      "gas_used": 24269370,
+      "gas_limit": 36070241,
+      "base_fee": 242065692,
+      "tx_count": 101,
+      "gas_utilization": 67.28,
+      "is_mev_boost_block": false,
+      "relay_tag": "",
+      "builder_pubkey": "",
+      "total_rewards_wei": 5.22455396956242e+16,
+      "total_rewards_eth": 0.0522455397,
+      "data_sources_used": [
+        "local_beacon_api",
+        "beaconchain_api"
+      ],
+      "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti",
+      "detailed_consensus": {
+        "consensus_rewards_wei": 4.7803969e+16,
+        "attestations_gwei": 46128911,
+        "deposits_gwei": 0,
+        "sync_aggregate_gwei": 1675058
+      },
+      "detailed_execution": {
+        "execution_reward_wei": 4441570695624199,
+        "mev_breakdown_wei": 0,
+        "traditional_fees_wei": 4441570695624199,
+        "block_reward_wei": 4441570695624199,
+        "producer_reward_wei": 4441570695624199
       }
     }
   ]
