@@ -243,7 +243,7 @@ def create_dashboard_tabs(cache, operator_validators, operator_exited, operator_
     
     st.markdown("---")
 
-    # Create tabs without server-side tracking (back to original beautiful design)
+    # Create tabs without server-side tracking
     tab1, tab2, tab3, tab4, tab5, tab6, tab7, tab8, tab9, tab10, tab11 = st.tabs([
         "📈 Distribution",
         "🎯 Concentration", 
@@ -2526,6 +2526,45 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             'Records': 'N/A'
         })
     
+    # 7. Exit data
+    exit_cache = load_exit_data()
+    if exit_cache[0] is not None:
+        exit_content, exit_file = exit_cache
+        try:
+            import os
+            file_size = os.path.getsize(exit_file)
+            file_size_mb = file_size / (1024 * 1024)
+            last_modified = datetime.fromtimestamp(os.path.getmtime(exit_file))
+            
+            # Count exit data records
+            exit_data = exit_content.get('exit_data', {})
+            data_files_info.append({
+                'File': 'dashboard_exit_data.json',
+                'Description': 'Validator exit analysis data',
+                'Size (MB)': f"{file_size_mb:.2f}",
+                'Last Modified': last_modified.strftime('%Y-%m-%d %H:%M:%S'),
+                'Status': '✅ Loaded',
+                'Records': f"{len(exit_data)} validators"
+            })
+        except Exception as e:
+            data_files_info.append({
+                'File': 'dashboard_exit_data.json',
+                'Description': 'Validator exit analysis data',
+                'Size (MB)': 'Unknown',
+                'Last Modified': 'Unknown',
+                'Status': '✅ Loaded',
+                'Records': f"{len(exit_content.get('exit_data', {}))} validators"
+            })
+    else:
+        data_files_info.append({
+            'File': 'dashboard_exit_data.json',
+            'Description': 'Validator exit analysis data',
+            'Size (MB)': 'N/A',
+            'Last Modified': 'N/A',
+            'Status': '❌ Missing',
+            'Records': 'N/A'
+        })
+    
     # Display files overview table
     files_df = pd.DataFrame(data_files_info)
     st.dataframe(
@@ -2555,7 +2594,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
     
     col1, col2, col3 = st.columns(3)
     # Calculate status
-    missing_files = 6 - loaded_files
+    missing_files = 7 - loaded_files
     if missing_files == 0:
         status = "🟢 All files loaded"
     else:
@@ -2571,7 +2610,7 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
             </div>
             <div class="glass-card">
                 <div class="glass-card-title">Files Loaded</div>
-                <div class="glass-card-value">{}/6</div>
+                <div class="glass-card-value">{}/7</div>
                 <div class="glass-card-caption">Data files available</div>
             </div>
             <div class="glass-card">
@@ -2588,13 +2627,14 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
     st.markdown("### 🔍 Detailed Cache Data")
     
     # Create tabs for each data file
-    tab1, tab2, tab3, tab4, tab5, tab6 = st.tabs([
+    tab1, tab2, tab3, tab4, tab5, tab6, tab7 = st.tabs([
         "🏠 Main Cache", 
         "🤲 Proposals", 
         "⛽ MEV Analysis", 
         "📡 Sync Committee", 
         "❌ Missed Proposals",
-        "⚡ Validator Performance"
+        "⚡ Validator Performance",
+        "🚪 Exit Data"
     ])
     
     with tab1:
@@ -2724,6 +2764,27 @@ def create_raw_data_tab(cache, operator_validators, operator_exited, ens_names):
                     st.json(performance_content)
         else:
             st.info("❌ Validator performance data not loaded")
+
+    with tab7:
+        if exit_cache[0] is not None:
+            exit_content, _ = exit_cache
+            st.markdown("**Exit Data Summary**")
+            
+            col1, col2 = st.columns(2)
+            with col1:
+                exit_data = exit_content.get('exit_data', {})
+                summary = {
+                    "total_validators": len(exit_data),
+                    "last_updated": exit_content.get('last_updated', 'Unknown'),
+                    "data_keys": list(exit_content.keys())
+                }
+                st.json(summary)
+            
+            with col2:
+                if st.button("🔄 Show Full Exit Data", key="show_exit_data"):
+                    st.json(exit_content)
+        else:
+            st.info("❌ Exit data not loaded")
 
     # ENS names section (existing code)
     st.markdown("---")
