@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "last_updated": "2025-07-06T16:45:50.253267",
+    "last_updated": "2025-07-06T17:00:56.754695",
     "total_periods_tracked": 24,
     "total_validators_in_committees": 36,
-    "total_attestations_tracked": 556712,
-    "total_successful_attestations": 534634,
-    "total_missed_attestations": 22078,
+    "total_attestations_tracked": 556862,
+    "total_successful_attestations": 534782,
+    "total_missed_attestations": 22080,
     "total_api_failures": 0,
     "overall_participation_rate": 96.03
   },
@@ -196,10 +196,10 @@
     },
     "1474": {
       "our_validators_count": 2,
-      "total_slots": 16040,
-      "total_successful": 15801,
-      "total_missed": 239,
-      "participation_rate": 98.50997506234414,
+      "total_slots": 16190,
+      "total_successful": 15949,
+      "total_missed": 241,
+      "participation_rate": 98.51142680667078,
       "api_failures": 0
     }
   },
@@ -430,18 +430,18 @@
     },
     "0xE8E6Ab490780FA179BE3F710Bec9A0bA57707A8c": {
       "total_periods": 1,
-      "total_slots": 8020,
-      "total_successful": 7876,
-      "total_missed": 144,
-      "participation_rate": 98.20448877805487,
+      "total_slots": 8095,
+      "total_successful": 7950,
+      "total_missed": 145,
+      "participation_rate": 98.20877084620136,
       "api_failures": 0
     },
     "0x8Fe576aEb5816a59fA48D0eCa46a9cE34C80AB89": {
       "total_periods": 1,
-      "total_slots": 8020,
-      "total_successful": 7925,
-      "total_missed": 95,
-      "participation_rate": 98.81546134663341,
+      "total_slots": 8095,
+      "total_successful": 7999,
+      "total_missed": 96,
+      "participation_rate": 98.8140827671402,
       "api_failures": 0
     }
   },
@@ -1170,16 +1170,16 @@
       "validator_pubkey": "0x973629dac90c008598f0537faf6d76cd93d4b9a8475fdf9e18bcf7a7ef0b3a1816b92850d3d0111503dbd69fb6bf554f",
       "operator": "0xE8E6Ab490780FA179BE3F710Bec9A0bA57707A8c",
       "operator_name": "0xE8E6Ab...707A8c",
-      "total_slots": 8020,
-      "successful_attestations": 7876,
-      "missed_attestations": 144,
-      "participation_rate": 98.2,
+      "total_slots": 8095,
+      "successful_attestations": 7950,
+      "missed_attestations": 145,
+      "participation_rate": 98.21,
       "is_partial_period": true,
       "actual_start_slot": 12075008,
-      "actual_end_slot": 12083027,
+      "actual_end_slot": 12083102,
       "api_failures": 0,
       "scan_start_slot": 12075008,
-      "scan_end_slot": 12083027
+      "scan_end_slot": 12083102
     },
     {
       "period": 1474,
@@ -1191,16 +1191,16 @@
       "validator_pubkey": "0xa91dc6d1c83ce91ab9673067d0774023823e6ee1c3cff0de9c195ca0b44266e141705e07337ddab2f7c6eb9997583951",
       "operator": "0x8Fe576aEb5816a59fA48D0eCa46a9cE34C80AB89",
       "operator_name": "nds.ramana.eth (0x8Fe576...80AB89)",
-      "total_slots": 8020,
-      "successful_attestations": 7925,
-      "missed_attestations": 95,
-      "participation_rate": 98.82,
+      "total_slots": 8095,
+      "successful_attestations": 7999,
+      "missed_attestations": 96,
+      "participation_rate": 98.81,
       "is_partial_period": true,
       "actual_start_slot": 12075008,
-      "actual_end_slot": 12083027,
+      "actual_end_slot": 12083102,
       "api_failures": 0,
       "scan_start_slot": 12075008,
-      "scan_end_slot": 12083027
+      "scan_end_slot": 12083102
     }
   ]
 }
