@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "analysis_timestamp": "2025-07-06T12:00:01.753429",
-    "analysis_duration_seconds": 1169.547177,
-    "total_active_validators": 2469,
+    "analysis_timestamp": "2025-07-07T12:00:01.847148",
+    "analysis_duration_seconds": 1181.868288,
+    "total_active_validators": 2473,
     "cache_file_used": "nodeset_validator_tracker_cache.json",
     "relays_tested": 8,
     "working_relays": [
@@ -14,60 +14,60 @@
       "agnostic"
     ],
     "failed_relays": {
-      "bloxroute_ethical": "HTTPSConnectionPool(host='bloxroute.ethical.blxrbdn.com', port=443): Max retries exceeded with url: /relay/v1/data/validator_registration?pubkey=0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x76f23667e0c0>: Failed to resolve 'bloxroute.ethical.blxrbdn.com' ([Errno -2] Name or service not known)\"))",
+      "bloxroute_ethical": "HTTPSConnectionPool(host='bloxroute.ethical.blxrbdn.com', port=443): Max retries exceeded with url: /relay/v1/data/validator_registration?pubkey=0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7e57a5121850>: Failed to resolve 'bloxroute.ethical.blxrbdn.com' ([Errno -2] Name or service not known)\"))",
       "securerpc": "HTTP 400"
     }
   },
   "summary": {
-    "total_validators": 2469,
-    "mev_registered_validators": 2433,
-    "mev_coverage_percentage": 98.5419198055893,
+    "total_validators": 2473,
+    "mev_registered_validators": 2437,
+    "mev_coverage_percentage": 98.54427820460978,
     "missing_validators": 36,
     "working_relays_count": 6,
-    "gas_limit_consistency_rate": 98.76695437731196
+    "gas_limit_consistency_rate": 98.76897825194911
   },
   "relay_performance": {
     "flashbots": {
       "name": "Flashbots",
-      "validators_found": 668,
-      "coverage_percentage": 27.45581586518701
+      "validators_found": 646,
+      "coverage_percentage": 26.508001641362334
     },
     "bloxroute_max_profit": {
       "name": "bloXroute Max Profit",
-      "validators_found": 2141,
-      "coverage_percentage": 87.99835593916974
+      "validators_found": 2144,
+      "coverage_percentage": 87.97702092736972
     },
     "bloxroute_regulated": {
       "name": "bloXroute Regulated",
-      "validators_found": 1938,
-      "coverage_percentage": 79.65474722564736
+      "validators_found": 1940,
+      "coverage_percentage": 79.60607304062371
     },
     "ultrasound": {
       "name": "Ultra Sound",
-      "validators_found": 1689,
-      "coverage_percentage": 69.42046855733662
+      "validators_found": 1690,
+      "coverage_percentage": 69.34755847353303
     },
     "aestus": {
       "name": "Aestus",
-      "validators_found": 1755,
-      "coverage_percentage": 72.13316892725031
+      "validators_found": 1757,
+      "coverage_percentage": 72.09684037751333
     },
     "agnostic": {
       "name": "Agnostic Relay",
       "validators_found": 375,
-      "coverage_percentage": 15.413070283600494
+      "coverage_percentage": 15.387771850636028
     }
   },
   "gas_limit_analysis": {
     "distribution": {
-      "36000000": 1562,
-      "60000000": 181,
-      "30000000": 660
+      "36000000": 1564,
+      "60000000": 182,
+      "30000000": 661
     },
     "consistency_stats": {
-      "consistent": 2403,
+      "consistent": 2407,
       "inconsistent": 30,
-      "consistency_rate": 98.76695437731196
+      "consistency_rate": 98.76897825194911
     },
     "inconsistent_validators": {
       "0xa3d6393c9c17800ac530fc60bae644784d9b85d19d8bfa65788b056c52075ec910524d847a74b1e7a81e21ce90c26913": {
@@ -2292,12 +2292,13 @@
     "0x43FeD6F64874EE6733360a93B4B922b7B5E3d003": {
       "display_name": "0x43FeD6...E3d003",
       "total_validators": 17,
-      "mev_registered": 12,
-      "mev_coverage_percent": 70.58823529411765,
-      "missing_mev": 5,
+      "mev_registered": 13,
+      "mev_coverage_percent": 76.47058823529412,
+      "missing_mev": 4,
       "average_gas_limit": 36000000.0,
-      "gas_limit_count": 12,
+      "gas_limit_count": 13,
       "gas_limits": [
+        36000000,
         36000000,
         36000000,
         36000000,
@@ -2578,12 +2579,13 @@
     "0x89C7d89aa5076bf92FaFA0eb4Df9BaA7720BCD4c": {
       "display_name": "nodeset.lutrine.eth (0x89C7d8...0BCD4c)",
       "total_validators": 17,
-      "mev_registered": 12,
-      "mev_coverage_percent": 70.58823529411765,
-      "missing_mev": 5,
+      "mev_registered": 13,
+      "mev_coverage_percent": 76.47058823529412,
+      "missing_mev": 4,
       "average_gas_limit": 36000000.0,
-      "gas_limit_count": 12,
+      "gas_limit_count": 13,
       "gas_limits": [
+        36000000,
         36000000,
         36000000,
         36000000,
@@ -3031,12 +3033,13 @@
     "0x4A59Bebc8E54995aEb38Ee64f472C90EA4636Ac7": {
       "display_name": "0x4A59Be...636Ac7",
       "total_validators": 17,
-      "mev_registered": 15,
-      "mev_coverage_percent": 88.23529411764706,
-      "missing_mev": 2,
+      "mev_registered": 16,
+      "mev_coverage_percent": 94.11764705882352,
+      "missing_mev": 1,
       "average_gas_limit": 60000000.0,
-      "gas_limit_count": 15,
+      "gas_limit_count": 16,
       "gas_limits": [
+        60000000,
         60000000,
         60000000,
         60000000,
@@ -3139,7 +3142,7 @@
       ]
     },
     "0x58D0c4B57904a597475dFd37428Fffad09F03074": {
-      "display_name": "0x58D0c4...F03074",
+      "display_name": "slipp.eth (0x58D0c4...F03074)",
       "total_validators": 17,
       "mev_registered": 17,
       "mev_coverage_percent": 100.0,
@@ -4380,12 +4383,14 @@
     "0xb1E6A425c17eabd7898F421926Cd83431DAd21d6": {
       "display_name": "0xb1E6A4...Ad21d6",
       "total_validators": 17,
-      "mev_registered": 0,
-      "mev_coverage_percent": 0.0,
-      "missing_mev": 17,
-      "average_gas_limit": null,
-      "gas_limit_count": 0,
-      "gas_limits": []
+      "mev_registered": 1,
+      "mev_coverage_percent": 5.88235294117647,
+      "missing_mev": 16,
+      "average_gas_limit": 30000000.0,
+      "gas_limit_count": 1,
+      "gas_limits": [
+        30000000
+      ]
     },
     "0xaA7fe18541A7d0691Cac3411cC6dBD0a54e8f39C": {
       "display_name": "0xaA7fe1...e8f39C",
@@ -4401,42 +4406,42 @@
   "missing_validator_analysis": {
     "total_missing": 36,
     "missing_validators": [
-      "0x867f4e5e25262d03bcd5795e2f051034b42ad3452f0c7a01f2420647a44415e8b1c56065342c5fdfa951a9c9ee659f85",
-      "0xa14347d2a18a6f6d36cf6648ace1b1d9c849fa50c7a63aadc0cc12250fa494d50564c7d26fd7573bda6f9c1661988386",
-      "0x9557a45795d2f2e2969bbff1349f39ec0adc489ed293254b11afb6a779768145cfb4e2e33b8e171e2e65c10ef196ac29",
-      "0xb189aa5d990af31f799b0f8698f958610d66192fec0b825677d07c931051c6f88b2fa49eb6eafc1b543ae3b7633da6ad",
-      "0x90fb3bf7461e536f4d9f54011ff9e89385194cf4ade15b5b4f7b92933a51c75946502b2c3b6e447532eb50035b21ebb8",
-      "0x928d3c8eefc6d742f8a5121b4bf99f25a263abd958b15d292282fadec8add76d610dc23c67625d58383b1dec5efc518d",
-      "0x8bdef0f1233092fcbb34b122eabd9e44faadabd395dff619c51247fa76f6e4fe74bc8f6b8eb59365fe0e40b265a3be16",
-      "0xaceb58c5db1508fbd22dc105219cf71e2469584a209d0692d4f67112e258dda258ed5627d61c5147637326ad910784c7",
-      "0x8fc571a7b90807c769d76c262ab805fa4617975bc0d36ff5bb296a685bcc32bdc34ea0b913b0adcacb772d960412b40e",
-      "0x83e7b3a2bc7c212aa657f734c0bce1c95ec93670a41b3cbfa94adc817cbc05c61fb64bf4d97888b29e1cfd5929f4a0aa",
-      "0x9004f80be2ff67d91336811d5d609ff1648c823605a672195b080ada9ea806aa47870b9c170173ab52e94f13093495a9",
-      "0x947a10880a0853d3896edbd1a76d1fad8423710502e0d4a83aebbebbccadbda4ff376cd8339aff43a89c5e51f880209e",
-      "0x8d8cd6d78e20235da67211f70d3c9e89e0e1fe38e3346aeeffd9538c98d7e632ebaa9671ef33e1b2776488bc8d8f3ddd",
       "0xadfff4172f4541ce2d037979f11bb2d6d9394198a97f25a09bb56468e99724a7abdc43440556f56683f743cdead37ee4",
-      "0xa134180138ae073826af65d9e08fba7fc59341f084a2ea9f9b5c5415265ce572b42a7dfb38c021ee6877846823e3535b",
-      "0xb2bc84ce855bc39c87b7207d4819458d039b3c90bd72f091b3b737e1f6c2edfa21bbeb661e864b045f7767e54f322a4e",
-      "0x867d04babe07f723c89511e66a097e9bcd6e7843b29abcb1c48a032be227c1af959dd9439d75860a10a60f9bbb8e350e",
-      "0xa9ff6f4bccc131e121ebee0585bbcdefa6882a528e59f54ecc3523d45462b3642c5146f6f0833a08590ccd327d6bb95a",
-      "0xa5ec9caa9058103f34886db2fdc41d7b98cce3d274f5d30314d7b931c17fe538cfdeadca9351218ce09bb6659c242374",
-      "0xa9c681c839146a77b199091678a61ebefed967d471adcd6d3406740b5e84135142a066b0c1c95a21cc3beaa1b6684cbf",
-      "0x977b22be41cf54866c6e97f70b84a0abd2b781184d93f78d588bda5111355847b7246597a3c972cd600a94b19379d3a1",
-      "0xb2e2f6b3423c8f8abdb033db10096b0d33472d986f6cb5752cedfb89c853ac2807837dd4690e5ec782c4067b3cac05d9",
-      "0xad78916955abdc70be6d46409c4000f6d696e0280283f8c5eac7c60a477a244fa605d767382d9fa0172b3c1987f367b7",
-      "0xa61d291faad09db82cb018d241651148db3ff03b1acb67bf7317a03b5174762742f142d8aa1d48ee4622a5fd44e7682a",
-      "0x87696333f69f1a976e5ef28890220a27528f665d9cc66d489cb954bd05cb3be67f3a915e6b98ccac6ae6f07a9c3109a4",
-      "0xac6f78ba5a7d0a76e3daaf9c8a9c01f48b2a5e01cc10c0801d19f14da69f8d0d221e3a4dfb96893711e2452157a7591f",
-      "0x98f511b7909a02f1e00e83a38d54fc895a27e6389685c01e5d07eae879bd97080e6d50ef1ebfb7b49d1f30ad5c07d490",
-      "0xadfc4f4470e53f23a2aa40711c38dd9194c4806266077fb839277fc7c756d64cc37c958b9afa805c6677085ce78a383f",
-      "0xa5407d530e1e7997249b494ee5ac45adcf16458a81a0b48255ef75dd8e15097cdf7b483b9edfd074bbe4d94584892829",
+      "0x9557a45795d2f2e2969bbff1349f39ec0adc489ed293254b11afb6a779768145cfb4e2e33b8e171e2e65c10ef196ac29",
       "0xa2ddb07aa24fcc6f93447ab82539b790c7ea7768001d649d92a717963b75ff85a8dd540f3e5854b0907b29f8115944e3",
-      "0x84fa8355425bed8af9af9f2e9fc8041df1efc043fd5f9588142a7548a3bfb38746c3a77f220ba37a6d643302f0194130",
-      "0xaddb8cfc0acc8b78f0593060338d923ccbad879bb690817ee976758a845dee456a1135e59348d31c1fe9e683a8e94bf0",
-      "0xad667ebebe1c7d2c6a579f2999b6fae483b7e8e00c1a7dde87a2f054beb8a9a0bae0c7041c01143ac1a8e2f005219efc",
       "0xa809a48221094a6203563126e5f2af9ca18cf1fba601d121a01c51099e041298cf6b0e56a8bc7080a0b81ec29e94bfb5",
+      "0xa5407d530e1e7997249b494ee5ac45adcf16458a81a0b48255ef75dd8e15097cdf7b483b9edfd074bbe4d94584892829",
+      "0x83e7b3a2bc7c212aa657f734c0bce1c95ec93670a41b3cbfa94adc817cbc05c61fb64bf4d97888b29e1cfd5929f4a0aa",
+      "0xa14347d2a18a6f6d36cf6648ace1b1d9c849fa50c7a63aadc0cc12250fa494d50564c7d26fd7573bda6f9c1661988386",
+      "0x8fc571a7b90807c769d76c262ab805fa4617975bc0d36ff5bb296a685bcc32bdc34ea0b913b0adcacb772d960412b40e",
+      "0x947a10880a0853d3896edbd1a76d1fad8423710502e0d4a83aebbebbccadbda4ff376cd8339aff43a89c5e51f880209e",
+      "0x867d04babe07f723c89511e66a097e9bcd6e7843b29abcb1c48a032be227c1af959dd9439d75860a10a60f9bbb8e350e",
+      "0xad78916955abdc70be6d46409c4000f6d696e0280283f8c5eac7c60a477a244fa605d767382d9fa0172b3c1987f367b7",
+      "0x928d3c8eefc6d742f8a5121b4bf99f25a263abd958b15d292282fadec8add76d610dc23c67625d58383b1dec5efc518d",
+      "0xadfc4f4470e53f23a2aa40711c38dd9194c4806266077fb839277fc7c756d64cc37c958b9afa805c6677085ce78a383f",
+      "0xa134180138ae073826af65d9e08fba7fc59341f084a2ea9f9b5c5415265ce572b42a7dfb38c021ee6877846823e3535b",
+      "0xaceb58c5db1508fbd22dc105219cf71e2469584a209d0692d4f67112e258dda258ed5627d61c5147637326ad910784c7",
+      "0x84fa8355425bed8af9af9f2e9fc8041df1efc043fd5f9588142a7548a3bfb38746c3a77f220ba37a6d643302f0194130",
+      "0xac6f78ba5a7d0a76e3daaf9c8a9c01f48b2a5e01cc10c0801d19f14da69f8d0d221e3a4dfb96893711e2452157a7591f",
+      "0xb189aa5d990af31f799b0f8698f958610d66192fec0b825677d07c931051c6f88b2fa49eb6eafc1b543ae3b7633da6ad",
+      "0x8bdef0f1233092fcbb34b122eabd9e44faadabd395dff619c51247fa76f6e4fe74bc8f6b8eb59365fe0e40b265a3be16",
+      "0xa9ff6f4bccc131e121ebee0585bbcdefa6882a528e59f54ecc3523d45462b3642c5146f6f0833a08590ccd327d6bb95a",
+      "0xb2e2f6b3423c8f8abdb033db10096b0d33472d986f6cb5752cedfb89c853ac2807837dd4690e5ec782c4067b3cac05d9",
+      "0x90fb3bf7461e536f4d9f54011ff9e89385194cf4ade15b5b4f7b92933a51c75946502b2c3b6e447532eb50035b21ebb8",
+      "0xb2bc84ce855bc39c87b7207d4819458d039b3c90bd72f091b3b737e1f6c2edfa21bbeb661e864b045f7767e54f322a4e",
+      "0xa5ec9caa9058103f34886db2fdc41d7b98cce3d274f5d30314d7b931c17fe538cfdeadca9351218ce09bb6659c242374",
+      "0xad667ebebe1c7d2c6a579f2999b6fae483b7e8e00c1a7dde87a2f054beb8a9a0bae0c7041c01143ac1a8e2f005219efc",
+      "0xa9c681c839146a77b199091678a61ebefed967d471adcd6d3406740b5e84135142a066b0c1c95a21cc3beaa1b6684cbf",
+      "0x943dc8fdb00b311e510526ba460c784cf3f4def720af531f96b09e986182d4c399ca261020e1ea53327c26e221ce5665",
+      "0x98f511b7909a02f1e00e83a38d54fc895a27e6389685c01e5d07eae879bd97080e6d50ef1ebfb7b49d1f30ad5c07d490",
       "0x992f8d653c4d911fc9c2fbc8895c485d1be20ea3b4643e8c946b81db6090964b60a19791b49f14a95b820a022619f887",
-      "0x943dc8fdb00b311e510526ba460c784cf3f4def720af531f96b09e986182d4c399ca261020e1ea53327c26e221ce5665"
+      "0x977b22be41cf54866c6e97f70b84a0abd2b781184d93f78d588bda5111355847b7246597a3c972cd600a94b19379d3a1",
+      "0xa61d291faad09db82cb018d241651148db3ff03b1acb67bf7317a03b5174762742f142d8aa1d48ee4622a5fd44e7682a",
+      "0x9004f80be2ff67d91336811d5d609ff1648c823605a672195b080ada9ea806aa47870b9c170173ab52e94f13093495a9",
+      "0x867f4e5e25262d03bcd5795e2f051034b42ad3452f0c7a01f2420647a44415e8b1c56065342c5fdfa951a9c9ee659f85",
+      "0x8d8cd6d78e20235da67211f70d3c9e89e0e1fe38e3346aeeffd9538c98d7e632ebaa9671ef33e1b2776488bc8d8f3ddd",
+      "0x87696333f69f1a976e5ef28890220a27528f665d9cc66d489cb954bd05cb3be67f3a915e6b98ccac6ae6f07a9c3109a4",
+      "0xaddb8cfc0acc8b78f0593060338d923ccbad879bb690817ee976758a845dee456a1135e59348d31c1fe9e683a8e94bf0"
     ],
     "missing_by_operator": {
       "0x907696b3C3cc30d44A3Bd672A3fAdD4bA2b59eAb": {
@@ -4504,7 +4509,7 @@
   "raw_data": {
     "relay_registrations": {
       "flashbots": {
-        "count": 668,
+        "count": 646,
         "sample_pubkeys": [
           "0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab",
           "0xb6107a04414d8f2517bd7fd84906781b46973104b182955eb21e60bb103044dcf2ad1bd2c490b1bdf33e99334da23b91",
@@ -4514,7 +4519,7 @@
         ]
       },
       "bloxroute_max_profit": {
-        "count": 2141,
+        "count": 2144,
         "sample_pubkeys": [
           "0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab",
           "0xb6107a04414d8f2517bd7fd84906781b46973104b182955eb21e60bb103044dcf2ad1bd2c490b1bdf33e99334da23b91",
@@ -4524,7 +4529,7 @@
         ]
       },
       "bloxroute_regulated": {
-        "count": 1938,
+        "count": 1940,
         "sample_pubkeys": [
           "0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab",
           "0xb6107a04414d8f2517bd7fd84906781b46973104b182955eb21e60bb103044dcf2ad1bd2c490b1bdf33e99334da23b91",
@@ -4534,7 +4539,7 @@
         ]
       },
       "ultrasound": {
-        "count": 1689,
+        "count": 1690,
         "sample_pubkeys": [
           "0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab",
           "0xb6107a04414d8f2517bd7fd84906781b46973104b182955eb21e60bb103044dcf2ad1bd2c490b1bdf33e99334da23b91",
@@ -4544,7 +4549,7 @@
         ]
       },
       "aestus": {
-        "count": 1755,
+        "count": 1757,
         "sample_pubkeys": [
           "0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab",
           "0xb6107a04414d8f2517bd7fd84906781b46973104b182955eb21e60bb103044dcf2ad1bd2c490b1bdf33e99334da23b91",
@@ -7666,7 +7671,8 @@
         "0x11050FbD79813566eBDe4eEe0e4448D6118105c5": "atomicwhale",
         "0xFc4bDa360beC1a288b371CFb99fa3E385422a058": "hd.shipos.eth",
         "0x1878f36F8442Bf3994F7F3E8DF342F9AA91e692b": "Blackfeather",
-        "0xFf026C6b9Af07d86fa990D868A6293220A0dD96b": "nodeset.primestake.eth"
+        "0xFf026C6b9Af07d86fa990D868A6293220A0dD96b": "nodeset.primestake.eth",
+        "0x58D0c4B57904a597475dFd37428Fffad09F03074": "slipp.eth"
       },
       "total_validators": 2584
     }
