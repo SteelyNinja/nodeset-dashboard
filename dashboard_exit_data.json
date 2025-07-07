@@ -3,7 +3,13 @@
     "total_exited": 27,
     "total_active": 2557,
     "exit_rate_percent": 1.044891640866873,
-    "last_updated": 1751919347
+    "last_updated": 1751920523
+  },
+  "ens_summary": {
+    "total_ens_names": 52,
+    "manual_ens_count": 21,
+    "onchain_ens_count": 31,
+    "ens_coverage_percent": 33.76623376623377
   },
   "operators_with_exits": [
     {
