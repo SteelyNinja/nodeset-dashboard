@@ -1,13 +1,13 @@
 {
   "metadata": {
-    "last_updated": "2025-07-08T13:45:43.449466",
-    "total_proposals": 622,
-    "total_value_eth": 49.9037137182,
-    "total_consensus_eth": 28.329261686,
-    "total_execution_eth": 21.5744520322,
+    "last_updated": "2025-07-08T14:02:58.393041",
+    "total_proposals": 623,
+    "total_value_eth": 49.9805793248,
+    "total_consensus_eth": 28.376351594,
+    "total_execution_eth": 21.604227730799998,
     "total_mev_eth": 21.205316097,
     "mev_boost_blocks": 586,
-    "mev_boost_percentage": 94.21221864951768,
+    "mev_boost_percentage": 94.0609951845907,
     "operators_tracked": 147,
     "data_sources": [
       "local_lighthouse",
@@ -17,11 +17,11 @@
     "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti"
   },
   "client_diversity": {
-    "total_proposals": 622,
+    "total_proposals": 623,
     "identified_proposals": 0,
     "identification_rate": 0.0,
     "client_distribution": {},
-    "analysis_timestamp": "2025-07-08T13:45:43.449461"
+    "analysis_timestamp": "2025-07-08T14:02:58.393037"
   },
   "operator_summary": {
     "0x93373F548355225C479bC7aA2380158ef868623e": {
@@ -921,14 +921,14 @@
       "pool_signatures_percentage": 0.0
     },
     "0x0ca5D73C78B215E20be73Eb7c3cEababcB9982De": {
-      "proposal_count": 3,
-      "total_value_eth": 0.2098193123,
-      "average_value_eth": 0.06993977076666667,
-      "consensus_rewards_eth": 0.13820057,
-      "execution_rewards_eth": 0.0716187423,
+      "proposal_count": 4,
+      "total_value_eth": 0.28668491890000003,
+      "average_value_eth": 0.07167122972500001,
+      "consensus_rewards_eth": 0.18529047799999998,
+      "execution_rewards_eth": 0.1013944409,
       "mev_rewards_eth": 0.0716187423,
       "mev_blocks_count": 3,
-      "mev_blocks_percentage": 100.0,
+      "mev_blocks_percentage": 75.0,
       "clients_used": {},
       "primary_client": null,
       "pool_signatures_count": 0,
@@ -34440,6 +34440,58 @@
         "traditional_fees_wei": 0,
         "block_reward_wei": 37968034833030185,
         "producer_reward_wei": 35486476241641004
+      }
+    },
+    {
+      "slot": 12096610,
+      "epoch": 378019,
+      "timestamp": 1751983343,
+      "date": "2025-07-08 14:02:23",
+      "validator_index": 1940631,
+      "validator_pubkey": "0xae5d97223f73ad938da0ecdbe16e6efdb0edb8335299efd55c715dfcf0f2c1aa24cf7fb05f76d570eabe7e4adb07ee65",
+      "operator": "0x0ca5D73C78B215E20be73Eb7c3cEababcB9982De",
+      "operator_name": "0x0ca5D7...9982De",
+      "total_value_wei": 7.68656066270462e+16,
+      "total_value_eth": 0.0768656066,
+      "block_number": 22874936,
+      "proposer_index": 1940631,
+      "fee_recipient": "0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97",
+      "graffiti_hex": "0x4e534e4e582076312e322e320000000000000000000000000000000000000000",
+      "graffiti_text": "NSNNX v1.2.2",
+      "consensus_client": null,
+      "client_version": "1.2.2",
+      "has_pool_signature": false,
+      "consensus_reward_eth": 0.047089908,
+      "execution_fees_eth": 0.0297756986,
+      "mev_breakdown_eth": 0.0,
+      "mev_percentage": 0.0,
+      "gas_used": 22920074,
+      "gas_limit": 36000000,
+      "base_fee": 2281988115,
+      "tx_count": 185,
+      "gas_utilization": 63.67,
+      "is_mev_boost_block": false,
+      "relay_tag": "",
+      "builder_pubkey": "",
+      "total_rewards_wei": 7.68656066270462e+16,
+      "total_rewards_eth": 0.0768656066,
+      "data_sources_used": [
+        "local_beacon_api",
+        "beaconchain_api"
+      ],
+      "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti",
+      "detailed_consensus": {
+        "consensus_rewards_wei": 4.7089908e+16,
+        "attestations_gwei": 45409740,
+        "deposits_gwei": 0,
+        "sync_aggregate_gwei": 1680168
+      },
+      "detailed_execution": {
+        "execution_reward_wei": 29775698627046212,
+        "mev_breakdown_wei": 0,
+        "traditional_fees_wei": 29775698627046212,
+        "block_reward_wei": 29775698627046212,
+        "producer_reward_wei": 29775698627046212
       }
     }
   ]
