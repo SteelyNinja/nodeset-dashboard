@@ -1,13 +1,13 @@
 {
   "metadata": {
-    "last_updated": "2025-07-10T17:15:39.732451",
-    "total_proposals": 648,
-    "total_value_eth": 51.77722067,
-    "total_consensus_eth": 29.517368834,
-    "total_execution_eth": 22.259851836,
-    "total_mev_eth": 21.8060305397,
-    "mev_boost_blocks": 608,
-    "mev_boost_percentage": 93.82716049382715,
+    "last_updated": "2025-07-10T17:30:51.517650",
+    "total_proposals": 649,
+    "total_value_eth": 51.863643858,
+    "total_consensus_eth": 29.563761332,
+    "total_execution_eth": 22.299882526,
+    "total_mev_eth": 21.8460612297,
+    "mev_boost_blocks": 609,
+    "mev_boost_percentage": 93.8366718027735,
     "operators_tracked": 147,
     "data_sources": [
       "local_lighthouse",
@@ -17,11 +17,11 @@
     "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti"
   },
   "client_diversity": {
-    "total_proposals": 648,
+    "total_proposals": 649,
     "identified_proposals": 0,
     "identification_rate": 0.0,
     "client_distribution": {},
-    "analysis_timestamp": "2025-07-10T17:15:39.732445"
+    "analysis_timestamp": "2025-07-10T17:30:51.517641"
   },
   "operator_summary": {
     "0x93373F548355225C479bC7aA2380158ef868623e": {
@@ -627,13 +627,13 @@
       "pool_signatures_percentage": 0.0
     },
     "0x49c1A32EA7058988a94Ea301555A11923C185750": {
-      "proposal_count": 7,
-      "total_value_eth": 0.4733781586,
-      "average_value_eth": 0.06762545122857143,
-      "consensus_rewards_eth": 0.32397766,
-      "execution_rewards_eth": 0.14940049860000001,
-      "mev_rewards_eth": 0.14940049860000001,
-      "mev_blocks_count": 7,
+      "proposal_count": 8,
+      "total_value_eth": 0.5598013466,
+      "average_value_eth": 0.069975168325,
+      "consensus_rewards_eth": 0.370370158,
+      "execution_rewards_eth": 0.18943118860000002,
+      "mev_rewards_eth": 0.18943118860000002,
+      "mev_blocks_count": 8,
       "mev_blocks_percentage": 100.0,
       "clients_used": {},
       "primary_client": null,
@@ -35790,6 +35790,58 @@
         "traditional_fees_wei": 0,
         "block_reward_wei": 26580710934277970,
         "producer_reward_wei": 17979314725571094
+      }
+    },
+    {
+      "slot": 12111990,
+      "epoch": 378499,
+      "timestamp": 1752167903,
+      "date": "2025-07-10 17:18:23",
+      "validator_index": 1970604,
+      "validator_pubkey": "0x8c95f6d6990238377eb0bf02b431df300955cf7828d589b500aaaa5fa987231d448e961717d5798c84594b35076ffc0d",
+      "operator": "0x49c1A32EA7058988a94Ea301555A11923C185750",
+      "operator_name": "0x49c1A3...185750",
+      "total_value_wei": 8.642318798835018e+16,
+      "total_value_eth": 0.086423188,
+      "block_number": 22890221,
+      "proposer_index": 1970604,
+      "fee_recipient": "0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97",
+      "graffiti_hex": "0x4e53474e582076312e322e320000000000000000000000000000000000000000",
+      "graffiti_text": "NSGNX v1.2.2",
+      "consensus_client": null,
+      "client_version": "1.2.2",
+      "has_pool_signature": false,
+      "consensus_reward_eth": 0.046392498,
+      "execution_fees_eth": 0.04003069,
+      "mev_breakdown_eth": 0.04003069,
+      "mev_percentage": 100.0,
+      "gas_used": 14784902,
+      "gas_limit": 35999793,
+      "base_fee": 13840817437,
+      "tx_count": 174,
+      "gas_utilization": 41.07,
+      "is_mev_boost_block": true,
+      "relay_tag": "ultrasound-relay",
+      "builder_pubkey": "0xb67eaa5efcfa1d17319c344e1e5167811afbfe7922a2cf01c9a361f465597a5dc3a5472bd98843bac88d2541a78eab08",
+      "total_rewards_wei": 8.642318798835018e+16,
+      "total_rewards_eth": 0.086423188,
+      "data_sources_used": [
+        "local_beacon_api",
+        "beaconchain_api"
+      ],
+      "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti",
+      "detailed_consensus": {
+        "consensus_rewards_wei": 4.6392498e+16,
+        "attestations_gwei": 44734078,
+        "deposits_gwei": 0,
+        "sync_aggregate_gwei": 1658420
+      },
+      "detailed_execution": {
+        "execution_reward_wei": 40030689988350177,
+        "mev_breakdown_wei": 40030689988350177,
+        "traditional_fees_wei": 0,
+        "block_reward_wei": 41231858682340045,
+        "producer_reward_wei": 40030689988350177
       }
     }
   ]
