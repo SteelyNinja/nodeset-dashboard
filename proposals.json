@@ -1,13 +1,13 @@
 {
   "metadata": {
-    "last_updated": "2025-07-11T02:15:44.365817",
-    "total_proposals": 653,
-    "total_value_eth": 52.168007221799996,
-    "total_consensus_eth": 29.751340386,
-    "total_execution_eth": 22.4166668358,
+    "last_updated": "2025-07-11T02:33:17.196632",
+    "total_proposals": 654,
+    "total_value_eth": 52.2282220411,
+    "total_consensus_eth": 29.797743966,
+    "total_execution_eth": 22.4304780751,
     "total_mev_eth": 21.962845539499998,
     "mev_boost_blocks": 613,
-    "mev_boost_percentage": 93.87442572741195,
+    "mev_boost_percentage": 93.7308868501529,
     "operators_tracked": 148,
     "data_sources": [
       "local_lighthouse",
@@ -17,11 +17,11 @@
     "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti"
   },
   "client_diversity": {
-    "total_proposals": 653,
+    "total_proposals": 654,
     "identified_proposals": 0,
     "identification_rate": 0.0,
     "client_distribution": {},
-    "analysis_timestamp": "2025-07-11T02:15:44.365811"
+    "analysis_timestamp": "2025-07-11T02:33:17.196624"
   },
   "operator_summary": {
     "0x93373F548355225C479bC7aA2380158ef868623e": {
@@ -1635,14 +1635,14 @@
       "pool_signatures_percentage": 0.0
     },
     "0x366bBc4a72986042D8CBc71edd7F19a62EC608Be": {
-      "proposal_count": 6,
-      "total_value_eth": 0.4026330674,
-      "average_value_eth": 0.06710551123333333,
-      "consensus_rewards_eth": 0.275377153,
-      "execution_rewards_eth": 0.1272559144,
+      "proposal_count": 7,
+      "total_value_eth": 0.4628478867,
+      "average_value_eth": 0.06612112667142857,
+      "consensus_rewards_eth": 0.321780733,
+      "execution_rewards_eth": 0.1410671537,
       "mev_rewards_eth": 0.1272559144,
       "mev_blocks_count": 6,
-      "mev_blocks_percentage": 100.0,
+      "mev_blocks_percentage": 85.71428571428571,
       "clients_used": {},
       "primary_client": null,
       "pool_signatures_count": 0,
@@ -36064,6 +36064,58 @@
         "traditional_fees_wei": 0,
         "block_reward_wei": 21346447531991698,
         "producer_reward_wei": 23236753730949813
+      }
+    },
+    {
+      "slot": 12114761,
+      "epoch": 378586,
+      "timestamp": 1752201155,
+      "date": "2025-07-11 02:32:35",
+      "validator_index": 1906163,
+      "validator_pubkey": "0x87cd386f04609dc06a534b8c2980940cb3a18b5f3b51070c5e017848cb2413a59561c24a62fb242b7b23f0995d8cf755",
+      "operator": "0x366bBc4a72986042D8CBc71edd7F19a62EC608Be",
+      "operator_name": "0x366bBc...C608Be",
+      "total_value_wei": 6.021481931598346e+16,
+      "total_value_eth": 0.0602148193,
+      "block_number": 22892977,
+      "proposer_index": 1906163,
+      "fee_recipient": "0x4838B106FCe9647Bdf1E7877BF73cE8B0BAD5f97",
+      "graffiti_hex": "0x4e53424e4c2076312e322e320000000000000000000000000000000000000000",
+      "graffiti_text": "NSBNL v1.2.2",
+      "consensus_client": null,
+      "client_version": "1.2.2",
+      "has_pool_signature": false,
+      "consensus_reward_eth": 0.04640358,
+      "execution_fees_eth": 0.0138112393,
+      "mev_breakdown_eth": 0.0,
+      "mev_percentage": 0.0,
+      "gas_used": 12606288,
+      "gas_limit": 35929554,
+      "base_fee": 2563855466,
+      "tx_count": 149,
+      "gas_utilization": 35.09,
+      "is_mev_boost_block": false,
+      "relay_tag": "",
+      "builder_pubkey": "",
+      "total_rewards_wei": 6.021481931598346e+16,
+      "total_rewards_eth": 0.0602148193,
+      "data_sources_used": [
+        "local_beacon_api",
+        "beaconchain_api"
+      ],
+      "calculation_method": "lighthouse_plus_beaconchain_plus_graffiti",
+      "detailed_consensus": {
+        "consensus_rewards_wei": 4.640358e+16,
+        "attestations_gwei": 44767650,
+        "deposits_gwei": 0,
+        "sync_aggregate_gwei": 1635930
+      },
+      "detailed_execution": {
+        "execution_reward_wei": 13811239315983461,
+        "mev_breakdown_wei": 0,
+        "traditional_fees_wei": 13811239315983461,
+        "block_reward_wei": 13811239315983461,
+        "producer_reward_wei": 13811239315983461
       }
     }
   ]
