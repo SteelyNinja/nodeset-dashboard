@@ -1,9 +1,9 @@
 {
   "exit_summary": {
-    "total_exited": 28,
-    "total_active": 2556,
-    "exit_rate_percent": 1.08359133126935,
-    "last_updated": 1752346841
+    "total_exited": 36,
+    "total_active": 2548,
+    "exit_rate_percent": 1.393188854489164,
+    "last_updated": 1752347894
   },
   "ens_summary": {
     "total_ens_names": 54,
@@ -21,6 +21,16 @@
       "exit_rate": 100.0,
       "latest_exit_timestamp": 1748820695,
       "latest_exit_date": "2025-06-01"
+    },
+    {
+      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
+      "operator_name": "0xb41341...A573db",
+      "exits": 9,
+      "still_active": 8,
+      "total_ever": 17,
+      "exit_rate": 52.9,
+      "latest_exit_timestamp": 1752347351,
+      "latest_exit_date": "2025-07-12"
     },
     {
       "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
@@ -61,19 +71,97 @@
       "exit_rate": 5.9,
       "latest_exit_timestamp": 1748039255,
       "latest_exit_date": "2025-05-23"
-    },
-    {
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exits": 1,
-      "still_active": 16,
-      "total_ever": 17,
-      "exit_rate": 5.9,
-      "latest_exit_timestamp": 1752345047,
-      "latest_exit_date": "2025-07-12"
     }
   ],
   "recent_exits": [
+    {
+      "validator_index": 1906202,
+      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
+      "operator_name": "0xb41341...A573db",
+      "exit_timestamp": 1752347351,
+      "exit_date": "2025-07-12 19:09:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "378967"
+    },
+    {
+      "validator_index": 1905576,
+      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
+      "operator_name": "0xb41341...A573db",
+      "exit_timestamp": 1752347351,
+      "exit_date": "2025-07-12 19:09:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "378967"
+    },
+    {
+      "validator_index": 1942339,
+      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
+      "operator_name": "0xb41341...A573db",
+      "exit_timestamp": 1752347351,
+      "exit_date": "2025-07-12 19:09:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "378967"
+    },
+    {
+      "validator_index": 1942340,
+      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
+      "operator_name": "0xb41341...A573db",
+      "exit_timestamp": 1752347351,
+      "exit_date": "2025-07-12 19:09:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "378967"
+    },
+    {
+      "validator_index": 1942341,
+      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
+      "operator_name": "0xb41341...A573db",
+      "exit_timestamp": 1752347351,
+      "exit_date": "2025-07-12 19:09:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "378967"
+    },
+    {
+      "validator_index": 1942342,
+      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
+      "operator_name": "0xb41341...A573db",
+      "exit_timestamp": 1752347351,
+      "exit_date": "2025-07-12 19:09:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "378967"
+    },
+    {
+      "validator_index": 1922593,
+      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
+      "operator_name": "0xb41341...A573db",
+      "exit_timestamp": 1752347351,
+      "exit_date": "2025-07-12 19:09:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "378967"
+    },
+    {
+      "validator_index": 1922722,
+      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
+      "operator_name": "0xb41341...A573db",
+      "exit_timestamp": 1752347351,
+      "exit_date": "2025-07-12 19:09:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "378967"
+    },
     {
       "validator_index": 1894909,
       "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
@@ -197,9 +285,9 @@
     },
     {
       "date": "2025-07-12",
-      "voluntary_exits": 1,
+      "voluntary_exits": 9,
       "slashed_exits": 0,
-      "total_exits": 1
+      "total_exits": 9
     }
   ]
 }
