@@ -1,8 +1,8 @@
 {
   "metadata": {
-    "analysis_timestamp": "2025-07-12T12:00:01.351878",
-    "analysis_duration_seconds": 1239.882111,
-    "total_active_validators": 2557,
+    "analysis_timestamp": "2025-07-13T12:00:01.858622",
+    "analysis_duration_seconds": 1213.882036,
+    "total_active_validators": 2540,
     "cache_file_used": "nodeset_validator_tracker_cache.json",
     "relays_tested": 8,
     "working_relays": [
@@ -14,63 +14,71 @@
       "agnostic"
     ],
     "failed_relays": {
-      "bloxroute_ethical": "HTTPSConnectionPool(host='bloxroute.ethical.blxrbdn.com', port=443): Max retries exceeded with url: /relay/v1/data/validator_registration?pubkey=0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x79579f9bed20>: Failed to resolve 'bloxroute.ethical.blxrbdn.com' ([Errno -2] Name or service not known)\"))",
+      "bloxroute_ethical": "HTTPSConnectionPool(host='bloxroute.ethical.blxrbdn.com', port=443): Max retries exceeded with url: /relay/v1/data/validator_registration?pubkey=0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab (Caused by NameResolutionError(\"<urllib3.connection.HTTPSConnection object at 0x7e50430bbda0>: Failed to resolve 'bloxroute.ethical.blxrbdn.com' ([Errno -2] Name or service not known)\"))",
       "securerpc": "HTTP 400"
     }
   },
   "summary": {
-    "total_validators": 2557,
-    "mev_registered_validators": 2521,
-    "mev_coverage_percentage": 98.59210011732499,
+    "total_validators": 2540,
+    "mev_registered_validators": 2504,
+    "mev_coverage_percentage": 98.58267716535433,
     "missing_validators": 36,
     "working_relays_count": 6,
-    "gas_limit_consistency_rate": 99.04799682665609
+    "gas_limit_consistency_rate": 97.88338658146965
   },
   "relay_performance": {
     "flashbots": {
       "name": "Flashbots",
-      "validators_found": 668,
-      "coverage_percentage": 26.497421658072195
+      "validators_found": 662,
+      "coverage_percentage": 26.437699680511184
     },
     "bloxroute_max_profit": {
       "name": "bloXroute Max Profit",
-      "validators_found": 2227,
-      "coverage_percentage": 88.3379611265371
+      "validators_found": 2210,
+      "coverage_percentage": 88.25878594249201
     },
     "bloxroute_regulated": {
       "name": "bloXroute Regulated",
-      "validators_found": 2015,
-      "coverage_percentage": 79.92859976199921
+      "validators_found": 1998,
+      "coverage_percentage": 79.7923322683706
     },
     "ultrasound": {
       "name": "Ultra Sound",
       "validators_found": 1741,
-      "coverage_percentage": 69.05989686632289
+      "coverage_percentage": 69.52875399361022
     },
     "aestus": {
       "name": "Aestus",
       "validators_found": 1821,
-      "coverage_percentage": 72.23324077746925
+      "coverage_percentage": 72.72364217252397
     },
     "agnostic": {
       "name": "Agnostic Relay",
       "validators_found": 379,
-      "coverage_percentage": 15.033716779055931
+      "coverage_percentage": 15.135782747603836
     }
   },
   "gas_limit_analysis": {
     "distribution": {
-      "36000000": 1592,
+      "36000000": 1538,
       "60000000": 183,
       "30000000": 688,
-      "45000000": 34
+      "45000000": 42
     },
     "consistency_stats": {
-      "consistent": 2497,
-      "inconsistent": 24,
-      "consistency_rate": 99.04799682665609
+      "consistent": 2451,
+      "inconsistent": 53,
+      "consistency_rate": 97.88338658146965
     },
     "inconsistent_validators": {
+      "0x941231f5bbb572bf6386f0a2ae6fe4d65bdf8837293da1e8b39a91c9608e2f0c79917864446864af6e5adea22752a159": {
+        "flashbots": 45000000,
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
       "0xa3d6393c9c17800ac530fc60bae644784d9b85d19d8bfa65788b056c52075ec910524d847a74b1e7a81e21ce90c26913": {
         "flashbots": 36000000,
         "bloxroute_max_profit": 36000000,
@@ -102,6 +110,12 @@
         "ultrasound": 60000000,
         "aestus": 60000000
       },
+      "0xa02043472f108a0921f7ae6afb2964d98e33ec715d8d45ac4c6af614eab3cf173d1cc02cea4e8519eb3aba16f7a74db3": {
+        "flashbots": 45000000,
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
       "0xb1a41997e3b52aed631c3df6a43ed46ea242708a7c19a79ccdbef232abf76acc1f47cf094d5c9db3a978ad29929a4575": {
         "flashbots": 36000000,
         "bloxroute_max_profit": 36000000,
@@ -124,6 +138,14 @@
         "aestus": 30000000,
         "agnostic": 36000000
       },
+      "0xa824a90c264a7de58c6c3f573bfc171ffa508d618866364dbabed587b28e3937dae262b9d909517fd5918ea9072a3f12": {
+        "flashbots": 45000000,
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
       "0x8f44d18529f3bb46e1d952eac546133cfee3e0260742438837d0fef0da32057d5e68beeea4c23da6f2b9606d0e8d22d1": {
         "flashbots": 36000000,
         "bloxroute_max_profit": 36000000,
@@ -137,6 +159,78 @@
         "bloxroute_regulated": 60000000,
         "ultrasound": 60000000,
         "aestus": 60000000
+      },
+      "0x84f406572d74ba2698caaa3e04d4e51f16b210e601e41286bafaaf9b762225460d61d63ff2f3add5ca4cad02ba501bf2": {
+        "flashbots": 45000000,
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0xb12d6c0599a66966779a7e92ff6e209bf5c2fbf6ab6d9c5be2a30c779cca8b46a3c2e7f24b03faa6e2d02528061a4744": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0xa158b7f6c553d8b708bda4c1a7c2223cd5957cc9acc482519b06570ec3f3c2d79faff439ccb9f9798e26d8481b45ab0c": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0x99faeccfbd1e6ee18393c04586983227293a963585431e61590a612c26579d2af658d869ead7f819bbffb60aada14b00": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0x991256441f549a8ad23c68d3306e79497f5ab4aaa0bec4fa8bba51c3c2cd8bacfe76f95720f115f89f41951acf74c5a3": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0x8e16a27c3a360d624b8744be43c929daeb87f440909e5ce4f2edcacde308e9d226b0f16b8e5b09df480556adea2b3d92": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0x92fec2ff31f4fa2aea425049a17c8f5dac7e1bda7fbffaf9109cd671abb32edb13d31e362f61462a6f3a5e9db5f49ba5": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0xa9f68f156329a9abb444d721681ecea9b96dcdf3298a64d68654dda33ebcb651a87e6255d106af7d424a6e16127389d6": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0x94dcc141c2184f16f4f385b20a50561c4daf6054ed975039d10f18c217633e77177e08b20fcc83583c774bab419867f0": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0x88b4d283c2b02abd67008f644e717cdad1531fe79f1b7a123035c412efa89342fa9453c1300909617d7502a93ba58bf3": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0xa7d0f94093426256af055113c9eee8ae3a9b69e161781431861323ab25a7f134c69d8aaf9854121440f85e4f02d323b0": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0x8d24010fdeb06e8c6ec7098bb2ff967db10fd7d2769d332e5f8896a7317cd3349e7bc8417e2e490a8bf260883fb6c622": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0xa29755a2d5bcbab71c63badf0b9afc60d13ee00d79ffb1500359015d97b217a9ebb12b1e5f0cf30e33fa1565782d5adb": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
       },
       "0x8b307ec8741719b9907196f4750452161be64e614872102697f552b64b4aca7ce9f4a5b5d60757804afddfc8c0968cd3": {
         "bloxroute_max_profit": 36000000,
@@ -227,6 +321,95 @@
         "bloxroute_regulated": 30000000,
         "ultrasound": 30000000,
         "aestus": 30000000,
+        "agnostic": 36000000
+      },
+      "0xa50f189661f89b1beadc7e153687e5bf6541af62906b346a4f0bc374ae980af732c7fb62cc7a7e99d8b0f3a5b0505f90": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0x88a7e4637591081d55fcf70a7e584e972dd011746ed1fcd6db3a26bf9a5c854f7e5c53ec1f90b8c17e17808a9d64fcce": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0x8041014d1eaa43c4e1433e23f99d28cf7446216bfe4b7650c34c55017389be08445cc9db59417dfc153346bb2bf0602f": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0x8ad0243b883d8a612e4b80687e6c90325e013f3be1ea352be5d0971042ca737dd403af2a27c7dc421efd6ceb4183c37a": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0x8f4823520b6fb8d64f7120fbe1678ca15c46feaa51d79452649d950945b5b7771f0b042907c3e365dcb188d9cade682a": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0x84f757e5d97310da3dac6622378c88c68275d7e3ba9e04c7e7bfda83697983441e8e03acf63be93f1d51063b83b90b74": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0x827c653756544ab87b2bf472857a1aede9d606a64077a1ca40f3e9630ebdba02a60b2f464f566c8f7e771ff354b5afd1": {
+        "bloxroute_max_profit": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000
+      },
+      "0xac9a12bd896fb0ef587b52b1e37a77180842a30ff41ee2d0e0b2f9f8623b5d209b287f2b971f69a323bef55d803e338b": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0xac7dc7cc65efa69370a79887ead3e05a70987530acadb14fb7f3b6881222bd201dd7639532f4fe7b1ae342f1f7ea3157": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0xa7c7439ab0c4af13701230744fdb199663c64b17b32040816e452a3bd8176019d12fd3201b0b3192fa734f14729bdffa": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0xa713c581d19d0d5d3814175884ac98ea5a418bbd7e45970886df6f7e8d9e37747c49d0c1daecdb5af04f23a71057db96": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0xb844fc77fd52837bdf9ea2801f4168e31f3849811dbc6e2a2155b36747c314b5526c45ada2827f3bacba7185ec8e5178": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
+        "agnostic": 36000000
+      },
+      "0xae1d2945c8f442104c5022f016b9896b9cfcf251de075554c4ff932183063dc8417c30304aba6892a659b7a5fdceccad": {
+        "bloxroute_max_profit": 45000000,
+        "bloxroute_regulated": 45000000,
+        "ultrasound": 36000000,
+        "aestus": 36000000,
         "agnostic": 36000000
       },
       "0xb2c344432c077e83c8f3ef6ccbcf96ec1e76d843dff2d51be716ba883acc158b369197756f5fa9cb2d57b1cca22029e1": {
@@ -917,29 +1100,29 @@
       "mev_registered": 20,
       "mev_coverage_percent": 100.0,
       "missing_mev": 0,
-      "average_gas_limit": 36000000.0,
+      "average_gas_limit": 45000000.0,
       "gas_limit_count": 20,
       "gas_limits": [
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000
       ]
     },
     "0xdeeD7fc8e8078AB76d4e256D13914eA697A0F65b": {
@@ -1329,30 +1512,12 @@
     "0xb413410b9Ba837D19aB96AC22eB079277cA573db": {
       "display_name": "0xb41341...A573db",
       "total_validators": 17,
-      "mev_registered": 17,
-      "mev_coverage_percent": 100.0,
-      "missing_mev": 0,
-      "average_gas_limit": 36000000.0,
-      "gas_limit_count": 17,
-      "gas_limits": [
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000
-      ]
+      "mev_registered": 0,
+      "mev_coverage_percent": 0.0,
+      "missing_mev": 17,
+      "average_gas_limit": null,
+      "gas_limit_count": 0,
+      "gas_limits": []
     },
     "0x7FA3098aab3aEAb9ac96d965B8E5cef8493C11EF": {
       "display_name": "0x7FA309...3C11EF",
@@ -2588,26 +2753,26 @@
       "mev_registered": 17,
       "mev_coverage_percent": 100.0,
       "missing_mev": 0,
-      "average_gas_limit": 36000000.0,
+      "average_gas_limit": 45000000.0,
       "gas_limit_count": 17,
       "gas_limits": [
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000,
-        36000000
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000,
+        45000000
       ]
     },
     "0x8A877e089025Cd2D0a2b4D2eE9D45DD2450E2d3A": {
@@ -2668,10 +2833,10 @@
     },
     "0xFc4bDa360beC1a288b371CFb99fa3E385422a058": {
       "display_name": "hd.shipos.eth (0xFc4bDa...22a058)",
-      "total_validators": 17,
+      "total_validators": 18,
       "mev_registered": 17,
-      "mev_coverage_percent": 100.0,
-      "missing_mev": 0,
+      "mev_coverage_percent": 94.44444444444444,
+      "missing_mev": 1,
       "average_gas_limit": 36000000.0,
       "gas_limit_count": 17,
       "gas_limits": [
@@ -4456,42 +4621,42 @@
   "missing_validator_analysis": {
     "total_missing": 36,
     "missing_validators": [
-      "0x90fb3bf7461e536f4d9f54011ff9e89385194cf4ade15b5b4f7b92933a51c75946502b2c3b6e447532eb50035b21ebb8",
+      "0xa2ddb07aa24fcc6f93447ab82539b790c7ea7768001d649d92a717963b75ff85a8dd540f3e5854b0907b29f8115944e3",
+      "0x9004f80be2ff67d91336811d5d609ff1648c823605a672195b080ada9ea806aa47870b9c170173ab52e94f13093495a9",
+      "0xac6f78ba5a7d0a76e3daaf9c8a9c01f48b2a5e01cc10c0801d19f14da69f8d0d221e3a4dfb96893711e2452157a7591f",
+      "0xadfff4172f4541ce2d037979f11bb2d6d9394198a97f25a09bb56468e99724a7abdc43440556f56683f743cdead37ee4",
+      "0xad78916955abdc70be6d46409c4000f6d696e0280283f8c5eac7c60a477a244fa605d767382d9fa0172b3c1987f367b7",
+      "0x8fc571a7b90807c769d76c262ab805fa4617975bc0d36ff5bb296a685bcc32bdc34ea0b913b0adcacb772d960412b40e",
+      "0x87696333f69f1a976e5ef28890220a27528f665d9cc66d489cb954bd05cb3be67f3a915e6b98ccac6ae6f07a9c3109a4",
+      "0x98f511b7909a02f1e00e83a38d54fc895a27e6389685c01e5d07eae879bd97080e6d50ef1ebfb7b49d1f30ad5c07d490",
+      "0x8bdef0f1233092fcbb34b122eabd9e44faadabd395dff619c51247fa76f6e4fe74bc8f6b8eb59365fe0e40b265a3be16",
+      "0xadfc4f4470e53f23a2aa40711c38dd9194c4806266077fb839277fc7c756d64cc37c958b9afa805c6677085ce78a383f",
       "0xa5407d530e1e7997249b494ee5ac45adcf16458a81a0b48255ef75dd8e15097cdf7b483b9edfd074bbe4d94584892829",
       "0xa9ff6f4bccc131e121ebee0585bbcdefa6882a528e59f54ecc3523d45462b3642c5146f6f0833a08590ccd327d6bb95a",
-      "0xa5ec9caa9058103f34886db2fdc41d7b98cce3d274f5d30314d7b931c17fe538cfdeadca9351218ce09bb6659c242374",
-      "0x992f8d653c4d911fc9c2fbc8895c485d1be20ea3b4643e8c946b81db6090964b60a19791b49f14a95b820a022619f887",
-      "0xa2ddb07aa24fcc6f93447ab82539b790c7ea7768001d649d92a717963b75ff85a8dd540f3e5854b0907b29f8115944e3",
-      "0x8fc571a7b90807c769d76c262ab805fa4617975bc0d36ff5bb296a685bcc32bdc34ea0b913b0adcacb772d960412b40e",
-      "0x9557a45795d2f2e2969bbff1349f39ec0adc489ed293254b11afb6a779768145cfb4e2e33b8e171e2e65c10ef196ac29",
-      "0x8d8cd6d78e20235da67211f70d3c9e89e0e1fe38e3346aeeffd9538c98d7e632ebaa9671ef33e1b2776488bc8d8f3ddd",
-      "0x943dc8fdb00b311e510526ba460c784cf3f4def720af531f96b09e986182d4c399ca261020e1ea53327c26e221ce5665",
-      "0x87696333f69f1a976e5ef28890220a27528f665d9cc66d489cb954bd05cb3be67f3a915e6b98ccac6ae6f07a9c3109a4",
-      "0x84fa8355425bed8af9af9f2e9fc8041df1efc043fd5f9588142a7548a3bfb38746c3a77f220ba37a6d643302f0194130",
-      "0xac6f78ba5a7d0a76e3daaf9c8a9c01f48b2a5e01cc10c0801d19f14da69f8d0d221e3a4dfb96893711e2452157a7591f",
-      "0xb189aa5d990af31f799b0f8698f958610d66192fec0b825677d07c931051c6f88b2fa49eb6eafc1b543ae3b7633da6ad",
-      "0xb2bc84ce855bc39c87b7207d4819458d039b3c90bd72f091b3b737e1f6c2edfa21bbeb661e864b045f7767e54f322a4e",
-      "0xa9c681c839146a77b199091678a61ebefed967d471adcd6d3406740b5e84135142a066b0c1c95a21cc3beaa1b6684cbf",
-      "0xaceb58c5db1508fbd22dc105219cf71e2469584a209d0692d4f67112e258dda258ed5627d61c5147637326ad910784c7",
-      "0x83e7b3a2bc7c212aa657f734c0bce1c95ec93670a41b3cbfa94adc817cbc05c61fb64bf4d97888b29e1cfd5929f4a0aa",
-      "0xa61d291faad09db82cb018d241651148db3ff03b1acb67bf7317a03b5174762742f142d8aa1d48ee4622a5fd44e7682a",
-      "0x867f4e5e25262d03bcd5795e2f051034b42ad3452f0c7a01f2420647a44415e8b1c56065342c5fdfa951a9c9ee659f85",
-      "0x867d04babe07f723c89511e66a097e9bcd6e7843b29abcb1c48a032be227c1af959dd9439d75860a10a60f9bbb8e350e",
-      "0x947a10880a0853d3896edbd1a76d1fad8423710502e0d4a83aebbebbccadbda4ff376cd8339aff43a89c5e51f880209e",
-      "0xad667ebebe1c7d2c6a579f2999b6fae483b7e8e00c1a7dde87a2f054beb8a9a0bae0c7041c01143ac1a8e2f005219efc",
-      "0xadfc4f4470e53f23a2aa40711c38dd9194c4806266077fb839277fc7c756d64cc37c958b9afa805c6677085ce78a383f",
-      "0x9004f80be2ff67d91336811d5d609ff1648c823605a672195b080ada9ea806aa47870b9c170173ab52e94f13093495a9",
-      "0x98f511b7909a02f1e00e83a38d54fc895a27e6389685c01e5d07eae879bd97080e6d50ef1ebfb7b49d1f30ad5c07d490",
-      "0xad78916955abdc70be6d46409c4000f6d696e0280283f8c5eac7c60a477a244fa605d767382d9fa0172b3c1987f367b7",
-      "0x8bdef0f1233092fcbb34b122eabd9e44faadabd395dff619c51247fa76f6e4fe74bc8f6b8eb59365fe0e40b265a3be16",
-      "0xa14347d2a18a6f6d36cf6648ace1b1d9c849fa50c7a63aadc0cc12250fa494d50564c7d26fd7573bda6f9c1661988386",
-      "0xb2e2f6b3423c8f8abdb033db10096b0d33472d986f6cb5752cedfb89c853ac2807837dd4690e5ec782c4067b3cac05d9",
-      "0xa809a48221094a6203563126e5f2af9ca18cf1fba601d121a01c51099e041298cf6b0e56a8bc7080a0b81ec29e94bfb5",
-      "0xa134180138ae073826af65d9e08fba7fc59341f084a2ea9f9b5c5415265ce572b42a7dfb38c021ee6877846823e3535b",
       "0x977b22be41cf54866c6e97f70b84a0abd2b781184d93f78d588bda5111355847b7246597a3c972cd600a94b19379d3a1",
+      "0x943dc8fdb00b311e510526ba460c784cf3f4def720af531f96b09e986182d4c399ca261020e1ea53327c26e221ce5665",
+      "0x947a10880a0853d3896edbd1a76d1fad8423710502e0d4a83aebbebbccadbda4ff376cd8339aff43a89c5e51f880209e",
+      "0x9557a45795d2f2e2969bbff1349f39ec0adc489ed293254b11afb6a779768145cfb4e2e33b8e171e2e65c10ef196ac29",
+      "0xa5ec9caa9058103f34886db2fdc41d7b98cce3d274f5d30314d7b931c17fe538cfdeadca9351218ce09bb6659c242374",
+      "0x8d8cd6d78e20235da67211f70d3c9e89e0e1fe38e3346aeeffd9538c98d7e632ebaa9671ef33e1b2776488bc8d8f3ddd",
+      "0x83e7b3a2bc7c212aa657f734c0bce1c95ec93670a41b3cbfa94adc817cbc05c61fb64bf4d97888b29e1cfd5929f4a0aa",
+      "0xaceb58c5db1508fbd22dc105219cf71e2469584a209d0692d4f67112e258dda258ed5627d61c5147637326ad910784c7",
+      "0xa9c681c839146a77b199091678a61ebefed967d471adcd6d3406740b5e84135142a066b0c1c95a21cc3beaa1b6684cbf",
+      "0xb2e2f6b3423c8f8abdb033db10096b0d33472d986f6cb5752cedfb89c853ac2807837dd4690e5ec782c4067b3cac05d9",
+      "0xb189aa5d990af31f799b0f8698f958610d66192fec0b825677d07c931051c6f88b2fa49eb6eafc1b543ae3b7633da6ad",
+      "0xa14347d2a18a6f6d36cf6648ace1b1d9c849fa50c7a63aadc0cc12250fa494d50564c7d26fd7573bda6f9c1661988386",
+      "0xaddb8cfc0acc8b78f0593060338d923ccbad879bb690817ee976758a845dee456a1135e59348d31c1fe9e683a8e94bf0",
+      "0xa809a48221094a6203563126e5f2af9ca18cf1fba601d121a01c51099e041298cf6b0e56a8bc7080a0b81ec29e94bfb5",
+      "0x867f4e5e25262d03bcd5795e2f051034b42ad3452f0c7a01f2420647a44415e8b1c56065342c5fdfa951a9c9ee659f85",
+      "0x84fa8355425bed8af9af9f2e9fc8041df1efc043fd5f9588142a7548a3bfb38746c3a77f220ba37a6d643302f0194130",
       "0x928d3c8eefc6d742f8a5121b4bf99f25a263abd958b15d292282fadec8add76d610dc23c67625d58383b1dec5efc518d",
-      "0xadfff4172f4541ce2d037979f11bb2d6d9394198a97f25a09bb56468e99724a7abdc43440556f56683f743cdead37ee4",
-      "0xaddb8cfc0acc8b78f0593060338d923ccbad879bb690817ee976758a845dee456a1135e59348d31c1fe9e683a8e94bf0"
+      "0xad667ebebe1c7d2c6a579f2999b6fae483b7e8e00c1a7dde87a2f054beb8a9a0bae0c7041c01143ac1a8e2f005219efc",
+      "0xb2bc84ce855bc39c87b7207d4819458d039b3c90bd72f091b3b737e1f6c2edfa21bbeb661e864b045f7767e54f322a4e",
+      "0xa61d291faad09db82cb018d241651148db3ff03b1acb67bf7317a03b5174762742f142d8aa1d48ee4622a5fd44e7682a",
+      "0x90fb3bf7461e536f4d9f54011ff9e89385194cf4ade15b5b4f7b92933a51c75946502b2c3b6e447532eb50035b21ebb8",
+      "0x867d04babe07f723c89511e66a097e9bcd6e7843b29abcb1c48a032be227c1af959dd9439d75860a10a60f9bbb8e350e",
+      "0xa134180138ae073826af65d9e08fba7fc59341f084a2ea9f9b5c5415265ce572b42a7dfb38c021ee6877846823e3535b",
+      "0x992f8d653c4d911fc9c2fbc8895c485d1be20ea3b4643e8c946b81db6090964b60a19791b49f14a95b820a022619f887"
     ],
     "missing_by_operator": {
       "0x907696b3C3cc30d44A3Bd672A3fAdD4bA2b59eAb": {
@@ -4559,7 +4724,7 @@
   "raw_data": {
     "relay_registrations": {
       "flashbots": {
-        "count": 668,
+        "count": 662,
         "sample_pubkeys": [
           "0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab",
           "0xb6107a04414d8f2517bd7fd84906781b46973104b182955eb21e60bb103044dcf2ad1bd2c490b1bdf33e99334da23b91",
@@ -4569,7 +4734,7 @@
         ]
       },
       "bloxroute_max_profit": {
-        "count": 2227,
+        "count": 2210,
         "sample_pubkeys": [
           "0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab",
           "0xb6107a04414d8f2517bd7fd84906781b46973104b182955eb21e60bb103044dcf2ad1bd2c490b1bdf33e99334da23b91",
@@ -4579,7 +4744,7 @@
         ]
       },
       "bloxroute_regulated": {
-        "count": 2015,
+        "count": 1998,
         "sample_pubkeys": [
           "0xa50425b4753fe1df812020bc670289b924d993597ccb9876e93ced043e89614259b23899b265b07e6fd54ced707220ab",
           "0xb6107a04414d8f2517bd7fd84906781b46973104b182955eb21e60bb103044dcf2ad1bd2c490b1bdf33e99334da23b91",
@@ -4701,7 +4866,7 @@
         "0x577c6ecb163067da10FEf73B9c02af3bfC60a637": 17,
         "0xBa51133A31a16F3045188Ab5056518b3CE78Bd2E": 17,
         "0x1e4908D9E8ECDE54E3bEc0447d5F1886510b3617": 17,
-        "0xFc4bDa360beC1a288b371CFb99fa3E385422a058": 17,
+        "0xFc4bDa360beC1a288b371CFb99fa3E385422a058": 18,
         "0x17602C0b2598827E79d2D1d607b1D57d6dEc89Ad": 17,
         "0x0ca5D73C78B215E20be73Eb7c3cEababcB9982De": 17,
         "0xA6Da44Bd0EBfD4E5743428de135cbf037453C49A": 17,
@@ -6472,7 +6637,8 @@
           "0x815e605d8fdfe45e8d55d8e1e6c0f10078884742427163a2cc310ffb7465a4edc06b159c71b7994cca456e4af368df40",
           "0xadf0a7bdfbad973f504ffcedef9956f749f26b50252232cf996db92d060bb23934a351ade7a5ef1deeafa661f2c585cc",
           "0x847621ef9fb0161ab1965e912300b3ce410153242ef523af12cf7e8357b61e85e7980588112f4b4bb6b06e6dc03bb0b7",
-          "0x8c7a75baf0057c324a54b3013724606a006ab7b6e3fe826cbfe207c05c2abe6a0f9d9ede7b6c04ccdca6078c24c543d5"
+          "0x8c7a75baf0057c324a54b3013724606a006ab7b6e3fe826cbfe207c05c2abe6a0f9d9ede7b6c04ccdca6078c24c543d5",
+          "0xac44106354160b7013382a774a4b35f944987b3c83b0cafef55be8b4a0a5b5d039038748f1bbfc15ea0b7aa24718037f"
         ],
         "0x9Db70292b56969F30b1714075cdd091B5B58F8Ae": [
           "0x86100880500592134ad991f8719c3a55217c1ca4ca7517d20f5572214f611b280fe92acebd203a1877038063c1bbd5e5",
@@ -7726,7 +7892,7 @@
         "0x1eCfb39B5053B9BE44B919a5E19de4c11383274a": "waqwaqattack.eth",
         "0x47830447d71Cc0058Db6dDf70E661A253a3083Ef": "aussiestake.eth"
       },
-      "total_validators": 2584
+      "total_validators": 2585
     }
   }
 }
