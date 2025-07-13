@@ -1,11 +1,11 @@
 {
   "metadata": {
-    "last_updated": "2025-07-13T21:33:03.432424",
+    "last_updated": "2025-07-13T21:45:51.091636",
     "total_periods_tracked": 29,
     "total_validators_in_committees": 47,
-    "total_attestations_tracked": 641488,
-    "total_successful_attestations": 617081,
-    "total_missed_attestations": 24407,
+    "total_attestations_tracked": 641552,
+    "total_successful_attestations": 617144,
+    "total_missed_attestations": 24408,
     "total_api_failures": 0,
     "overall_participation_rate": 96.2
   },
@@ -236,10 +236,10 @@
     },
     "1481": {
       "our_validators_count": 1,
-      "total_slots": 2512,
-      "total_successful": 2489,
-      "total_missed": 23,
-      "participation_rate": 99.08439490445859,
+      "total_slots": 2576,
+      "total_successful": 2552,
+      "total_missed": 24,
+      "participation_rate": 99.06832298136646,
       "api_failures": 0
     }
   },
@@ -358,10 +358,10 @@
     },
     "0x943185823FABb7E7bD6fED459B6390219c1668B0": {
       "total_periods": 2,
-      "total_slots": 18896,
-      "total_successful": 18643,
-      "total_missed": 253,
-      "participation_rate": 98.66109229466554,
+      "total_slots": 18960,
+      "total_successful": 18706,
+      "total_missed": 254,
+      "participation_rate": 98.66033755274262,
       "api_failures": 0
     },
     "0x273A7984f387F4C9fC623336B79664E399Ab7e84": {
@@ -1534,16 +1534,16 @@
       "validator_pubkey": "0x97d1c58911de874e6cffb878eb48018d1a0adb1ea41669b6b51aecd256c035b5495a9350a8c02b5fdec41b3b3b9590d1",
       "operator": "0x943185823FABb7E7bD6fED459B6390219c1668B0",
       "operator_name": "chonghe (0x943185...1668B0)",
-      "total_slots": 2512,
-      "successful_attestations": 2489,
-      "missed_attestations": 23,
-      "participation_rate": 99.08,
+      "total_slots": 2576,
+      "successful_attestations": 2552,
+      "missed_attestations": 24,
+      "participation_rate": 99.07,
       "is_partial_period": true,
       "actual_start_slot": 12132352,
-      "actual_end_slot": 12134863,
+      "actual_end_slot": 12134927,
       "api_failures": 0,
       "scan_start_slot": 12132352,
-      "scan_end_slot": 12134863
+      "scan_end_slot": 12134927
     }
   ]
 }
