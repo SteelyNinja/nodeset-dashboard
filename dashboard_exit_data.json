@@ -1,9 +1,9 @@
 {
   "exit_summary": {
     "total_exited": 44,
-    "total_active": 2542,
-    "exit_rate_percent": 1.7014694508894046,
-    "last_updated": 1752529542
+    "total_active": 2543,
+    "exit_rate_percent": 1.7008117510630072,
+    "last_updated": 1752530443
   },
   "ens_summary": {
     "total_ens_names": 55,
