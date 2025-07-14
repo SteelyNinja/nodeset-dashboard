@@ -1,10 +1,10 @@
 {
   "metadata": {
-    "last_updated": "2025-07-14T16:03:10.580602",
+    "last_updated": "2025-07-14T16:15:47.569090",
     "total_periods_tracked": 29,
     "total_validators_in_committees": 47,
-    "total_attestations_tracked": 647038,
-    "total_successful_attestations": 622578,
+    "total_attestations_tracked": 647101,
+    "total_successful_attestations": 622641,
     "total_missed_attestations": 24460,
     "total_api_failures": 0,
     "overall_participation_rate": 96.22
@@ -236,10 +236,10 @@
     },
     "1481": {
       "our_validators_count": 1,
-      "total_slots": 8062,
-      "total_successful": 7986,
+      "total_slots": 8125,
+      "total_successful": 8049,
       "total_missed": 76,
-      "participation_rate": 99.05730587943438,
+      "participation_rate": 99.06461538461538,
       "api_failures": 0
     }
   },
@@ -358,10 +358,10 @@
     },
     "0x943185823FABb7E7bD6fED459B6390219c1668B0": {
       "total_periods": 2,
-      "total_slots": 24446,
-      "total_successful": 24140,
+      "total_slots": 24509,
+      "total_successful": 24203,
       "total_missed": 306,
-      "participation_rate": 98.74826147426981,
+      "participation_rate": 98.75147904851279,
       "api_failures": 0
     },
     "0x273A7984f387F4C9fC623336B79664E399Ab7e84": {
@@ -1534,16 +1534,16 @@
       "validator_pubkey": "0x97d1c58911de874e6cffb878eb48018d1a0adb1ea41669b6b51aecd256c035b5495a9350a8c02b5fdec41b3b3b9590d1",
       "operator": "0x943185823FABb7E7bD6fED459B6390219c1668B0",
       "operator_name": "chonghe (0x943185...1668B0)",
-      "total_slots": 8062,
-      "successful_attestations": 7986,
+      "total_slots": 8125,
+      "successful_attestations": 8049,
       "missed_attestations": 76,
       "participation_rate": 99.06,
       "is_partial_period": true,
       "actual_start_slot": 12132352,
-      "actual_end_slot": 12140413,
+      "actual_end_slot": 12140476,
       "api_failures": 0,
       "scan_start_slot": 12132352,
-      "scan_end_slot": 12140413
+      "scan_end_slot": 12140476
     }
   ]
 }
