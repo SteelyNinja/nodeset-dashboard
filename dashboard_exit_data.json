@@ -1,9 +1,9 @@
 {
   "exit_summary": {
-    "total_exited": 79,
-    "total_active": 2508,
-    "exit_rate_percent": 3.0537301894085815,
-    "last_updated": 1752715086
+    "total_exited": 93,
+    "total_active": 2494,
+    "exit_rate_percent": 3.5948975647468107,
+    "last_updated": 1752715846
   },
   "ens_summary": {
     "total_ens_names": 55,
@@ -421,9 +421,303 @@
       "exit_rate": 5.9,
       "latest_exit_timestamp": 1752714839,
       "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x73c78a751FD15f9f1C0c01D01109eC758c85B8F9",
+      "operator_name": "0x73c78a...85B8F9",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715223,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x76B86368c5529b128b6b594333519Ae0Cccc1bA1",
+      "operator_name": "CrypDuck (0x76B863...cc1bA1)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715607,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x1D6A7bd13498a176B9Fdf1984E48446521e9D511",
+      "operator_name": "imrik.eth (0x1D6A7b...e9D511)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715607,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xe1D21E76820610938CACfb7CC6a669Be9C65DBEd",
+      "operator_name": "ns.operatooor.eth (0xe1D21E...65DBEd)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715607,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xF6bD96870b3a399091595B9403c32178944120b1",
+      "operator_name": "nodeset.0xtrooper.eth (0xF6bD96...4120b1)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715607,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x23F8a5c17936Cc68B47aB315246BB29c4a599acf",
+      "operator_name": "0x23F8a5...599acf",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715223,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x7Ba8671De7fcc5C1a4a9aC72bd82B1d5c5117eed",
+      "operator_name": "0x7Ba867...117eed",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715223,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xe12C0aB0803b9bc63eD6d1feCb0838a55e4e9Ca6",
+      "operator_name": "nodeset.bigwall.eth (0xe12C0a...4e9Ca6)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715223,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x4bc2e9d0Db4DC87415fCfdd55Fd357F7fc722640",
+      "operator_name": "0x4bc2e9...722640",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715607,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x049B18E785fde136521B7a7B6BDD5B77D7b85C10",
+      "operator_name": "0x049B18...b85C10",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715223,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x3201F22151E7600779084CE59ca2f2854f68aeB4",
+      "operator_name": "nspv01.rocknet.eth (0x3201F2...68aeB4)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715223,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x93373F548355225C479bC7aA2380158ef868623e",
+      "operator_name": "0x93373F...68623e",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715223,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xdeeD7fc8e8078AB76d4e256D13914eA697A0F65b",
+      "operator_name": "0xdeeD7f...A0F65b",
+      "exits": 1,
+      "still_active": 17,
+      "total_ever": 18,
+      "exit_rate": 5.6,
+      "latest_exit_timestamp": 1752715607,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xf359bEA5c9C8432A62A3718e25a9f7c77412c37A",
+      "operator_name": "nodeset.cryptognut.eth (0xf359bE...12c37A)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752715223,
+      "latest_exit_date": "2025-07-17"
     }
   ],
   "recent_exits": [
+    {
+      "validator_index": 1894901,
+      "operator": "0x76B86368c5529b128b6b594333519Ae0Cccc1bA1",
+      "operator_name": "CrypDuck (0x76B863...cc1bA1)",
+      "exit_timestamp": 1752715607,
+      "exit_date": "2025-07-17 01:26:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379926"
+    },
+    {
+      "validator_index": 1895539,
+      "operator": "0x1D6A7bd13498a176B9Fdf1984E48446521e9D511",
+      "operator_name": "imrik.eth (0x1D6A7b...e9D511)",
+      "exit_timestamp": 1752715607,
+      "exit_date": "2025-07-17 01:26:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379926"
+    },
+    {
+      "validator_index": 1894923,
+      "operator": "0xe1D21E76820610938CACfb7CC6a669Be9C65DBEd",
+      "operator_name": "ns.operatooor.eth (0xe1D21E...65DBEd)",
+      "exit_timestamp": 1752715607,
+      "exit_date": "2025-07-17 01:26:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379926"
+    },
+    {
+      "validator_index": 1894875,
+      "operator": "0xF6bD96870b3a399091595B9403c32178944120b1",
+      "operator_name": "nodeset.0xtrooper.eth (0xF6bD96...4120b1)",
+      "exit_timestamp": 1752715607,
+      "exit_date": "2025-07-17 01:26:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379926"
+    },
+    {
+      "validator_index": 1895546,
+      "operator": "0x4bc2e9d0Db4DC87415fCfdd55Fd357F7fc722640",
+      "operator_name": "0x4bc2e9...722640",
+      "exit_timestamp": 1752715607,
+      "exit_date": "2025-07-17 01:26:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379926"
+    },
+    {
+      "validator_index": 1894919,
+      "operator": "0xdeeD7fc8e8078AB76d4e256D13914eA697A0F65b",
+      "operator_name": "0xdeeD7f...A0F65b",
+      "exit_timestamp": 1752715607,
+      "exit_date": "2025-07-17 01:26:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379926"
+    },
+    {
+      "validator_index": 1894905,
+      "operator": "0x73c78a751FD15f9f1C0c01D01109eC758c85B8F9",
+      "operator_name": "0x73c78a...85B8F9",
+      "exit_timestamp": 1752715223,
+      "exit_date": "2025-07-17 01:20:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379925"
+    },
+    {
+      "validator_index": 1894874,
+      "operator": "0x23F8a5c17936Cc68B47aB315246BB29c4a599acf",
+      "operator_name": "0x23F8a5...599acf",
+      "exit_timestamp": 1752715223,
+      "exit_date": "2025-07-17 01:20:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379925"
+    },
+    {
+      "validator_index": 1894925,
+      "operator": "0x7Ba8671De7fcc5C1a4a9aC72bd82B1d5c5117eed",
+      "operator_name": "0x7Ba867...117eed",
+      "exit_timestamp": 1752715223,
+      "exit_date": "2025-07-17 01:20:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379925"
+    },
+    {
+      "validator_index": 1895541,
+      "operator": "0xe12C0aB0803b9bc63eD6d1feCb0838a55e4e9Ca6",
+      "operator_name": "nodeset.bigwall.eth (0xe12C0a...4e9Ca6)",
+      "exit_timestamp": 1752715223,
+      "exit_date": "2025-07-17 01:20:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379925"
+    },
+    {
+      "validator_index": 1894906,
+      "operator": "0x049B18E785fde136521B7a7B6BDD5B77D7b85C10",
+      "operator_name": "0x049B18...b85C10",
+      "exit_timestamp": 1752715223,
+      "exit_date": "2025-07-17 01:20:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379925"
+    },
+    {
+      "validator_index": 1894902,
+      "operator": "0x3201F22151E7600779084CE59ca2f2854f68aeB4",
+      "operator_name": "nspv01.rocknet.eth (0x3201F2...68aeB4)",
+      "exit_timestamp": 1752715223,
+      "exit_date": "2025-07-17 01:20:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379925"
+    },
+    {
+      "validator_index": 1895543,
+      "operator": "0x93373F548355225C479bC7aA2380158ef868623e",
+      "operator_name": "0x93373F...68623e",
+      "exit_timestamp": 1752715223,
+      "exit_date": "2025-07-17 01:20:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379925"
+    },
+    {
+      "validator_index": 1894877,
+      "operator": "0xf359bEA5c9C8432A62A3718e25a9f7c77412c37A",
+      "operator_name": "nodeset.cryptognut.eth (0xf359bE...12c37A)",
+      "exit_timestamp": 1752715223,
+      "exit_date": "2025-07-17 01:20:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379925"
+    },
     {
       "validator_index": 1895534,
       "operator": "0xeFf163C6f6973846C8aAc4af4d5F4FBa592e61dD",
@@ -819,160 +1113,6 @@
       "slashed": false,
       "balance_gwei": null,
       "exit_epoch": "378968"
-    },
-    {
-      "validator_index": 1906394,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347735,
-      "exit_date": "2025-07-12 19:15:35",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378968"
-    },
-    {
-      "validator_index": 1942338,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347735,
-      "exit_date": "2025-07-12 19:15:35",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378968"
-    },
-    {
-      "validator_index": 1938563,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347735,
-      "exit_date": "2025-07-12 19:15:35",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378968"
-    },
-    {
-      "validator_index": 1938564,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347735,
-      "exit_date": "2025-07-12 19:15:35",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378968"
-    },
-    {
-      "validator_index": 1938565,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347735,
-      "exit_date": "2025-07-12 19:15:35",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378968"
-    },
-    {
-      "validator_index": 1938566,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347735,
-      "exit_date": "2025-07-12 19:15:35",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378968"
-    },
-    {
-      "validator_index": 1938567,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347735,
-      "exit_date": "2025-07-12 19:15:35",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378968"
-    },
-    {
-      "validator_index": 1906202,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347351,
-      "exit_date": "2025-07-12 19:09:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378967"
-    },
-    {
-      "validator_index": 1905576,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347351,
-      "exit_date": "2025-07-12 19:09:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378967"
-    },
-    {
-      "validator_index": 1942339,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347351,
-      "exit_date": "2025-07-12 19:09:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378967"
-    },
-    {
-      "validator_index": 1942340,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347351,
-      "exit_date": "2025-07-12 19:09:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378967"
-    },
-    {
-      "validator_index": 1942341,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347351,
-      "exit_date": "2025-07-12 19:09:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378967"
-    },
-    {
-      "validator_index": 1942342,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347351,
-      "exit_date": "2025-07-12 19:09:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378967"
-    },
-    {
-      "validator_index": 1922593,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347351,
-      "exit_date": "2025-07-12 19:09:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378967"
     }
   ],
   "exit_timeline": [
@@ -1026,9 +1166,9 @@
     },
     {
       "date": "2025-07-17",
-      "voluntary_exits": 35,
+      "voluntary_exits": 49,
       "slashed_exits": 0,
-      "total_exits": 35
+      "total_exits": 49
     }
   ]
 }
