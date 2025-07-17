@@ -1,9 +1,9 @@
 {
   "exit_summary": {
-    "total_exited": 44,
-    "total_active": 2543,
-    "exit_rate_percent": 1.7008117510630072,
-    "last_updated": 1752713145
+    "total_exited": 55,
+    "total_active": 2532,
+    "exit_rate_percent": 2.1260146888287594,
+    "last_updated": 1752714045
   },
   "ens_summary": {
     "total_ens_names": 55,
@@ -71,9 +71,240 @@
       "exit_rate": 5.9,
       "latest_exit_timestamp": 1748039255,
       "latest_exit_date": "2025-05-23"
+    },
+    {
+      "operator": "0x1762Bb8347f074d1dE732812488291eA55977B61",
+      "operator_name": "0x1762Bb...977B61",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713687,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x79fc5Ff1857adb1944AAc20984f4Ebf8cA3F67cf",
+      "operator_name": "0x79fc5F...3F67cf",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713303,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xE141178005caF9A2189FA797bdC14fE4C1b038fc",
+      "operator_name": "0xE14117...b038fc",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713687,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x80dC1802eC299a12aa2c9fC855Ce177d95cE139d",
+      "operator_name": "ns.mambosan.eth (0x80dC18...cE139d)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713687,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x4A59Bebc8E54995aEb38Ee64f472C90EA4636Ac7",
+      "operator_name": "0x4A59Be...636Ac7",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713687,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x124Bb29E2de8D2c431ff763702F1C518cbCF8b21",
+      "operator_name": "zanarkand.eth (0x124Bb2...CF8b21)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713687,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xE8E6Ab490780FA179BE3F710Bec9A0bA57707A8c",
+      "operator_name": "0xE8E6Ab...707A8c",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713687,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xd693843d937F7CFd7c091c873036353369Df2115",
+      "operator_name": "0xd69384...Df2115",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713687,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x907696b3C3cc30d44A3Bd672A3fAdD4bA2b59eAb",
+      "operator_name": "0x907696...b59eAb",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713303,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x3E37430F2091E923668b7266dDeDc35d613787fF",
+      "operator_name": "0x3E3743...3787fF",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713687,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x0E2123aE944063c194F0ED4eC8b5D56c6441B3E5",
+      "operator_name": "0x0E2123...41B3E5",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752713303,
+      "latest_exit_date": "2025-07-17"
     }
   ],
   "recent_exits": [
+    {
+      "validator_index": 1894771,
+      "operator": "0x1762Bb8347f074d1dE732812488291eA55977B61",
+      "operator_name": "0x1762Bb...977B61",
+      "exit_timestamp": 1752713687,
+      "exit_date": "2025-07-17 00:54:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379921"
+    },
+    {
+      "validator_index": 1894770,
+      "operator": "0xE141178005caF9A2189FA797bdC14fE4C1b038fc",
+      "operator_name": "0xE14117...b038fc",
+      "exit_timestamp": 1752713687,
+      "exit_date": "2025-07-17 00:54:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379921"
+    },
+    {
+      "validator_index": 1894775,
+      "operator": "0x80dC1802eC299a12aa2c9fC855Ce177d95cE139d",
+      "operator_name": "ns.mambosan.eth (0x80dC18...cE139d)",
+      "exit_timestamp": 1752713687,
+      "exit_date": "2025-07-17 00:54:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379921"
+    },
+    {
+      "validator_index": 1894772,
+      "operator": "0x4A59Bebc8E54995aEb38Ee64f472C90EA4636Ac7",
+      "operator_name": "0x4A59Be...636Ac7",
+      "exit_timestamp": 1752713687,
+      "exit_date": "2025-07-17 00:54:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379921"
+    },
+    {
+      "validator_index": 1891416,
+      "operator": "0x124Bb29E2de8D2c431ff763702F1C518cbCF8b21",
+      "operator_name": "zanarkand.eth (0x124Bb2...CF8b21)",
+      "exit_timestamp": 1752713687,
+      "exit_date": "2025-07-17 00:54:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379921"
+    },
+    {
+      "validator_index": 1894870,
+      "operator": "0xE8E6Ab490780FA179BE3F710Bec9A0bA57707A8c",
+      "operator_name": "0xE8E6Ab...707A8c",
+      "exit_timestamp": 1752713687,
+      "exit_date": "2025-07-17 00:54:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379921"
+    },
+    {
+      "validator_index": 1894768,
+      "operator": "0xd693843d937F7CFd7c091c873036353369Df2115",
+      "operator_name": "0xd69384...Df2115",
+      "exit_timestamp": 1752713687,
+      "exit_date": "2025-07-17 00:54:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379921"
+    },
+    {
+      "validator_index": 1894769,
+      "operator": "0x3E37430F2091E923668b7266dDeDc35d613787fF",
+      "operator_name": "0x3E3743...3787fF",
+      "exit_timestamp": 1752713687,
+      "exit_date": "2025-07-17 00:54:47",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379921"
+    },
+    {
+      "validator_index": 1894767,
+      "operator": "0x79fc5Ff1857adb1944AAc20984f4Ebf8cA3F67cf",
+      "operator_name": "0x79fc5F...3F67cf",
+      "exit_timestamp": 1752713303,
+      "exit_date": "2025-07-17 00:48:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379920"
+    },
+    {
+      "validator_index": 1891121,
+      "operator": "0x907696b3C3cc30d44A3Bd672A3fAdD4bA2b59eAb",
+      "operator_name": "0x907696...b59eAb",
+      "exit_timestamp": 1752713303,
+      "exit_date": "2025-07-17 00:48:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379920"
+    },
+    {
+      "validator_index": 1891407,
+      "operator": "0x0E2123aE944063c194F0ED4eC8b5D56c6441B3E5",
+      "operator_name": "0x0E2123...41B3E5",
+      "exit_timestamp": 1752713303,
+      "exit_date": "2025-07-17 00:48:23",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379920"
+    },
     {
       "validator_index": 1922825,
       "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
@@ -376,6 +607,12 @@
       "voluntary_exits": 17,
       "slashed_exits": 0,
       "total_exits": 17
+    },
+    {
+      "date": "2025-07-17",
+      "voluntary_exits": 11,
+      "slashed_exits": 0,
+      "total_exits": 11
     }
   ]
 }
