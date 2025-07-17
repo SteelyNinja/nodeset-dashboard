@@ -1,9 +1,9 @@
 {
   "exit_summary": {
-    "total_exited": 55,
-    "total_active": 2532,
-    "exit_rate_percent": 2.1260146888287594,
-    "last_updated": 1752714045
+    "total_exited": 79,
+    "total_active": 2508,
+    "exit_rate_percent": 3.0537301894085815,
+    "last_updated": 1752715086
   },
   "ens_summary": {
     "total_ens_names": 55,
@@ -181,9 +181,513 @@
       "exit_rate": 5.9,
       "latest_exit_timestamp": 1752713303,
       "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xeA968176C88a0cEE7a0751b2E0C6EF49bDEAd6E0",
+      "operator_name": "nodeset.hackworth.eth (0xeA9681...EAd6E0)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714071,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xeFf163C6f6973846C8aAc4af4d5F4FBa592e61dD",
+      "operator_name": "Cyberhorse.eth (0xeFf163...2e61dD)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714839,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x56742914Bd97438917F10bEfCFDe8DE58251d2ca",
+      "operator_name": "0x567429...51d2ca",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714071,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x0B93cbe1381ceeEDFED73E478E2167375C1cf7e2",
+      "operator_name": "0x0B93cb...1cf7e2",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714071,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xA94C708871Ab146BE41C47c351C078B4E6d83C1e",
+      "operator_name": "nodeset.haloooloolo.eth (0xA94C70...d83C1e)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714455,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x8A877e089025Cd2D0a2b4D2eE9D45DD2450E2d3A",
+      "operator_name": "0x8A877e...0E2d3A",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714455,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xd2eEfd5021D25d7CBfabC7D7E69ba1320Bfa8668",
+      "operator_name": "0xd2eEfd...fa8668",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714839,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xf36686F4130a80afa7b6B2B055EBa9F81756b192",
+      "operator_name": "0xf36686...56b192",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714071,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x37Cc4C6478b7D4b48b9B1Df00807329B284106A9",
+      "operator_name": "0x37Cc4C...4106A9",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714839,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xC447A1FD2e9934AEF44C7f88f2e625F35c3C6c2f",
+      "operator_name": "0xC447A1...3C6c2f",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714839,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x2D8e181E5Ef6A2ce41Ee25F1461Ace538d311beD",
+      "operator_name": "0x2D8e18...311beD",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714839,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x8Fe576aEb5816a59fA48D0eCa46a9cE34C80AB89",
+      "operator_name": "nds.ramana.eth (0x8Fe576...80AB89)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714455,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x15a7923903BE991042Da72dE46Dd678bd4E0D8C0",
+      "operator_name": "0x15a792...E0D8C0",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714455,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xd4BC878bBACbf31F9C99B21AdC81b9cA37c32Cca",
+      "operator_name": "0xd4BC87...c32Cca",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714455,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0xA981CEdD43E727BAD8E1B1D965fd19191351E7C6",
+      "operator_name": "0xA981CE...51E7C6",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714839,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x11050FbD79813566eBDe4eEe0e4448D6118105c5",
+      "operator_name": "atomicwhale (0x11050F...8105c5)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714071,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x366bBc4a72986042D8CBc71edd7F19a62EC608Be",
+      "operator_name": "0x366bBc...C608Be",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714071,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x437634bb92cc2AB8BF670261eC2961aB65De2dF2",
+      "operator_name": "0x437634...De2dF2",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714455,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x6bb242D73120Ef1B7B755a94dEFdD786B51CBa95",
+      "operator_name": "0x6bb242...1CBa95",
+      "exits": 1,
+      "still_active": 19,
+      "total_ever": 20,
+      "exit_rate": 5.0,
+      "latest_exit_timestamp": 1752714071,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x43FeD6F64874EE6733360a93B4B922b7B5E3d003",
+      "operator_name": "0x43FeD6...E3d003",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714455,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x765c9573821B2f4e153E52ad177103BED0433D40",
+      "operator_name": "royalcanadianETHforce (0x765c95...433D40)",
+      "exits": 1,
+      "still_active": 19,
+      "total_ever": 20,
+      "exit_rate": 5.0,
+      "latest_exit_timestamp": 1752714071,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x2468a43b6bEbFe274A475151Cb1748780c2f3ECc",
+      "operator_name": "Icelandcalling.eth (0x2468a4...2f3ECc)",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714839,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x1878f36F8442Bf3994F7F3E8DF342F9AA91e692b",
+      "operator_name": "Blackfeather (0x1878f3...1e692b)",
+      "exits": 1,
+      "still_active": 19,
+      "total_ever": 20,
+      "exit_rate": 5.0,
+      "latest_exit_timestamp": 1752714455,
+      "latest_exit_date": "2025-07-17"
+    },
+    {
+      "operator": "0x9FF3c76c21c8823A308501ad32F8D8BE1f06C4c9",
+      "operator_name": "0x9FF3c7...06C4c9",
+      "exits": 1,
+      "still_active": 16,
+      "total_ever": 17,
+      "exit_rate": 5.9,
+      "latest_exit_timestamp": 1752714839,
+      "latest_exit_date": "2025-07-17"
     }
   ],
   "recent_exits": [
+    {
+      "validator_index": 1895534,
+      "operator": "0xeFf163C6f6973846C8aAc4af4d5F4FBa592e61dD",
+      "operator_name": "Cyberhorse.eth (0xeFf163...2e61dD)",
+      "exit_timestamp": 1752714839,
+      "exit_date": "2025-07-17 01:13:59",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379924"
+    },
+    {
+      "validator_index": 1895550,
+      "operator": "0xd2eEfd5021D25d7CBfabC7D7E69ba1320Bfa8668",
+      "operator_name": "0xd2eEfd...fa8668",
+      "exit_timestamp": 1752714839,
+      "exit_date": "2025-07-17 01:13:59",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379924"
+    },
+    {
+      "validator_index": 1894918,
+      "operator": "0x37Cc4C6478b7D4b48b9B1Df00807329B284106A9",
+      "operator_name": "0x37Cc4C...4106A9",
+      "exit_timestamp": 1752714839,
+      "exit_date": "2025-07-17 01:13:59",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379924"
+    },
+    {
+      "validator_index": 1895553,
+      "operator": "0xC447A1FD2e9934AEF44C7f88f2e625F35c3C6c2f",
+      "operator_name": "0xC447A1...3C6c2f",
+      "exit_timestamp": 1752714839,
+      "exit_date": "2025-07-17 01:13:59",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379924"
+    },
+    {
+      "validator_index": 1894920,
+      "operator": "0x2D8e181E5Ef6A2ce41Ee25F1461Ace538d311beD",
+      "operator_name": "0x2D8e18...311beD",
+      "exit_timestamp": 1752714839,
+      "exit_date": "2025-07-17 01:13:59",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379924"
+    },
+    {
+      "validator_index": 1894915,
+      "operator": "0xA981CEdD43E727BAD8E1B1D965fd19191351E7C6",
+      "operator_name": "0xA981CE...51E7C6",
+      "exit_timestamp": 1752714839,
+      "exit_date": "2025-07-17 01:13:59",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379924"
+    },
+    {
+      "validator_index": 1895540,
+      "operator": "0x2468a43b6bEbFe274A475151Cb1748780c2f3ECc",
+      "operator_name": "Icelandcalling.eth (0x2468a4...2f3ECc)",
+      "exit_timestamp": 1752714839,
+      "exit_date": "2025-07-17 01:13:59",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379924"
+    },
+    {
+      "validator_index": 1894914,
+      "operator": "0x9FF3c76c21c8823A308501ad32F8D8BE1f06C4c9",
+      "operator_name": "0x9FF3c7...06C4c9",
+      "exit_timestamp": 1752714839,
+      "exit_date": "2025-07-17 01:13:59",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379924"
+    },
+    {
+      "validator_index": 1895549,
+      "operator": "0xA94C708871Ab146BE41C47c351C078B4E6d83C1e",
+      "operator_name": "nodeset.haloooloolo.eth (0xA94C70...d83C1e)",
+      "exit_timestamp": 1752714455,
+      "exit_date": "2025-07-17 01:07:35",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379923"
+    },
+    {
+      "validator_index": 1895552,
+      "operator": "0x8A877e089025Cd2D0a2b4D2eE9D45DD2450E2d3A",
+      "operator_name": "0x8A877e...0E2d3A",
+      "exit_timestamp": 1752714455,
+      "exit_date": "2025-07-17 01:07:35",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379923"
+    },
+    {
+      "validator_index": 1894916,
+      "operator": "0x8Fe576aEb5816a59fA48D0eCa46a9cE34C80AB89",
+      "operator_name": "nds.ramana.eth (0x8Fe576...80AB89)",
+      "exit_timestamp": 1752714455,
+      "exit_date": "2025-07-17 01:07:35",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379923"
+    },
+    {
+      "validator_index": 1894922,
+      "operator": "0x15a7923903BE991042Da72dE46Dd678bd4E0D8C0",
+      "operator_name": "0x15a792...E0D8C0",
+      "exit_timestamp": 1752714455,
+      "exit_date": "2025-07-17 01:07:35",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379923"
+    },
+    {
+      "validator_index": 1894904,
+      "operator": "0xd4BC878bBACbf31F9C99B21AdC81b9cA37c32Cca",
+      "operator_name": "0xd4BC87...c32Cca",
+      "exit_timestamp": 1752714455,
+      "exit_date": "2025-07-17 01:07:35",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379923"
+    },
+    {
+      "validator_index": 1895551,
+      "operator": "0x437634bb92cc2AB8BF670261eC2961aB65De2dF2",
+      "operator_name": "0x437634...De2dF2",
+      "exit_timestamp": 1752714455,
+      "exit_date": "2025-07-17 01:07:35",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379923"
+    },
+    {
+      "validator_index": 1895545,
+      "operator": "0x43FeD6F64874EE6733360a93B4B922b7B5E3d003",
+      "operator_name": "0x43FeD6...E3d003",
+      "exit_timestamp": 1752714455,
+      "exit_date": "2025-07-17 01:07:35",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379923"
+    },
+    {
+      "validator_index": 1894903,
+      "operator": "0x1878f36F8442Bf3994F7F3E8DF342F9AA91e692b",
+      "operator_name": "Blackfeather (0x1878f3...1e692b)",
+      "exit_timestamp": 1752714455,
+      "exit_date": "2025-07-17 01:07:35",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379923"
+    },
+    {
+      "validator_index": 1894845,
+      "operator": "0xeA968176C88a0cEE7a0751b2E0C6EF49bDEAd6E0",
+      "operator_name": "nodeset.hackworth.eth (0xeA9681...EAd6E0)",
+      "exit_timestamp": 1752714071,
+      "exit_date": "2025-07-17 01:01:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379922"
+    },
+    {
+      "validator_index": 1894876,
+      "operator": "0x56742914Bd97438917F10bEfCFDe8DE58251d2ca",
+      "operator_name": "0x567429...51d2ca",
+      "exit_timestamp": 1752714071,
+      "exit_date": "2025-07-17 01:01:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379922"
+    },
+    {
+      "validator_index": 1894924,
+      "operator": "0x0B93cbe1381ceeEDFED73E478E2167375C1cf7e2",
+      "operator_name": "0x0B93cb...1cf7e2",
+      "exit_timestamp": 1752714071,
+      "exit_date": "2025-07-17 01:01:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379922"
+    },
+    {
+      "validator_index": 1895538,
+      "operator": "0xf36686F4130a80afa7b6B2B055EBa9F81756b192",
+      "operator_name": "0xf36686...56b192",
+      "exit_timestamp": 1752714071,
+      "exit_date": "2025-07-17 01:01:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379922"
+    },
+    {
+      "validator_index": 1894921,
+      "operator": "0x11050FbD79813566eBDe4eEe0e4448D6118105c5",
+      "operator_name": "atomicwhale (0x11050F...8105c5)",
+      "exit_timestamp": 1752714071,
+      "exit_date": "2025-07-17 01:01:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379922"
+    },
+    {
+      "validator_index": 1894869,
+      "operator": "0x366bBc4a72986042D8CBc71edd7F19a62EC608Be",
+      "operator_name": "0x366bBc...C608Be",
+      "exit_timestamp": 1752714071,
+      "exit_date": "2025-07-17 01:01:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379922"
+    },
+    {
+      "validator_index": 1894873,
+      "operator": "0x6bb242D73120Ef1B7B755a94dEFdD786B51CBa95",
+      "operator_name": "0x6bb242...1CBa95",
+      "exit_timestamp": 1752714071,
+      "exit_date": "2025-07-17 01:01:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379922"
+    },
+    {
+      "validator_index": 1894774,
+      "operator": "0x765c9573821B2f4e153E52ad177103BED0433D40",
+      "operator_name": "royalcanadianETHforce (0x765c95...433D40)",
+      "exit_timestamp": 1752714071,
+      "exit_date": "2025-07-17 01:01:11",
+      "status": "exited_unslashed",
+      "slashed": false,
+      "balance_gwei": null,
+      "exit_epoch": "379922"
+    },
     {
       "validator_index": 1894771,
       "operator": "0x1762Bb8347f074d1dE732812488291eA55977B61",
@@ -469,94 +973,6 @@
       "slashed": false,
       "balance_gwei": null,
       "exit_epoch": "378967"
-    },
-    {
-      "validator_index": 1922722,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752347351,
-      "exit_date": "2025-07-12 19:09:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378967"
-    },
-    {
-      "validator_index": 1894909,
-      "operator": "0xb413410b9Ba837D19aB96AC22eB079277cA573db",
-      "operator_name": "0xb41341...A573db",
-      "exit_timestamp": 1752345047,
-      "exit_date": "2025-07-12 18:30:47",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "378961"
-    },
-    {
-      "validator_index": 1906395,
-      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
-      "operator_name": "0x37F4C7...17bDEa",
-      "exit_timestamp": 1751479511,
-      "exit_date": "2025-07-02 18:05:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "376707"
-    },
-    {
-      "validator_index": 1922661,
-      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
-      "operator_name": "0x37F4C7...17bDEa",
-      "exit_timestamp": 1751479511,
-      "exit_date": "2025-07-02 18:05:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "376707"
-    },
-    {
-      "validator_index": 1937869,
-      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
-      "operator_name": "0x37F4C7...17bDEa",
-      "exit_timestamp": 1751479511,
-      "exit_date": "2025-07-02 18:05:11",
-      "status": "exited_unslashed",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "376707"
-    },
-    {
-      "validator_index": 1896857,
-      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
-      "operator_name": "0x37F4C7...17bDEa",
-      "exit_timestamp": 1750535639,
-      "exit_date": "2025-06-21 19:53:59",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "374249"
-    },
-    {
-      "validator_index": 1905621,
-      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
-      "operator_name": "0x37F4C7...17bDEa",
-      "exit_timestamp": 1750535639,
-      "exit_date": "2025-06-21 19:53:59",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "374249"
-    },
-    {
-      "validator_index": 1906294,
-      "operator": "0x37F4C77c17b62fBF34fa8f147539aE9E5117bDEa",
-      "operator_name": "0x37F4C7...17bDEa",
-      "exit_timestamp": 1750535639,
-      "exit_date": "2025-06-21 19:53:59",
-      "status": "withdrawal_done",
-      "slashed": false,
-      "balance_gwei": null,
-      "exit_epoch": "374249"
     }
   ],
   "exit_timeline": [
@@ -610,9 +1026,9 @@
     },
     {
       "date": "2025-07-17",
-      "voluntary_exits": 11,
+      "voluntary_exits": 35,
       "slashed_exits": 0,
-      "total_exits": 11
+      "total_exits": 35
     }
   ]
 }
